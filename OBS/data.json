@@ -1,0 +1,30 @@
+{
+  "sellerName": "YNFDeals",
+  "productTitle": "Al Rehab Choco Musk Marshmallow",
+  "notes": {
+    "top": "Vanilla",
+    "mid": "Amber",
+    "base": "Musk"
+  },
+  "retailPrice": "$35+",
+  "companyStats": "⭐ 16,000+ SALES  •  4.9★ RATING  •  SAME DAY SHIPPING  •  $1 STARTS",
+  "promoText": "$1 STARTS",
+  "bidText": "Bid $1",
+  "bidCount": "12",
+  "ctaText": "Bid $1",
+  "ctaCount": "12",
+  "likeCount": "296",
+  "statsLine": "16,000+ SALES • 1K+ REVIEWS • 4.9★ RATING • <1d SHIPPING TIME",
+  "tickerItems": [
+    "🔥 $1 START AUCTIONS",
+    "📦 SHIPPING BUNDLES MAX 10 ITEMS",
+    "🚚 SAME DAY SHIPPING",
+    "⭐ 16,000+ SALES | 4.9 RATING"
+  ],
+  "chatLines": [
+    { "user": "PerfumeKing", "message": "Let's go!" },
+    { "user": "SaraScent", "message": "Love this scent!" },
+    { "user": "OmarDxb", "message": "Great deal for $1!" },
+    { "user": "AnnaW", "message": "Here for the giveaway!" }
+  ]
+}

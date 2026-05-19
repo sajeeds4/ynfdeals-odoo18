@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OBS Demo Scanner</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0a18;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,234,0,0.2);
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFEA00;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-top: -12px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: rgba(255,234,0,0.5);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    button:active { transform: scale(0.97); }
+
+    .btn-scan {
+      background: linear-gradient(135deg, #FFEA00, #FF9D00);
+      color: #1a0f00;
+    }
+
+    .btn-clear {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      flex: 0 0 auto;
+      padding: 14px 20px;
+    }
+
+    .result {
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .result.success {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #86efac;
+    }
+
+    .result.error {
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5;
+    }
+
+    .product-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,234,0,0.15);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFEA00;
+    }
+
+    .product-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-right: 6px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .live-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #86efac;
+      display: none;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <h1>OBS Demo Scanner</h1>
+      <p class="subtitle">Scan a product barcode to preview it on the overlay</p>
+    </div>
+
+    <div>
+      <label>Barcode / SKU</label>
+      <input type="text" id="barcodeInput" placeholder="Scan or type barcode..." autofocus />
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-scan" onclick="doScan()">Scan Product</button>
+      <button class="btn-clear" onclick="doClear()">Clear</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="product-card" id="productCard">
+      <div class="live-badge" id="liveBadge"><span class="status-dot"></span>Showing on overlay</div>
+      <div class="product-name" id="pName"></div>
+      <div class="product-meta" id="pMeta"></div>
+    </div>
+  </div>
+
+  <script>
+    // When served from the dashboard server, use relative URLs (same origin = no CORS).
+    // Falls back to localhost if opened directly as a file.
+    const API = window.location.protocol === 'file:' ? 'http://localhost:8088' : '';
+
+    const input = document.getElementById('barcodeInput');
+
+    // Submit on Enter
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doScan();
+    });
+
+    // Auto-submit if barcode scanner fires (fast input ending with Enter)
+    let scanTimer;
+    input.addEventListener('input', () => {
+      clearTimeout(scanTimer);
+      scanTimer = setTimeout(() => {
+        if (input.value.trim().length >= 4) doScan();
+      }, 300);
+    });
+
+    async function doScan() {
+      const barcode = input.value.trim();
+      if (!barcode) return;
+      showResult('', '');
+      try {
+        const res = await fetch(`${API}/api/obs/demo/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ barcode }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showProduct(data.product);
+          showResult('success', `Product found — overlay updated`);
+          input.value = '';
+          input.focus();
+        } else {
+          showProduct(null);
+          const msg = data.error === 'product_not_found'
+            ? `No product found for "${barcode}"`
+            : data.error;
+          showResult('error', msg);
+        }
+      } catch (e) {
+        showResult('error', 'Could not connect to server (is it running?)');
+      }
+    }
+
+    async function doClear() {
+      try {
+        await fetch(`${API}/api/obs/demo/clear`, { method: 'POST' });
+      } catch (_) {}
+      showProduct(null);
+      showResult('', '');
+      input.value = '';
+      input.focus();
+    }
+
+    function showResult(type, msg) {
+      const el = document.getElementById('result');
+      el.className = 'result ' + type;
+      el.textContent = msg;
+      el.style.display = msg ? 'block' : 'none';
+    }
+
+    function showProduct(p) {
+      const card = document.getElementById('productCard');
+      const badge = document.getElementById('liveBadge');
+      if (!p) { card.style.display = 'none'; return; }
+      card.style.display = 'flex';
+      badge.style.display = 'flex';
+      document.getElementById('pName').textContent = p.name || '—';
+      const lines = [];
+      if (p.retail_price) lines.push(`Retail: $${Number(p.retail_price).toFixed(2)}`);
+      if (p.note_top)     lines.push(`Top: ${p.note_top}`);
+      if (p.note_mid)     lines.push(`Mid: ${p.note_mid}`);
+      if (p.note_base)    lines.push(`Base: ${p.note_base}`);
+      if (p.media_url)    lines.push(`Media: ${p.media_url}`);
+      document.getElementById('pMeta').innerHTML = lines.join('<br>');
+    }
+  </script>
+</body>
+</html>

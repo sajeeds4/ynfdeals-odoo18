@@ -1,0 +1,738 @@
+:root {
+  --gold: #FFEA00;       /* Neon Bright Yellow Gold */
+  --gold2: #FF9D00;      /* Intense Orange Gold */
+  --bg1: rgba(35, 5, 55, 0.95);   /* Vibrant deep dark purple */
+  --bg2: rgba(15, 0, 25, 0.98);   /* Almost black-purple */
+  --text: #FFFFFF;       /* pure white text */
+  --muted: #FFEFD5;      /* brighter muted text */
+  --red: #FF003C;        /* neon hot red */
+  --purple: #8A2BE2;     /* vivid blueviolet */
+  --purple2: #4B0082;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#overlay {
+  position: relative;
+  width: 1080px;
+  height: 1920px;
+  color: var(--text);
+}
+
+/* Dark background that covers the ENTIRE overlay except the camera-window hole.
+   Camera-window area (left:35, top:490, w:640, h:700 → right:675, bottom:1190)
+   is left transparent so the OBS camera source shows through only there.
+   Outer rectangle clockwise + inner rectangle counter-clockwise = nonzero hole. */
+#overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg2);
+  clip-path: path('M 0 0 L 1080 0 L 1080 1920 L 0 1920 Z M 35 490 L 35 1190 L 675 1190 L 675 490 Z');
+  pointer-events: none;
+}
+
+/* --- LUXURY ANIMATED OUTER FRAME --- */
+.frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  z-index: 10;
+  padding: 6px; /* Frame border thickness */
+  /* Elegant, soft luxury palette for Makeup/Perfume vibe */
+  background: linear-gradient(var(--bgAngle, 0deg), #FFEA00, #ff7eb3, #8A2BE2, #FFEA00);
+  background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: frameDrift 6s linear infinite;
+  box-shadow: inset 0 0 60px rgba(255, 126, 179, 0.15), 0 0 30px rgba(255, 234, 0, 0.2);
+}
+
+@property --bgAngle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes frameDrift {
+  0% { --bgAngle: 0deg; }
+  100% { --bgAngle: 360deg; }
+}
+
+
+
+/* --- Hollow LED Trace Border & Vibrant Inner Background --- */
+/* --- Hollow LED Trace Border & Vibrant Inner Background --- */
+.gold-line {
+  position: relative;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  z-index: 1; 
+  box-shadow: inset 0 0 0 1px rgba(255, 234, 0, 0.6), 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+/* The spinning glowing trace masking exactly to the border edge */
+.gold-line::before {
+  content: "";
+  position: absolute;
+  inset: -3px; 
+  border-radius: 25px; 
+  padding: 3px; /* Ensure strictly hollow border */
+  background: conic-gradient(from var(--angle), transparent 60%, var(--gold2) 80%, var(--gold) 95%, #fff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: spinSnake 3.5s linear infinite;
+  z-index: -1;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spinSnake {
+  from { --angle: 0deg; }
+  to { --angle: 360deg; }
+}
+
+
+
+.topbar {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 28px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.brand-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wn-icon {
+  width: 34px;
+  height: 26px;
+  border-radius: 8px 18px 8px 18px;
+  background: linear-gradient(135deg, #ffca3a, #ff9f1c);
+  transform: skewX(-18deg);
+}
+
+.live-label {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+.upload-chip {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .92);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ticker-wrap {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 125px;
+  height: 98px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker {
+  white-space: nowrap;
+  position: absolute;
+  will-change: transform;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(246, 193, 75, .22);
+}
+
+.seller {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 245px;
+  height: 102px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.seller-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* --- SHIMMER GOLD TEXT ANIMATION --- */
+@keyframes shimmerText {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.seller-name {
+  font-size: 68px; /* Slightly larger for the new luxury font */
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: -5px;
+  
+  /* The Shimmer Effect */
+  background: linear-gradient(
+    to right, 
+    #BF953F 20%, 
+    #FCF6BA 40%, 
+    #b38728 60%, 
+    #FBF5B7 80%,
+    #BF953F 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerText 5s linear infinite;
+  
+  /* Drop shadow still works behind the clipped background */
+  filter: drop-shadow(0 4px 12px rgba(255, 215, 0, 0.4));
+}
+
+.seller-subtitle {
+  width: 80%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.sub-text {
+  display: inline-block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #f4d78e;
+  animation: scrollText 12s linear infinite;
+  text-shadow: 0 0 8px rgba(246, 193, 75, 0.3);
+}
+
+.main-title {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 365px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  padding: 0 26px;
+  font-size: 38px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--text);
+  text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+}
+
+/* Animated glowing frame — sits on top of the camera feed */
+.camera-frame {
+  position: absolute;
+  left: 35px;
+  top: 490px;
+  width: 640px;
+  height: 700px;
+  border-radius: 28px;
+  pointer-events: none;
+  z-index: 2;
+
+  /* 2px gradient gold border — transparent inside */
+  border: 2px solid transparent;
+  background:
+    transparent padding-box,
+    linear-gradient(135deg,
+      rgba(212,175,55,0.5),
+      rgba(248,231,160,0.85),
+      rgba(212,175,55,0.5),
+      rgba(184,150,46,0.6),
+      rgba(248,231,160,0.85),
+      rgba(212,175,55,0.5)
+    ) border-box;
+
+  /* Very soft ambient glow — not bright, just present */
+  box-shadow: 0 0 8px rgba(212,175,55,0.12), 0 0 22px rgba(212,175,55,0.06);
+}
+
+/* Shimmer sweep — a soft highlight that travels along the border */
+@property --shimmerPos {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes cameraShimmer {
+  0%   { --shimmerPos: 0deg; }
+  100% { --shimmerPos: 360deg; }
+}
+
+.camera-frame::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 30px;
+  padding: 2px;
+  background: conic-gradient(from var(--shimmerPos),
+    transparent 0%,
+    transparent 72%,
+    rgba(255, 248, 200, 0.08) 80%,
+    rgba(248, 231, 160, 0.55) 88%,
+    rgba(255, 255, 230, 0.75) 92%,
+    rgba(248, 231, 160, 0.55) 96%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: cameraShimmer 4s linear infinite;
+}
+
+/* --- Glitter Rain --- */
+.glitter-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.glitter {
+  position: absolute;
+  top: -12px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: glitterFall var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes glitterFall {
+  0%   { transform: translateY(0)      rotate(0deg)   scale(0.6); opacity: 0; }
+  10%  { opacity: var(--op); }
+  85%  { opacity: var(--op); }
+  100% { transform: translateY(1950px) rotate(360deg) scale(1);   opacity: 0; }
+}
+
+.camera-window {
+  position: absolute;
+  left: 35px;
+  top: 490px;
+  width: 640px;
+  height: 700px;
+  border-radius: 28px;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.camera-window #productVideo,
+.camera-window #productImage {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 28px;
+  animation: mediaPopIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mediaPopIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.product-video-frame {
+  position: absolute;
+  right: 35px;
+  top: 500px;
+  width: 350px;
+  height: 410px;
+  border-radius: 26px;
+  padding: 10px;
+}
+
+.video-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, .1);
+  box-shadow: inset 0 0 0 2px rgba(246, 193, 75, .35);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.frame-title {
+  margin-top: 12px;
+  background: rgba(20, 10, 25, .66);
+  padding: 8px 14px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.notes {
+  position: absolute;
+  right: 35px;
+  top: 925px;
+  width: 350px;
+  height: 265px;
+  padding: 20px;
+}
+
+.notes-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.note-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 24px;
+}
+
+.free-notes {
+  display: none;
+  white-space: pre-wrap;
+  font-size: 22px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #fff;
+  max-height: 150px;
+  overflow: hidden;
+}
+
+.label {
+  color: #f0d38e;
+  font-weight: 700;
+  display: inline-block;
+  min-width: 64px;
+}
+
+.note-list span:last-child {
+  color: #fff;
+  font-weight: 800;
+}
+
+.retail {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--gold);
+}
+
+.company-stats {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 1218px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#statLine {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--gold);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(255, 234, 0, 0.25);
+}
+
+.promo-row {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 1332px;
+  height: 140px;
+  display: flex;
+  gap: 24px;
+}
+
+.promo-card,
+.bid-card {
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(92, 32, 118, .6), rgba(38, 12, 49, .5));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05); /* Faint gold inner shadow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.promo-card {
+  flex: 1.15;
+  flex-direction: column;
+}
+
+.bid-card {
+  flex: .85;
+  background: linear-gradient(180deg, rgba(255, 206, 72, .98), rgba(217, 146, 29, .96));
+  color: #17110c;
+}
+
+.promo-main {
+  font-size: 72px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  line-height: 1;
+  padding-bottom: 8px; /* Room for drop shadow */
+  
+  /* The Shimmer Effect */
+  background: linear-gradient(
+    to right, 
+    #BF953F 20%, 
+    #FCF6BA 40%, 
+    #b38728 60%, 
+    #FBF5B7 80%,
+    #BF953F 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmerText 5s linear infinite reverse; /* Reverse sweep */
+  
+  filter: drop-shadow(0 4px 18px rgba(255, 215, 0, 0.3));
+}
+
+.promo-sub {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.bid-main {
+  font-size: 56px;
+  font-weight: 1000;
+}
+
+.bid-count,
+.cta-count {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  min-width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #d7263d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.stats {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 1495px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #f4d78e;
+}
+
+.chat {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  top: 1585px;
+  height: 205px;
+  padding: 18px 24px;
+}
+
+.chat-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  max-width: 62%;
+}
+
+.chat-lines .user {
+  color: white;
+  font-weight: 900;
+}
+
+.chat-lines .msg {
+  color: #f1e9d7;
+  font-weight: 500;
+}
+
+.audio-wave {
+  position: absolute;
+  right: 28px;
+  bottom: 25px;
+  width: 280px;
+  height: 86px;
+  opacity: .7;
+  background:
+    linear-gradient(to top, transparent 35%, rgba(255, 255, 255, .08) 35%, rgba(255, 255, 255, .08) 65%, transparent 65%),
+    repeating-linear-gradient(90deg,
+      rgba(255, 255, 255, .18) 0px, rgba(255, 255, 255, .18) 8px,
+      transparent 8px, transparent 18px);
+  clip-path: polygon(0 55%, 5% 50%, 10% 68%, 15% 30%, 20% 80%, 25% 35%, 30% 55%, 35% 20%, 40% 72%, 45% 38%, 50% 60%, 55% 22%, 60% 78%, 65% 35%, 70% 58%, 75% 24%, 80% 65%, 85% 40%, 90% 72%, 95% 52%, 100% 58%, 100% 100%, 0 100%);
+}
+
+.bottom-bar {
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  bottom: 35px;
+  height: 96px;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.likes,
+.input,
+.cta {
+  height: 96px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(23, 13, 30, .6), rgba(42, 17, 49, .5));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+}
+
+.likes {
+  width: 170px;
+  padding: 0 20px;
+  font-size: 28px;
+  font-weight: 900;
+  gap: 10px;
+}
+
+.heart {
+  color: #ff3d67;
+  font-size: 40px;
+}
+
+.input {
+  flex: 1;
+  padding: 0 28px;
+  font-size: 24px;
+  color: #c8bccd;
+}
+
+.cta {
+  width: 330px;
+  justify-content: center;
+  position: relative;
+  color: #1b140b;
+  background: linear-gradient(180deg, rgba(255, 206, 72, .98), rgba(217, 146, 29, .96));
+  font-size: 52px;
+  font-weight: 1000;
+}
+
+#ctaText {
+  transform: translateY(-1px);
+}
+
+/* --- Jumping Fading Stars --- */
+.stars-container {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  height: 600px; /* Covers the area below the shipping button */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background-color: rgba(255, 234, 0, 0.4);
+  /* Carve out a 4-pointed star/sparkle shape */
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  /* Use filter instead of box shadow so the glow follows the carved shape */
+  filter: drop-shadow(0 0 2px rgba(255, 234, 0, 0.15));
+  animation: jumpFade var(--duration) ease-in-out forwards;
+}
+
+@keyframes jumpFade {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  25% { opacity: 0.2; }
+  50% { transform: translateY(-10px) scale(1); opacity: 0.4; }
+  75% { opacity: 0.15; }
+  100% { transform: translateY(-15px) scale(0.5); opacity: 0; }
+}

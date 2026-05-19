@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1020" />
+  <title>Luxury Perfume Overlay – YNFDeals 1020×1920</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════
+       RESET & CANVAS
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width:  1020px;
+      height: 1920px;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    #overlay {
+      position: relative;
+      width:  1020px;
+      height: 1920px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
+       CSS CUSTOM PROPERTY ANIMATION (sweep)
+    ═══════════════════════════════════════════ */
+    @property --ang {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    /* ═══════════════════════════════════════════
+       KEYFRAMES
+    ═══════════════════════════════════════════ */
+    @keyframes sweepSpin  { to { --ang: 360deg; } }
+    @keyframes sweepSpinR { to { --ang: -360deg; } }
+
+    @keyframes goldGlow {
+      0%, 100% {
+        box-shadow:
+          0 0  8px rgba(212,175,55,0.22),
+          0 0 22px rgba(212,175,55,0.10),
+          inset 0 0 10px rgba(212,175,55,0.04);
+      }
+      50% {
+        box-shadow:
+          0 0 16px rgba(248,231,160,0.50),
+          0 0 40px rgba(212,175,55,0.20),
+          inset 0 0 20px rgba(212,175,55,0.08);
+      }
+    }
+
+    @keyframes pinkGlow {
+      0%, 100% {
+        box-shadow:
+          0 0  8px rgba(255,180,200,0.20),
+          0 0 22px rgba(255,140,180,0.10),
+          inset 0 0 10px rgba(255,180,200,0.04);
+      }
+      50% {
+        box-shadow:
+          0 0 16px rgba(255,200,220,0.50),
+          0 0 40px rgba(255,140,180,0.25),
+          inset 0 0 20px rgba(255,180,200,0.08);
+      }
+    }
+
+    @keyframes tickerMove {
+      0%   { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes glitterFall {
+      0%   { transform: translateY(-10px) rotate(0deg)   scale(0.5); opacity: 0; }
+      8%   { opacity: var(--op); }
+      88%  { opacity: var(--op); }
+      100% { transform: translateY(1950px)  rotate(540deg) scale(1);   opacity: 0; }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: -400px center; }
+      100% { background-position: 600px center; }
+    }
+
+    /* ═══════════════════════════════════════════
+       SHARED NEON BOX
+    ═══════════════════════════════════════════ */
+    .neon-box {
+      position: absolute;
+      border-radius: 18px;
+      /* Gold gradient border via background-clip trick */
+      border: 2.5px solid transparent;
+      background:
+        rgba(0,0,0,0.0) padding-box,
+        linear-gradient(135deg,
+          rgba(212,175,55,0.55),
+          rgba(248,231,160,0.90),
+          rgba(255,248,220,0.80),
+          rgba(212,175,55,0.50),
+          rgba(184,150,46,0.65),
+          rgba(248,231,160,0.90),
+          rgba(212,175,55,0.55)
+        ) border-box;
+      animation: goldGlow 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Rotating sweep shimmer on border */
+    .neon-box::before {
+      content: "";
+      position: absolute;
+      inset: -3.5px;
+      border-radius: 21px;
+      background: conic-gradient(from var(--ang),
+        transparent 0%,
+        transparent 68%,
+        rgba(255,248,200,0.06) 76%,
+        rgba(248,231,160,0.45) 84%,
+        rgba(255,255,240,0.75) 90%,
+        rgba(248,231,160,0.45) 95%,
+        transparent 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: sweepSpin 5s linear infinite;
+    }
+
+    /* ── Pink variant for notes ── */
+    .neon-box.pink {
+      background:
+        rgba(0,0,0,0.0) padding-box,
+        linear-gradient(135deg,
+          rgba(255,140,180,0.45),
+          rgba(255,210,230,0.85),
+          rgba(255,240,248,0.75),
+          rgba(255,140,180,0.40),
+          rgba(220,100,150,0.60),
+          rgba(255,210,230,0.85),
+          rgba(255,140,180,0.45)
+        ) border-box;
+      animation: pinkGlow 4s ease-in-out infinite;
+    }
+    .neon-box.pink::before {
+      background: conic-gradient(from var(--ang),
+        transparent 0%,
+        transparent 68%,
+        rgba(255,200,220,0.06) 76%,
+        rgba(255,180,210,0.45) 84%,
+        rgba(255,240,250,0.75) 90%,
+        rgba(255,180,210,0.45) 95%,
+        transparent 100%
+      );
+      animation: sweepSpinR 5s linear infinite;
+    }
+
+    /* ═══════════════════════════════════════════
+       🔝 TICKER STRIP  (top, full-width)
+    ═══════════════════════════════════════════ */
+    .ticker-wrap {
+      position: absolute;
+      left: 20px;
+      top: 18px;
+      width: 980px;
+      height: 56px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      /* Separate border — not using neon-box here so we can have a solid bg strip */
+      border: 2px solid transparent;
+      border-radius: 14px;
+      background:
+        rgba(0,0,0,0.40) padding-box,
+        linear-gradient(90deg,
+          rgba(212,175,55,0.55),
+          rgba(248,231,160,0.85),
+          rgba(212,175,55,0.55)
+        ) border-box;
+      box-shadow:
+        0 0 12px rgba(212,175,55,0.18),
+        0 0 30px rgba(212,175,55,0.08);
+      animation: goldGlow 5s ease-in-out infinite;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .ticker-text {
+      display: inline-block;
+      white-space: nowrap;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #f8e7a0;
+      text-shadow: 0 0 14px rgba(212,175,55,0.50), 0 0 4px rgba(255,255,200,0.30);
+      animation: tickerMove 22s linear infinite;
+      padding-left: 20px;
+    }
+
+    /* ═══════════════════════════════════════════
+       🎥 WEBCAM FRAME  (top-left square)
+    ═══════════════════════════════════════════ */
+    .webcam-frame {
+      left: 20px;
+      top: 94px;
+      width: 304px;
+      height: 304px;
+      border-radius: 20px;
+    }
+    .webcam-frame::before {
+      animation: sweepSpin 4s linear infinite;
+    }
+
+    /* Label inside webcam */
+    .webcam-label {
+      position: absolute;
+      left:  20px;
+      top:   374px;   /* just below webcam box */
+      width: 304px;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: 2px;
+      color: rgba(248,231,160,0.55);
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════════
+       🧴 PRODUCT CAMERA FRAME  (main center area)
+    ═══════════════════════════════════════════ */
+    .product-frame {
+      left: 20px;
+      top:  420px;
+      width: 980px;
+      height: 1100px;
+      border-radius: 24px;
+      border-width: 3px;
+    }
+    .product-frame::before {
+      inset: -4.5px;
+      border-radius: 27px;
+      animation: sweepSpin 7s linear infinite;
+    }
+
+    /* Elegant corner ornaments */
+    .corner {
+      position: absolute;
+      width:  22px;
+      height: 22px;
+      z-index: 15;
+      pointer-events: none;
+    }
+    .corner svg { width: 100%; height: 100%; }
+
+    /* Corners positioned around product frame */
+    .c-tl { left: 18px;  top:  418px; }
+    .c-tr { left: 980px; top:  418px; }
+    .c-bl { left: 18px;  top: 1492px; }
+    .c-br { left: 980px; top: 1492px; }
+
+    /* ─── PRODUCT LABEL (inside product frame, bottom) ─── */
+    .product-label {
+      position: absolute;
+      left:  20px;
+      top:   1500px;  /* just below product frame */
+      width: 980px;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-style: italic;
+      letter-spacing: 3px;
+      color: rgba(248,231,160,0.50);
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════════
+       📝 NOTES BOX  (bottom-right)
+    ═══════════════════════════════════════════ */
+    .notes-frame {
+      right: 20px;
+      top:   1540px;
+      width: 340px;
+      height: 340px;
+      border-radius: 18px;
+    }
+    .notes-frame::before {
+      animation: sweepSpinR 4.5s linear infinite;
+    }
+
+    /* Notes content layer (sits above the frame border) */
+    .notes-content {
+      position: absolute;
+      right: 20px;
+      top:   1540px;
+      width: 340px;
+      height: 340px;
+      border-radius: 18px;
+      padding: 22px 20px;
+      z-index: 12;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notes-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-style: italic;
+      color: rgba(248,231,160,0.85);
+      letter-spacing: 1.5px;
+      border-bottom: 1px solid rgba(212,175,55,0.30);
+      padding-bottom: 8px;
+      margin-bottom: 2px;
+    }
+
+    .note-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-size: 15px;
+      color: #f0daa0;
+    }
+
+    .note-icon {
+      font-size: 13px;
+      color: rgba(212,175,55,0.80);
+      flex-shrink: 0;
+    }
+
+    .note-val {
+      font-weight: 700;
+      color: #fff8e0;
+      text-shadow: 0 0 8px rgba(212,175,55,0.30);
+      font-size: 15px;
+    }
+
+    .note-label {
+      font-size: 12px;
+      color: rgba(248,231,160,0.55);
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .divider-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent);
+      margin: 4px 0;
+    }
+
+    .notes-free {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,230,180,0.90);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════
+       CORNER JEWELS (webcam corners)
+    ═══════════════════════════════════════════ */
+    .jewel {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      z-index: 16;
+      background: radial-gradient(circle, #fff8d0 0%, #d4af37 55%, #8a6000 100%);
+      box-shadow:
+        0 0 6px rgba(212,175,55,1.0),
+        0 0 12px rgba(212,175,55,0.55),
+        0 0 2px rgba(255,255,220,0.90);
+      pointer-events: none;
+    }
+    /* Webcam jewels */
+    .j-webcam-tl { left:  16px;  top:  90px;  }
+    .j-webcam-tr { left: 320px; top:  90px;  }
+    .j-webcam-bl { left:  16px;  top: 394px; }
+    .j-webcam-br { left: 320px; top: 394px; }
+
+    /* Product frame jewels */
+    .j-prod-tl { left:  16px;  top: 416px; }
+    .j-prod-tr { left: 997px; top: 416px; }
+    .j-prod-bl { left:  16px;  top: 1516px; }
+    .j-prod-br { left: 997px; top: 1516px; }
+
+    /* ═══════════════════════════════════════════
+       VIGNETTE  (depth / mobile edge fade)
+    ═══════════════════════════════════════════ */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(
+        ellipse 85% 85% at 50% 50%,
+        transparent 55%,
+        rgba(0,0,0,0.28) 100%
+      );
+    }
+
+    /* ═══════════════════════════════════════════
+       GLITTER PARTICLES
+    ═══════════════════════════════════════════ */
+    .glitter-container {
+      position: absolute;
+      inset: 0;
+      z-index: 18;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .glitter {
+      position: absolute;
+      top: -10px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: glitterFall var(--dur) linear var(--delay) infinite;
+    }
+
+    /* ═══════════════════════════════════════════
+       BOTTOM SHIMMER BAR (safe zone indicator)
+    ═══════════════════════════════════════════ */
+    .bottom-bar {
+      position: absolute;
+      left: 20px;
+      top: 1895px;
+      width: 980px;
+      height: 3px;
+      border-radius: 2px;
+      z-index: 20;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(212,175,55,0.40),
+        rgba(248,231,160,0.75),
+        rgba(212,175,55,0.40),
+        transparent
+      );
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+
+    <!-- ─── Vignette ─── -->
+    <div class="vignette"></div>
+
+    <!-- ─── TOP TICKER ─── -->
+    <div class="ticker-wrap" id="tickerWrap">
+      <span class="ticker-text" id="tickerText">
+        ✦ &nbsp; Shipping bundle at $9 &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Follow for exclusive drops &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Like &amp; share for giveaway entry &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; New arrivals every week &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Fast same-day shipping &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Shipping bundle at $9 &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Follow for exclusive drops &nbsp;&nbsp;&nbsp;
+        ✦ &nbsp; Like &amp; share for giveaway entry &nbsp;&nbsp;&nbsp;
+      </span>
+    </div>
+
+    <!-- ─── WEBCAM FRAME (top-left, square, OBS source behind) ─── -->
+    <div class="neon-box webcam-frame"></div>
+    <!-- Corner jewels -->
+    <div class="jewel j-webcam-tl"></div>
+    <div class="jewel j-webcam-tr"></div>
+    <div class="jewel j-webcam-bl"></div>
+    <div class="jewel j-webcam-br"></div>
+    <div class="webcam-label">Live Cam ✦</div>
+
+    <!-- ─── PRODUCT CAMERA FRAME (center, largest) ─── -->
+    <div class="neon-box product-frame"></div>
+    <!-- Corner jewels -->
+    <div class="jewel j-prod-tl"></div>
+    <div class="jewel j-prod-tr"></div>
+    <div class="jewel j-prod-bl"></div>
+    <div class="jewel j-prod-br"></div>
+    <div class="product-label">✦ &nbsp; Product Display &nbsp; ✦</div>
+
+    <!-- ─── NOTES BOX (bottom-right) ─── -->
+    <div class="neon-box pink notes-frame"></div>
+    <!-- Notes content (rendered above border) -->
+    <div class="notes-content" id="notesContent">
+      <div class="notes-title" id="notesTitle">Today's Picks ✦</div>
+      <div class="note-row">
+        <span class="note-icon">◈</span>
+        <span class="note-val" id="note1">$18</span>
+        <span class="note-label" id="note1label">Starting bid</span>
+      </div>
+      <div class="note-row">
+        <span class="note-icon">◈</span>
+        <span class="note-val" id="note2">$9</span>
+        <span class="note-label" id="note2label">Bundle shipping</span>
+      </div>
+      <div class="divider-line"></div>
+      <div class="note-row">
+        <span class="note-icon">◈</span>
+        <span class="note-val" id="note3">3 for $45</span>
+        <span class="note-label" id="note3label">Bundle deal</span>
+      </div>
+      <div class="divider-line"></div>
+      <div class="notes-free" id="notesFree">🎁 Free gift over $60</div>
+    </div>
+
+    <!-- ─── BOTTOM SHIMMER BAR ─── -->
+    <div class="bottom-bar"></div>
+
+    <!-- ─── GLITTER PARTICLES ─── -->
+    <div class="glitter-container" id="glitterContainer"></div>
+
+  </div>
+
+  <script>
+  /* ─────────────────────────────────────────────
+     URL PARAM OVERRIDES
+     Usage: overlay3.html?ticker=YOUR+TEXT&note1=25&note1label=Opening+bid
+  ───────────────────────────────────────────── */
+  (function applyParams() {
+    const p = new URLSearchParams(location.search);
+
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val) el.textContent = val;
+    };
+
+    // Ticker — supports multiple ?ticker= params joined with separators
+    if (p.has('ticker')) {
+      const parts = p.getAll('ticker');
+      const joined = parts.map(t => `✦ &nbsp; ${t} &nbsp;&nbsp;&nbsp;`).join('');
+      document.getElementById('tickerText').innerHTML = joined.repeat(3);
+    }
+
+    set('notesTitle',  p.get('title'));
+    set('note1',       p.get('note1'));
+    set('note1label',  p.get('note1label'));
+    set('note2',       p.get('note2'));
+    set('note2label',  p.get('note2label'));
+    set('note3',       p.get('note3'));
+    set('note3label',  p.get('note3label'));
+    set('notesFree',   p.get('extra'));
+  })();
+
+  /* ─────────────────────────────────────────────
+     GLITTER PARTICLES
+  ───────────────────────────────────────────── */
+  (function spawnGlitter() {
+    const container = document.getElementById('glitterContainer');
+    const colors = [
+      'rgba(212,175,55,OP)',
+      'rgba(255,255,200,OP)',
+      'rgba(248,231,160,OP)',
+      'rgba(184,150,46,OP)',
+      'rgba(255,248,220,OP)',
+      'rgba(255,210,230,OP)',   // soft pink
+      'rgba(255,180,200,OP)',
+    ];
+
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'glitter';
+      const size  = 1.5 + Math.random() * 4;
+      const op    = 0.10 + Math.random() * 0.30;
+      const color = colors[Math.floor(Math.random() * colors.length)]
+                      .replace('OP', op.toFixed(2));
+      el.style.cssText =
+        `left:${Math.random() * 1020}px;` +
+        `width:${size}px;height:${size}px;` +
+        `background:${color};` +
+        `box-shadow:0 0 ${size + 1}px ${color};` +
+        `--dur:${8 + Math.random() * 12}s;` +
+        `--delay:-${Math.random() * 15}s;` +
+        `--op:${op};`;
+      container.appendChild(el);
+    }
+  })();
+  </script>
+</body>
+</html>
