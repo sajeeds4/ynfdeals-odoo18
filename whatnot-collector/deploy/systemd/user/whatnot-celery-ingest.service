@@ -1,0 +1,20 @@
+[Unit]
+Description=Whatnot Celery Worker - ingest support
+After=network.target whatnot-redis.service
+Wants=whatnot-redis.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/cybertechna/AethrixSystems_Portable/hjay9672-WN /whatnot-collector
+Environment=REDIS_ENABLED=1
+Environment=REDIS_URL=redis://127.0.0.1:6379/0
+Environment=CELERY_BROKER_URL=redis://127.0.0.1:6379/0
+Environment=CELERY_RESULT_BACKEND=redis://127.0.0.1:6379/0
+ExecStart=/bin/bash -lc 'exec ".venv/bin/celery" -A app.workers.celery_app.celery_app worker --loglevel=INFO -Q ingest_support -n whatnot-ingest@%H --concurrency=1'
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/cybertechna/AethrixSystems_Portable/hjay9672-WN /whatnot-collector/data/celery_ingest.log
+StandardError=append:/home/cybertechna/AethrixSystems_Portable/hjay9672-WN /whatnot-collector/data/celery_ingest.log
+
+[Install]
+WantedBy=default.target

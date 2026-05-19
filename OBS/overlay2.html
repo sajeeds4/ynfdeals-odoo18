@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Luxury Perfume Livestream Overlay – 1080×1920</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: transparent;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    #overlay {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MAIN BORDER — full canvas edge neon frame
+    ═══════════════════════════════════════════════════════════ */
+    .main-border {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px;
+      height: 1920px;
+      border: 6px solid;
+      border-image: linear-gradient(
+        180deg,
+        #ff006e 0%,
+        #ff6b00 15%,
+        #d4af37 30%,
+        #00e5ff 50%,
+        #d4af37 70%,
+        #ff006e 85%,
+        #8b00ff 100%
+      ) 1;
+      z-index: 10;
+      pointer-events: none;
+      animation: borderPulse 3s ease-in-out infinite;
+      display: none;
+    }
+
+    @keyframes borderPulse {
+      0%, 100% {
+        box-shadow:
+          inset 0 0 15px rgba(255,0,110,0.3),
+          inset 0 0 30px rgba(0,229,255,0.1),
+          0 0 15px rgba(255,0,110,0.4),
+          0 0 30px rgba(212,175,55,0.2),
+          0 0 60px rgba(0,229,255,0.1);
+      }
+      50% {
+        box-shadow:
+          inset 0 0 25px rgba(0,229,255,0.4),
+          inset 0 0 50px rgba(255,0,110,0.15),
+          0 0 20px rgba(0,229,255,0.5),
+          0 0 45px rgba(212,175,55,0.3),
+          0 0 80px rgba(139,0,255,0.15);
+      }
+    }
+
+    /* Webcam frame hidden for this live stream */
+    .webcam-frame {
+      display: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       PRODUCT INFO — floating text, no box
+    ═══════════════════════════════════════════════════════════ */
+    .notes-frame {
+      position: absolute;
+      right: 96px;
+      top: 286px;
+      width: 186px;
+      min-height: 500px;
+      max-height: 720px;
+      z-index: 11;
+      pointer-events: none;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px 12px 16px;
+      background: linear-gradient(180deg, rgba(8,10,14,0.74), rgba(8,10,14,0.44));
+      border: 1px solid rgba(248,231,160,0.22);
+      border-radius: 22px;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .notes-frame.active {
+      display: flex;
+      animation: fadeInProduct 0.5s ease-out;
+    }
+
+    @keyframes fadeInProduct {
+      0%   { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .notes-name {
+      font-size: clamp(17px, 1.45vw, 24px);
+      font-weight: 900;
+      color: #ffffff;
+      -webkit-text-stroke: 1px rgba(0, 0, 0, 0.95);
+      display: block;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      text-align: left;
+      line-height: 1.08;
+      text-shadow:
+        0 2px 8px rgba(0,0,0,0.98),
+        0 3px 0 rgba(0,0,0,0.65),
+        0 0 10px rgba(0,0,0,0.8),
+        0 0 12px rgba(212,175,55,0.45),
+        0 0 24px rgba(248,231,160,0.28);
+    }
+
+    .notes-price {
+      font-size: clamp(28px, 2.5vw, 44px);
+      font-weight: 900;
+      color: #7df9ff;
+      -webkit-text-stroke: 1px rgba(0, 0, 0, 0.95);
+      display: block;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      text-shadow:
+        0 2px 10px rgba(0,0,0,0.96),
+        0 3px 0 rgba(0,0,0,0.68),
+        0 0 12px rgba(0,0,0,0.8),
+        0 0 14px rgba(212,175,55,0.42),
+        0 0 24px rgba(0,229,255,0.55),
+        0 0 38px rgba(248,231,160,0.24);
+      text-align: left;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(0.3);
+      transition: none;
+    }
+
+    .notes-price.reveal {
+      animation: priceReveal 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+
+    @keyframes priceReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+        text-shadow: 0 0 0 transparent;
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.25);
+        text-shadow: 0 0 40px #00e5ff, 0 0 80px rgba(0,229,255,0.6), 0 0 120px rgba(255,0,110,0.3);
+        color: #fff;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 15px rgba(0,229,255,0.6), 0 0 30px rgba(0,229,255,0.3);
+        color: #00e5ff;
+      }
+    }
+
+    .notes-divider {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(248,231,160,0.05), rgba(248,231,160,0.9), rgba(0,229,255,0.15));
+    }
+
+    .notes-label {
+      font-size: clamp(11px, 0.9vw, 14px);
+      font-weight: 900;
+      color: #ffe9a6;
+      -webkit-text-stroke: 0.7px rgba(0, 0, 0, 0.95);
+      display: block;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      text-shadow:
+        0 2px 8px rgba(0,0,0,0.96),
+        0 2px 0 rgba(0,0,0,0.65),
+        0 0 10px rgba(0,0,0,0.75),
+        0 0 12px rgba(212,175,55,0.45),
+        0 0 20px rgba(248,231,160,0.18);
+    }
+
+    .notes-value {
+      font-size: clamp(15px, 1.15vw, 20px);
+      font-weight: 800;
+      color: #ffffff;
+      -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.95);
+      display: block;
+      width: 100%;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      line-height: 1.16;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      text-shadow:
+        0 2px 9px rgba(0,0,0,0.97),
+        0 2px 0 rgba(0,0,0,0.66),
+        0 0 12px rgba(0,0,0,0.82),
+        0 0 10px rgba(212,175,55,0.28),
+        0 0 18px rgba(248,231,160,0.16);
+    }
+
+    .notes-section {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notes-section.compact {
+      gap: 2px;
+    }
+
+
+
+    /* ═══════════════════════════════════════════════════════════
+       TICKER STRIP — top edge
+    ═══════════════════════════════════════════════════════════ */
+    .ticker-strip {
+      position: absolute;
+      left: 6px;
+      top: 208px;
+      width: 1068px;
+      height: 65px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 15;
+      pointer-events: none;
+    }
+
+    .ticker-msg {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #f8e7a0;
+      text-shadow: 0 0 10px rgba(212,175,55,0.5), 0 0 20px rgba(255,0,110,0.2);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+
+    .ticker-msg.active {
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       VIGNETTE
+    ═══════════════════════════════════════════════════════════ */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      display: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       GLITTER
+    ═══════════════════════════════════════════════════════════ */
+    .glitter-container {
+      position: absolute;
+      inset: 0;
+      z-index: 14;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .glitter {
+      position: absolute;
+      top: -10px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: glitterFall var(--dur) linear var(--delay) infinite;
+    }
+    @keyframes glitterFall {
+      0%   { transform: translateY(0)      rotate(0deg)   scale(0.5); opacity: 0; }
+      10%  { opacity: var(--op); }
+      85%  { opacity: var(--op); }
+      100% { transform: translateY(1950px) rotate(360deg) scale(1);   opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+
+    <!-- Vignette -->
+    <div class="vignette"></div>
+
+    <!-- Main canvas neon border -->
+    <div class="main-border"></div>
+
+    <!-- Ticker -->
+    <div class="ticker-strip" id="tickerStrip">
+      <span class="ticker-msg active">✦ &lt;1 Day Shipping Time</span>
+      <span class="ticker-msg">✦ 100% Authentic Guaranteed</span>
+      <span class="ticker-msg">✦ Like &amp; Bookmark our Future Shows!</span>
+      <span class="ticker-msg">✦ Check notes for what we have!</span>
+    </div>
+
+    <!-- Webcam PIP Frame (pink neon) -->
+    <div class="webcam-frame"></div>
+
+    <!-- Notes Frame (cyan neon) — live product data -->
+    <div class="notes-frame" id="notesFrame">
+      <div class="notes-name" id="prodName"></div>
+      <div class="notes-divider"></div>
+      <div class="notes-section">
+        <div class="notes-label">Top Notes</div>
+        <div class="notes-value" id="noteTop"></div>
+      </div>
+      <div class="notes-section">
+        <div class="notes-label">Middle Notes</div>
+        <div class="notes-value" id="noteMid"></div>
+      </div>
+      <div class="notes-section">
+        <div class="notes-label">Base Notes</div>
+        <div class="notes-value" id="noteBase"></div>
+      </div>
+    </div>
+
+    <!-- Glitter -->
+    <div class="glitter-container" id="glitterContainer"></div>
+
+  </div>
+
+  <script>
+  // ── Poll server for current scanned product ──
+  const API_BASE = (() => {
+    const origin = window.location.origin || '';
+    if (/^https?:\/\/[^/]+:8088$/i.test(origin)) return origin;
+    return 'http://127.0.0.1:8088';
+  })();
+  let lastProductName = null;
+
+  function fitTextBlock(el, maxPx, minPx) {
+    if (!el) return;
+    let size = maxPx;
+    el.style.fontSize = size + 'px';
+    while (size > minPx && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)) {
+      size -= 1;
+      el.style.fontSize = size + 'px';
+    }
+  }
+
+  function fitNotesPanel() {
+    const frame = document.getElementById('notesFrame');
+    if (!frame.classList.contains('active')) return;
+
+    const nameEl = document.getElementById('prodName');
+    const noteEls = [document.getElementById('noteTop'), document.getElementById('noteMid'), document.getElementById('noteBase')];
+
+    nameEl.style.fontSize = '';
+    noteEls.forEach((el) => { el.style.fontSize = ''; });
+
+    fitTextBlock(nameEl, 24, 15);
+    noteEls.forEach((el) => fitTextBlock(el, 20, 12));
+
+    while (frame.scrollHeight > frame.clientHeight) {
+      let changed = false;
+      [nameEl, ...noteEls].forEach((el) => {
+        if (!el || el.style.display === 'none') return;
+        const current = parseFloat(window.getComputedStyle(el).fontSize);
+        const floor = el === nameEl ? 15 : 12;
+        if (current > floor) {
+          el.style.fontSize = (current - 1) + 'px';
+          changed = true;
+        }
+      });
+      if (!changed) break;
+    }
+  }
+
+  async function pollProduct() {
+    try {
+      const res = await fetch(API_BASE + '/api/obs/current?_ts=' + Date.now(), { cache: 'no-store' });
+      const data = await res.json();
+      const frame = document.getElementById('notesFrame');
+
+      if (data.active && data.product) {
+        const p = data.product;
+        let name = p.name || '';
+        name = name.replace(/^\[.*?\]\s*/, '');
+
+        const isNewProduct = (name !== lastProductName);
+
+        document.getElementById('prodName').textContent = name;
+        document.getElementById('noteTop').textContent = p.note_top || '—';
+        document.getElementById('noteMid').textContent = p.note_mid || '—';
+        document.getElementById('noteBase').textContent = p.note_base || '—';
+
+        // Hide overlay for Generic Fragrance (fallback product)
+        if (name === 'Generic Fragrance') {
+          frame.classList.remove('active');
+          lastProductName = name;
+          return;
+        }
+
+        frame.classList.add('active');
+        fitNotesPanel();
+
+        if (isNewProduct) {
+          lastProductName = name;
+        }
+      } else {
+        frame.classList.remove('active');
+        lastProductName = null;
+      }
+    } catch(e) {
+      document.getElementById('notesFrame').classList.remove('active');
+      lastProductName = null;
+    }
+  }
+
+  // Sequential poll: fetch → wait → fetch. Prevents overlapping requests.
+  (async function loop() {
+    while (true) {
+      await pollProduct();
+      await new Promise(r => setTimeout(r, 200));
+    }
+  })();
+
+  window.addEventListener('resize', fitNotesPanel);
+  </script>
+
+  <script>
+  // ── Glitter init ──
+  (function() {
+    const container = document.getElementById('glitterContainer');
+    const colors = [
+      'rgba(255,0,110,VAL)', 'rgba(0,229,255,VAL)',
+      'rgba(212,175,55,VAL)', 'rgba(255,255,255,VAL)',
+      'rgba(139,0,255,VAL)', 'rgba(248,231,160,VAL)'
+    ];
+    for (let i = 0; i < 15; i++) {
+      const el = document.createElement('div');
+      el.className = 'glitter';
+      const size = 2 + Math.random() * 3.5;
+      const op = 0.15 + Math.random() * 0.4;
+      const c = colors[Math.floor(Math.random() * colors.length)].replace('VAL', op.toFixed(2));
+      el.style.cssText =
+        `left:${Math.random()*1080}px;width:${size}px;height:${size}px;` +
+        `background:${c};box-shadow:0 0 ${size+2}px ${c};` +
+        `--dur:${7+Math.random()*10}s;--delay:${Math.random()*12}s;--op:${op};`;
+      container.appendChild(el);
+    }
+  })();
+  </script>
+
+  <script>
+  // ── Ticker rotation ──
+  (function() {
+    const msgs = document.querySelectorAll('.ticker-msg');
+    let current = 0;
+    setInterval(() => {
+      msgs[current].classList.remove('active');
+      current = (current + 1) % msgs.length;
+      msgs[current].classList.add('active');
+    }, 4000);
+  })();
+  </script>
+</body>
+</html>

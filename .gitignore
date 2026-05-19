@@ -1,0 +1,41 @@
+data/
+whatnot-collector/data/
+whatnot-collector/.venv/
+whatnot-collector/.venv-excel/
+whatnot-collector/www.whatnot.com_cookies.json
+whatnot-collector/.env
+whatnot-collector/nohup_server.out
+whatnot-collector/tmp/
+whatnot-collector/dashboard-vite/node_modules/
+whatnot-collector/dashboard-vite/dist/
+__pycache__/
+*.pyc
+.codex
+.codex/
+.vscode/
+whatnot-collector/company_data.db
+whatnot-collector/build/
+whatnot-collector/src/*.egg-info/
+
+# Internal databases and runtime auth/session artifacts
+*.db
+*.sqlite
+*.sqlite3
+whatnot-collector/**/auth_users.json
+whatnot-collector/**/auth_sessions.json
+whatnot-collector/**/auth_audit.log
+
+# Local secrets, cookies, and ad-hoc server outputs
+*.env.local
+*.env.*.local
+*cookies*.json
+nohup.out
+*.log
+
+# Internal exports, uploads, and business documents
+whatnot-collector/exports/
+whatnot-collector/uploads/
+whatnot-collector/**/*.pdf
+whatnot-collector/**/*.csv
+whatnot-collector/**/*.xlsx
+whatnot-collector/**/*.xls

@@ -1,0 +1,17 @@
+[Unit]
+Description=Whatnot Global Barcode Scanner
+After=network.target
+
+[Service]
+Type=simple
+Environment=SCAN_API_URL=http://localhost:8088/api/scan
+Environment=SCAN_MIN_LEN=4
+Environment=SCAN_IDLE_FLUSH_MS=300
+# Optional: set a fixed device path, e.g. /dev/input/event6
+# Environment=SCANNER_DEVICE=/dev/input/event6
+ExecStart=/home/cybertechna/AethrixSystems_Portable/hjay9672-WN\x20/whatnot-collector/.venv/bin/python /home/cybertechna/AethrixSystems_Portable/hjay9672-WN\x20/whatnot-collector/scanner_daemon.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

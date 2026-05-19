@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OBS Whatnot Overlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="overlay">
+    <div class="frame"></div>
+    <div class="glitter-container" id="glitterContainer"></div>
+
+    <!-- topbar section removed as it's provided by Whatnot -->
+    <section class="ticker-wrap panel gold-line">
+      <div class="ticker" id="ticker"></div>
+    </section>
+
+    <section class="seller panel gold-line">
+      <div class="seller-content">
+        <div class="seller-name" id="sellerName">YNFDeals</div>
+        <div class="seller-subtitle">
+          <span class="sub-text">Follow Us! • Best Deals of the Day • Fast Shipping • New Arrivals</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-title panel gold-line">
+      <div id="productTitle"></div>
+    </section>
+
+    <!-- animated glow frame around the camera area -->
+    <div class="camera-frame"></div>
+
+    <!-- camera area — transparent by default, product media pops in on scan -->
+    <section class="camera-window">
+      <video id="productVideo" autoplay loop muted playsinline></video>
+      <img id="productImage" alt="" />
+    </section>
+
+    <!-- top-right product video frame (OBS media source goes behind this) -->
+    <section class="product-video-frame gold-line">
+      <div class="video-inner">
+        <div class="frame-title" id="productDisplayLabel">PRODUCT DISPLAY</div>
+      </div>
+    </section>
+
+    <section class="notes panel gold-line" id="notesPanel">
+      <div class="notes-title">Notes:</div>
+      <div class="note-list" id="notesList">
+        <div><span class="label">Top</span> <span id="topNote"></span></div>
+        <div><span class="label">Mid</span> <span id="midNote"></span></div>
+        <div><span class="label">Base</span> <span id="baseNote"></span></div>
+      </div>
+      <div class="free-notes" id="freeNotes"></div>
+      <div class="retail">Retail <span id="retailPrice"></span></div>
+      <div class="retail">Our Cost <span id="costPrice"></span></div>
+    </section>
+
+    <section class="company-stats panel gold-line" id="companyStats">
+      <span id="statLine">⭐ 16,000+ SALES &nbsp;•&nbsp; 4.9★ RATING &nbsp;•&nbsp; SAME DAY SHIPPING &nbsp;•&nbsp; $1 STARTS</span>
+    </section>
+
+    <!-- jumping stars container for the bottom area -->
+    <div id="stars-container" class="stars-container"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

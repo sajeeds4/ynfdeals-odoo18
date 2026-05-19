@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "odoo": {
+      "command": "uvx",
+      "args": ["mcp-server-odoo"],
+      "env": {
+        "ODOO_URL": "http://127.0.0.1:8072",
+        "ODOO_USER": "admin",
+        "ODOO_PASSWORD": "AdminTest!23",
+        "ODOO_DB": "ynf_odoo19",
+        "ODOO_YOLO": "true",
+        "ODOO_MCP_LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}

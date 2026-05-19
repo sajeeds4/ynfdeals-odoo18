@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -lt ~/Downloads/*.pdf)",
+      "Bash(ls -lt ~/Downloads/*.csv)",
+      "Bash(grep -o \"\"2222[^\"\"]*\"\" /home/cybertechna/.claude/projects/-home-cybertechna-AethrixSystems-Portable-hjay9672-WN-/6794674a-da8b-465c-a79d-af8225a8f071.jsonl)"
+    ]
+  }
+}
