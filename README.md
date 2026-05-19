@@ -25,8 +25,18 @@ The team typically runs the main app on:
 
 ## PostgreSQL Copy
 
-- Portable SQL copy committed for repository portability:
-	- `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql`
+- Lightweight SQL artifacts committed for repository portability:
+	- `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql` (placeholder)
+	- `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_schema.sql`
+	- `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_demo.sql`
 
 - Very large historical SQL archive (15 GB) is intentionally not committed due repository size constraints.
+
+## Post-Clone PostgreSQL Setup
+
+From `whatnot-collector`, run:
+
+- `./scripts/bootstrap_postgres_clone.sh`
+
+This is the supported one-command bootstrap for local Postgres after clone.
 

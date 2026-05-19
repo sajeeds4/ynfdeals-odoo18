@@ -50,17 +50,18 @@ The project is in a PostgreSQL-primary migration phase with sidecar and historic
 - Cutover control and domain toggles: `whatnot-collector/server/postgres_cutover.py`
 - Runtime diagnostics and database health: `whatnot-collector/app/services/database_status_service.py`
 
-## 5. PostgreSQL Copy Included In GitLab
+## 5. PostgreSQL Artifacts Included In GitLab
 
-Two SQL export artifacts exist in local storage:
+The repository now ships lightweight SQL artifacts (schema + demo values) instead of a larger data export.
 
 1. Large archive (not committed):
-   - `whatnot-collector/data/migration_backups/whatnot_sidecar_sqlite_mirror_before_postgres_enable_20260430_164807.sql`
-   - Size: about 15 GB
+  - `whatnot-collector/data/migration_backups/whatnot_sidecar_sqlite_mirror_before_postgres_enable_20260430_164807.sql`
+  - Size: about 15 GB
 
-2. Portable SQL copy (committed):
-   - `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql`
-   - Size: about 4.5 MB
+2. Lightweight committed artifacts:
+  - `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql` (placeholder)
+  - `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_schema.sql` (skeleton schema)
+  - `whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_demo.sql` (demo records)
 
 Reason the 15 GB file is not committed:
 
@@ -70,7 +71,7 @@ Recommended handling for the 15 GB backup:
 
 - Store in object storage or backup volume.
 - Track SHA256 and location in an internal runbook.
-- Keep the committed 4.5 MB SQL copy in git for portability.
+- Keep only lightweight schema/demo SQL in git for portability.
 
 ## 6. Local Setup
 
@@ -81,6 +82,22 @@ From repository root:
 3. `source .venv/bin/activate`
 4. `pip install -r requirements.txt`
 5. `cd dashboard-vite && npm install`
+
+### 6.1 Clone Bootstrap For Local PostgreSQL
+
+From `whatnot-collector`:
+
+1. `./scripts/bootstrap_postgres_clone.sh`
+
+What this does:
+
+- starts local PostgreSQL via `docker-compose.postgres.yml` on `127.0.0.1:5433`
+- updates local `.env` sidecar settings for local DSN
+- initializes required schema using `ensure_wave1_postgres_schema`
+
+Note:
+
+- true zero-action "auto-run on git clone" is not a Git feature; this script provides a one-command equivalent immediately after cloning.
 
 ## 7. Start Services
 

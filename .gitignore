@@ -1,5 +1,14 @@
 data/
 whatnot-collector/data/
+!whatnot-collector/data/
+whatnot-collector/data/*
+!whatnot-collector/data/strong_backups/
+whatnot-collector/data/strong_backups/*
+!whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/
+whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/*
+!whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql
+!whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_schema.sql
+!whatnot-collector/data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_demo.sql
 whatnot-collector/.venv/
 whatnot-collector/.venv-excel/
 whatnot-collector/www.whatnot.com_cookies.json

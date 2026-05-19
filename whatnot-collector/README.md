@@ -123,6 +123,23 @@ Playwright-based collector for Whatnot livestream auctions, plus a local dashboa
 - Run continuously:
   - `python -m server.sidecar_runner --postgres --redis`
 
+## One-Command Local PostgreSQL Bootstrap (After Clone)
+- Git itself does not execute code automatically on clone.
+- Use this one command from `whatnot-collector`:
+  - `./scripts/bootstrap_postgres_clone.sh`
+- What it does:
+  - starts local PostgreSQL on `127.0.0.1:5433` using `docker-compose.postgres.yml`
+  - updates local `.env` sidecar DSN for that local database
+  - initializes required schema via `ensure_wave1_postgres_schema`
+
+### Lightweight SQL Artifacts (No Full Data Dump)
+- Placeholder file (kept for compatibility):
+  - `data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_data.sql`
+- Schema skeleton:
+  - `data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_schema.sql`
+- Demo seed rows:
+  - `data/strong_backups/session_cleanup_keep_18_20260430_180610/postgres_session_tables_demo.sql`
+
 ## Docs
 - [Documentation Index](docs/INDEX.md)
 - [Intern Handbook](docs/intern_handbook.md)
