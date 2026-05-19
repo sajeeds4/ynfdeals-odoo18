@@ -5,11 +5,16 @@
 If you are new to the project, read these first:
 
 1. [README.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/README.md)
-2. [intern_handbook.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/intern_handbook.md)
-3. [technical_architecture.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/technical_architecture.md)
-4. [contribution_safety_guide.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/contribution_safety_guide.md)
+2. [visual_project_blueprint.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/visual_project_blueprint.md)
+3. [intern_handbook.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/intern_handbook.md)
+4. [technical_architecture.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/technical_architecture.md)
+5. [contribution_safety_guide.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/contribution_safety_guide.md)
 
 ## Onboarding And Project Understanding
+
+- [visual_project_blueprint.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/visual_project_blueprint.md)
+  - graphical architecture and runtime overview
+  - fastest way to build a shared mental model across frontend, backend, data, and ops
 
 - [intern_handbook.md](/home/cybertechna/AethrixSystems_Portable/hjay9672-WN%20/whatnot-collector/docs/intern_handbook.md)
   - best starting point for interns
