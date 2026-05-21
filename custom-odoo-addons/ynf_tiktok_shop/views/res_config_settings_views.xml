@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_tiktok" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.tiktok.shop</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="TikTok Shop" name="ynf_tiktok_shop_settings">
+                    <setting string="TikTok Shop Accounts" help="Manage OAuth and sync for TikTok Shop Partner API.">
+                        <button type="object" name="action_open_tiktok_accounts" string="Open Accounts" class="btn-link"/>
+                        <field name="tiktok_shop_active_account_id"/>
+                    </setting>
+                    <setting string="Default App Credentials" groups="ynf_tiktok_shop.group_tiktok_shop_manager">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="tiktok_shop_default_app_key" class="col-lg-3"/>
+                                <field name="tiktok_shop_default_app_key"/>
+                            </div>
+                            <div class="row">
+                                <label for="tiktok_shop_default_service_id" class="col-lg-3"/>
+                                <field name="tiktok_shop_default_service_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="tiktok_shop_default_redirect_uri" class="col-lg-3"/>
+                                <field name="tiktok_shop_default_redirect_uri"/>
+                            </div>
+                            <div class="row">
+                                <label for="tiktok_shop_webhook_base_url" class="col-lg-3"/>
+                                <field name="tiktok_shop_webhook_base_url" placeholder="https://your-odoo.com"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="API Endpoints" groups="ynf_tiktok_shop.group_tiktok_shop_manager">
+                        <div class="content-group">
+                            <field name="tiktok_shop_api_base_url"/>
+                            <field name="tiktok_shop_auth_base_url"/>
+                            <field name="tiktok_shop_authorize_base_url"/>
+                            <field name="tiktok_shop_token_url"/>
+                            <field name="tiktok_shop_refresh_url"/>
+                            <field name="tiktok_shop_target_idc"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

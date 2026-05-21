@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ynf_tiktok_shop_account_user,ynf.tiktok.shop.account user,model_ynf_tiktok_shop_account,group_tiktok_shop_user,1,0,0,0
+access_ynf_tiktok_shop_account_manager,ynf.tiktok.shop.account manager,model_ynf_tiktok_shop_account,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_product_map_user,ynf.tiktok.product.map user,model_ynf_tiktok_product_map,group_tiktok_shop_user,1,0,0,0
+access_ynf_tiktok_product_map_manager,ynf.tiktok.product.map manager,model_ynf_tiktok_product_map,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_category_map_manager,ynf.tiktok.category.map manager,model_ynf_tiktok_category_map,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_api_log_user,ynf.tiktok.api.log user,model_ynf_tiktok_api_log,group_tiktok_shop_user,1,0,0,0
+access_ynf_tiktok_api_log_manager,ynf.tiktok.api.log manager,model_ynf_tiktok_api_log,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_webhook_user,ynf.tiktok.webhook.event user,model_ynf_tiktok_webhook_event,group_tiktok_shop_user,1,0,0,0
+access_ynf_tiktok_webhook_manager,ynf.tiktok.webhook.event manager,model_ynf_tiktok_webhook_event,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_return_user,ynf.tiktok.return user,model_ynf_tiktok_return,group_tiktok_shop_user,1,0,0,0
+access_ynf_tiktok_return_manager,ynf.tiktok.return manager,model_ynf_tiktok_return,group_tiktok_shop_manager,1,1,1,1
+access_ynf_tiktok_connect_wizard_manager,ynf.tiktok.connect.wizard manager,model_ynf_tiktok_connect_wizard,group_tiktok_shop_manager,1,1,1,1

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ynf_tiktok_webhook_list" model="ir.ui.view">
+        <field name="name">ynf.tiktok.webhook.event.list</field>
+        <field name="model">ynf.tiktok.webhook.event</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="create_date"/>
+                <field name="account_id"/>
+                <field name="event_type"/>
+                <field name="order_id"/>
+                <field name="processed"/>
+                <field name="error"/>
+                <button name="action_process" type="object" string="Process" icon="fa-play"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ynf_tiktok_webhooks" model="ir.actions.act_window">
+        <field name="name">Webhook Events</field>
+        <field name="res_model">ynf.tiktok.webhook.event</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

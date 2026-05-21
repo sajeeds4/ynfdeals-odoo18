@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ynf_tiktok_shop_account_list" model="ir.ui.view">
+        <field name="name">ynf.tiktok.shop.account.list</field>
+        <field name="model">ynf.tiktok.shop.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="is_connected"/>
+                <field name="access_token_valid"/>
+                <field name="shop_cipher"/>
+                <field name="region"/>
+                <field name="last_order_sync_at"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ynf_tiktok_shop_account_form" model="ir.ui.view">
+        <field name="name">ynf.tiktok.shop.account.form</field>
+        <field name="model">ynf.tiktok.shop.account</field>
+        <field name="arch" type="xml">
+            <form string="TikTok Shop Account">
+                <header>
+                    <button name="action_open_connect_wizard" type="object" string="Connect" class="btn-primary"
+                        invisible="is_connected" groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+                    <button name="action_build_auth_url" type="object" string="Re-authorize"
+                        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+                    <button name="action_refresh_token" type="object" string="Refresh Token"
+                        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+                    <button name="action_test_connection" type="object" string="Test Connection"
+                        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+                    <button name="action_sync_orders" type="object" string="Sync Orders" class="btn-primary"/>
+                    <button name="action_sync_inventory" type="object" string="Push Inventory"/>
+                    <button name="action_sync_returns" type="object" string="Sync Returns"/>
+                    <button name="action_disconnect" type="object" string="Disconnect" confirm="Disconnect TikTok Shop?"
+                        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" name="%(ynf_tiktok_shop.action_ynf_tiktok_product_maps)d" class="oe_stat_button" icon="fa-cubes"
+                            context="{'default_account_id': id, 'search_default_account_id': id}">
+                            <field name="product_map_count" widget="statinfo" string="Mappings"/>
+                        </button>
+                        <button type="action" class="oe_stat_button" icon="fa-shopping-cart"
+                            name="%(ynf_tiktok_shop.action_ynf_tiktok_shop_orders)d"
+                            context="{'search_default_x_ynf_tiktok_account_id': id}">
+                            <field name="sale_order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Connected" bg_color="text-bg-success" invisible="not is_connected"/>
+                    <group>
+                        <group string="Account">
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                            <field name="is_connected" readonly="1"/>
+                            <field name="access_token_valid" readonly="1"/>
+                            <field name="last_error" readonly="1"/>
+                        </group>
+                        <group string="Shop">
+                            <field name="shop_id" readonly="1"/>
+                            <field name="shop_cipher"/>
+                            <field name="merchant_id" readonly="1"/>
+                            <field name="seller_name" readonly="1"/>
+                            <field name="region" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Credentials" groups="ynf_tiktok_shop.group_tiktok_shop_manager">
+                            <group>
+                                <field name="app_key"/>
+                                <field name="app_secret" password="True"/>
+                                <field name="service_id"/>
+                                <field name="redirect_uri"/>
+                                <field name="webhook_secret" password="True"/>
+                            </group>
+                            <group string="Tokens">
+                                <field name="access_token" password="True" readonly="1"/>
+                                <field name="refresh_token" password="True" readonly="1"/>
+                                <field name="access_token_expires_at" readonly="1"/>
+                                <field name="refresh_token_expires_at" readonly="1"/>
+                                <field name="granted_scopes" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="API Endpoints" groups="ynf_tiktok_shop.group_tiktok_shop_manager">
+                            <group>
+                                <field name="api_base_url"/>
+                                <field name="auth_base_url"/>
+                                <field name="authorize_base_url"/>
+                                <field name="token_url"/>
+                                <field name="refresh_url"/>
+                                <field name="target_idc"/>
+                            </group>
+                        </page>
+                        <page string="Sync Settings">
+                            <group>
+                                <field name="auto_sync_orders"/>
+                                <field name="auto_sync_inventory"/>
+                                <field name="auto_sync_returns"/>
+                                <field name="order_import_days"/>
+                                <field name="deduct_stock_on_import"/>
+                                <field name="sku_field"/>
+                            </group>
+                            <group string="Last Sync">
+                                <field name="last_connected_at" readonly="1"/>
+                                <field name="last_refreshed_at" readonly="1"/>
+                                <field name="last_tested_at" readonly="1"/>
+                                <field name="last_order_sync_at" readonly="1"/>
+                                <field name="last_inventory_sync_at" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Authorized Shops" groups="ynf_tiktok_shop.group_tiktok_shop_manager">
+                            <field name="authorized_shops_json" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ynf_tiktok_shop_account" model="ir.actions.act_window">
+        <field name="name">TikTok Shop Accounts</field>
+        <field name="res_model">ynf.tiktok.shop.account</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

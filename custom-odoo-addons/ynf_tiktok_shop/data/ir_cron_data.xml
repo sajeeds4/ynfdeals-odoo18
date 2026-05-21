@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_cron_tiktok_refresh_tokens" model="ir.cron">
+        <field name="name">TikTok Shop: Refresh Tokens</field>
+        <field name="model_id" ref="model_ynf_tiktok_shop_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_refresh_tokens()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="ir_cron_tiktok_sync_orders" model="ir.cron">
+        <field name="name">TikTok Shop: Sync Orders</field>
+        <field name="model_id" ref="model_ynf_tiktok_shop_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_orders()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="ir_cron_tiktok_sync_inventory" model="ir.cron">
+        <field name="name">TikTok Shop: Push Inventory</field>
+        <field name="model_id" ref="model_ynf_tiktok_shop_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_inventory()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="ir_cron_tiktok_sync_returns" model="ir.cron">
+        <field name="name">TikTok Shop: Sync Returns</field>
+        <field name="model_id" ref="model_ynf_tiktok_shop_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_returns()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+    <record id="ir_cron_tiktok_process_webhooks" model="ir.cron">
+        <field name="name">TikTok Shop: Process Webhook Backlog</field>
+        <field name="model_id" ref="model_ynf_tiktok_webhook_event"/>
+        <field name="state">code</field>
+        <field name="code">model.search([('processed','=',False)], limit=50).action_process()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

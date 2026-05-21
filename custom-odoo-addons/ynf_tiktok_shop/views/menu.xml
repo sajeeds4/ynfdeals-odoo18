@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="ynf_tiktok_shop_root" name="TikTok Shop" sequence="53"/>
+
+    <menuitem id="ynf_tiktok_shop_accounts_menu" name="Accounts"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_shop_account" sequence="10"/>
+
+    <menuitem id="ynf_tiktok_shop_orders_menu" name="Shop Orders"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_shop_orders" sequence="20"/>
+
+    <menuitem id="ynf_tiktok_shop_maps_menu" name="Product Maps"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_product_maps" sequence="30"/>
+
+    <menuitem id="ynf_tiktok_shop_returns_menu" name="Returns"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_returns" sequence="40"/>
+
+    <menuitem id="ynf_tiktok_shop_webhooks_menu" name="Webhooks"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_webhooks" sequence="50"/>
+
+    <menuitem id="ynf_tiktok_shop_logs_menu" name="API Logs"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_api_logs" sequence="60"
+        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+
+    <menuitem id="ynf_tiktok_shop_categories_menu" name="Category Maps"
+        parent="ynf_tiktok_shop_root" action="action_ynf_tiktok_category_maps" sequence="70"
+        groups="ynf_tiktok_shop.group_tiktok_shop_manager"/>
+</odoo>

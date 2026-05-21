@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ynf_tiktok_return_list" model="ir.ui.view">
+        <field name="name">ynf.tiktok.return.list</field>
+        <field name="model">ynf.tiktok.return</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="return_id"/>
+                <field name="account_id"/>
+                <field name="order_id"/>
+                <field name="sale_order_id"/>
+                <field name="return_status"/>
+                <field name="refund_status"/>
+                <field name="total_refund_amount"/>
+                <field name="processed"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ynf_tiktok_returns" model="ir.actions.act_window">
+        <field name="name">TikTok Returns</field>
+        <field name="res_model">ynf.tiktok.return</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

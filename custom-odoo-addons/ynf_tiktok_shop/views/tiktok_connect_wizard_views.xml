@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ynf_tiktok_connect_wizard_form" model="ir.ui.view">
+        <field name="name">ynf.tiktok.connect.wizard.form</field>
+        <field name="model">ynf.tiktok.connect.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Connect TikTok Shop">
+                <group>
+                    <field name="account_id" readonly="1"/>
+                    <field name="instructions" nolabel="1"/>
+                </group>
+                <group string="Manual code (optional)">
+                    <field name="auth_code" placeholder="Paste auth code from redirect URL"/>
+                    <field name="use_browser"/>
+                </group>
+                <footer>
+                    <button name="action_apply_defaults_from_settings" type="object" string="Apply Global Settings"/>
+                    <button name="action_authorize_browser" type="object" string="Authorize in Browser" class="btn-primary"/>
+                    <button name="action_connect_manual" type="object" string="Connect with Code"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

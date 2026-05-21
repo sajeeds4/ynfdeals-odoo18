@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_form_tiktok_shop" model="ir.ui.view">
+        <field name="name">sale.order.form.tiktok.shop</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='x_ynf_sale_channel']" position="after">
+                <field name="x_ynf_tiktok_account_id" invisible="x_ynf_sale_channel != 'tiktok_shop'"/>
+                <field name="x_ynf_tiktok_order_id" invisible="x_ynf_sale_channel != 'tiktok_shop'"/>
+                <field name="x_ynf_tiktok_status" invisible="x_ynf_sale_channel != 'tiktok_shop'"/>
+                <field name="x_ynf_tiktok_package_id" invisible="x_ynf_sale_channel != 'tiktok_shop'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ynf_tiktok_shop_orders" model="ir.actions.act_window">
+        <field name="name">TikTok Shop Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('x_ynf_sale_channel', '=', 'tiktok_shop')]</field>
+        <field name="context">{'default_x_ynf_sale_channel': 'tiktok_shop'}</field>
+    </record>
+</odoo>

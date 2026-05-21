@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="oauth_result" name="TikTok OAuth Result">
+        <t t-call="web.frontend_layout">
+            <div class="container py-5">
+                <h2>TikTok Shop Connection</h2>
+                <t t-if="success">
+                    <p class="text-success fw-bold">Connected successfully.</p>
+                    <p t-if="account_name">Account: <t t-esc="account_name"/></p>
+                </t>
+                <t t-else="">
+                    <p class="text-danger fw-bold">Connection failed.</p>
+                </t>
+                <pre class="bg-light p-3 border rounded" t-esc="message"/>
+                <p class="text-muted mt-3">Return to Odoo and refresh the TikTok Shop account form.</p>
+            </div>
+        </t>
+    </template>
+</odoo>
