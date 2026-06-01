@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    YNF Deals - MFD v2 Cart page reskin
+    ====================================
+    Inherits and replaces the body of:
+      - website_sale.cart        (the /shop/cart page wrapper)
+      - website_sale.cart_lines  (the line-item list rendered inside)
+
+    Strategy: `position="replace"` on the inner Bootstrap col so the Odoo
+    `checkout_layout` form/handlers above us remain intact. All hooks the
+    front-end JS expects are preserved on quantity input/buttons and the
+    delete button:
+        - input.js_quantity[data-line-id][data-product-id]   (qty update)
+        - a.js_add_cart_json                                  (+ / - buttons)
+        - .js_delete_product inside .o_cart_product           (line removal)
+    Form fields keep their original `name=""` attributes so Odoo's existing
+    cart.js handlers still operate without a full page reload.
+-->
+<odoo>
+
+    <!-- ============================================================
+         /shop/cart page wrapper reskin
+         Replaces the entire <div class="col">…</div> inside
+         website_sale.cart so we can drop Bootstrap chrome (titles,
+         alerts) and render the YNF MFD2 page column instead.
+         ============================================================ -->
+    <template id="ynf_mfd2_cart_page" name="YNF MFD2 - Cart Page"
+              inherit_id="website_sale.cart" priority="20">
+        <xpath expr="//div[hasclass('col')]" position="replace">
+            <div class="col-12">
+                <!-- Carry the abandoned-cart / access_token notice if any -->
+                <t t-if="abandoned_proceed or access_token">
+                    <div class="ynf-mfd2-cart-notice" role="alert">
+                        <t t-if="abandoned_proceed">
+                            <p>Your previous cart has already been completed.</p>
+                            <p t-if="website_sale_order">Please proceed your current cart.</p>
+                        </t>
+                        <t t-if="access_token">
+                            <p>This is your current cart.</p>
+                            <p>
+                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Restore your previous cart</a></strong>
+                                — your current cart will be replaced.
+                            </p>
+                            <p>
+                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Merge previous cart into current</a></strong>.
+                            </p>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Mobile-first 560px column -->
+                <div class="ynf-mfd2-cart">
+                    <t t-call="website_sale.cart_lines"/>
+                    <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================================================
+         Cart lines body reskin
+         Replaces the inner cart-products area (and the empty notice)
+         with the YNF cart layout: progress meter, line items,
+         summary card, recommendations rail.
+         ============================================================ -->
+    <template id="ynf_mfd2_cart_lines" name="YNF MFD2 - Cart Lines"
+              inherit_id="website_sale.cart_lines" priority="20">
+
+        <!-- Replace the default "Your cart is empty!" alert with the
+             MFD2 empty-state component -->
+        <xpath expr="//div[hasclass('js_cart_lines') and hasclass('alert-info')]" position="replace">
+            <div t-if="not website_sale_order or not website_sale_order.website_order_line"
+                 class="js_cart_lines ynf-mfd2-cart-empty">
+                <t t-call="ynf_storefront.ynf_mfd2_empty_state">
+                    <t t-set="icon_svg">
+                        <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 16h24l-2.4 22a3 3 0 01-3 2.7H17.4a3 3 0 01-3-2.7L12 16z"/>
+                            <path d="M18 16a6 6 0 1112 0"/>
+                        </svg>
+                    </t>
+                    <t t-set="title">Your bag is empty</t>
+                    <t t-set="body">Find your signature scent across Lattafa, Afnan, Rasasi and Maison Alhambra.</t>
+                    <t t-set="cta_label">Shop fragrances</t>
+                    <t t-set="cta_href">/shop</t>
+                </t>
+            </div>
+        </xpath>
+
+        <!-- Replace the populated cart-products container with the YNF
+             line list + summary + recommendations -->
+        <xpath expr="//div[@id='cart_products']" position="replace">
+            <t t-if="website_sale_order and website_sale_order.website_order_line">
+                <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
+                <t t-set="_cart_count" t-value="int(website_sale_order.cart_quantity)"/>
+                <t t-set="_amount_untaxed" t-value="website_sale_order.amount_untaxed or 0.0"/>
+                <t t-set="_free_at" t-value="75.0"/>
+                <t t-set="_to_free" t-value="max(0.0, _free_at - _amount_untaxed)"/>
+                <t t-set="_progress_pct" t-value="min(100, int((_amount_untaxed / _free_at) * 100)) if _free_at &gt; 0 else 0"/>
+
+                <!-- Heading -->
+                <header class="ynf-mfd2-cart-head">
+                    <t t-call="ynf_storefront.ynf_mfd2_eyebrow">
+                        <t t-set="label">Your bag</t>
+                    </t>
+                    <h1 class="ynf-mfd2-cart-title">
+                        <t t-esc="_cart_count"/>
+                        <t t-if="_cart_count == 1"> item</t>
+                        <t t-else=""> items</t>
+                    </h1>
+                </header>
+
+                <!-- Free-shipping progress meter -->
+                <div class="ynf-mfd2-cart-ship">
+                    <div class="ynf-mfd2-cart-ship-label">
+                        <t t-if="_to_free &gt; 0">
+                            Add <b>$<t t-esc="'%.2f' % _to_free"/></b> for free shipping
+                        </t>
+                        <t t-else="">
+                            <span class="ynf-mfd2-cart-ship-tick" aria-hidden="true">✓</span>
+                            You have unlocked free shipping
+                        </t>
+                    </div>
+                    <div class="ynf-mfd2-cart-ship-track" aria-hidden="true">
+                        <div class="ynf-mfd2-cart-ship-fill" t-attf-style="width: #{_progress_pct}%;"/>
+                    </div>
+                </div>
+
+                <!-- Cart warning surface (Odoo-driven) -->
+                <t t-if="website_sale_order._get_shop_warning(clear=False)">
+                    <div class="ynf-mfd2-cart-warning js_cart_lines" role="alert">
+                        <strong>Note:</strong> <t t-esc="website_sale_order._get_shop_warning()"/>
+                    </div>
+                </t>
+
+                <!-- Line items -->
+                <ul id="cart_products" class="js_cart_lines ynf-mfd2-cart-lines" role="list">
+                    <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                        <li t-if="line.product_id"
+                            t-attf-class="ynf-mfd2-cart-line o_cart_product #{line.linked_line_id and 'optional_product info'}"
+                            t-attf-data-product-id="#{line.product_id and line.product_id.id}">
+
+                            <!-- Image (links to product) -->
+                            <a t-att-href="line.product_id.website_url" class="ynf-mfd2-cart-line-thumb"
+                               t-attf-aria-label="View #{line.name_short}">
+                                <img t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                                     t-att-src="image_data_uri(line.product_id.image_128)"
+                                     class="ynf-mfd2-cart-line-img"
+                                     t-att-alt="line.name_short"/>
+                                <img t-elif="line.product_id.image_128"
+                                     t-attf-src="/web/image/product.product/#{line.product_id.id}/image_256"
+                                     class="ynf-mfd2-cart-line-img"
+                                     t-att-alt="line.name_short"
+                                     loading="lazy"/>
+                            </a>
+
+                            <!-- Body: brand + name + qty stepper + remove -->
+                            <div class="ynf-mfd2-cart-line-body">
+                                <t t-set="_brand_token" t-value="(line.product_id.name.split(' ')[0] if line.product_id.name else '').upper()"/>
+                                <span class="ynf-mfd2-cart-line-brand" t-esc="_brand_token"/>
+                                <a t-att-href="line.product_id.website_url" class="ynf-mfd2-cart-line-name">
+                                    <t t-call="website_sale.cart_line_product_link">
+                                        <span class="ynf-mfd2-cart-line-name-text" t-field="line.name_short"/>
+                                    </t>
+                                </a>
+                                <t t-call="website_sale.cart_line_description_following_lines">
+                                    <t t-set="div_class" t-value="'ynf-mfd2-cart-line-meta'"/>
+                                </t>
+
+                                <!-- Inspired-by hint (uses x_ynf_inspired_by if available) -->
+                                <t t-set="_inspired" t-value="getattr(line.product_id, 'x_ynf_inspired_by', False)"/>
+                                <t t-if="_inspired">
+                                    <span class="ynf-mfd2-cart-line-inspired">
+                                        <span class="ynf-mfd2-cart-line-inspired-spark" aria-hidden="true">✦</span>
+                                        Inspired by <t t-esc="_inspired"/>
+                                    </span>
+                                </t>
+
+                                <!-- Combo item display (preserve Odoo behavior) -->
+                                <t t-if="line.product_type == 'combo'">
+                                    <div t-foreach="line.linked_line_ids" t-as="combo_item_line"
+                                         t-attf-class="ynf-mfd2-cart-line-combo {{'' if combo_item_line_last else 'pb-2'}}">
+                                        <t t-call="website_sale.cart_combo_item_line"/>
+                                    </div>
+                                </t>
+
+                                <!-- Stepper + remove row -->
+                                <div class="ynf-mfd2-cart-line-controls">
+                                    <div class="ynf-mfd2-cart-line-qty css_quantity input-group"
+                                         name="website_sale_cart_line_quantity">
+                                        <t t-if="not line._is_not_sellable_line()">
+                                            <t t-if="show_qty">
+                                                <a href="#" role="button"
+                                                   class="ynf-mfd2-cart-line-step ynf-mfd2-cart-line-step-minus js_add_cart_json"
+                                                   aria-label="Remove one" title="Remove one">
+                                                    <span aria-hidden="true">−</span>
+                                                    <i class="position-relative z-1 fa fa-minus d-none"/>
+                                                </a>
+                                                <input type="text"
+                                                       class="ynf-mfd2-cart-line-qty-input js_quantity quantity form-control"
+                                                       name="set_qty"
+                                                       t-att-data-line-id="line.id"
+                                                       t-att-data-product-id="line.product_id.id"
+                                                       t-att-value="line._get_displayed_quantity()"
+                                                       inputmode="numeric"
+                                                       aria-label="Quantity"/>
+                                                <t t-if="line._get_shop_warning(clear=False)">
+                                                    <a href="#" class="ynf-mfd2-cart-line-warn btn btn-link">
+                                                        <i class="fa fa-warning text-warning"
+                                                           t-att-title="line._get_shop_warning()"
+                                                           role="img" aria-label="Warning"/>
+                                                    </a>
+                                                </t>
+                                                <a t-else="" href="#" role="button"
+                                                   class="ynf-mfd2-cart-line-step ynf-mfd2-cart-line-step-plus js_add_cart_json"
+                                                   aria-label="Add one" title="Add one">
+                                                    <span aria-hidden="true">+</span>
+                                                    <i class="fa fa-plus position-relative z-1 d-none"/>
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="ynf-mfd2-cart-line-qty-static" t-esc="int(line.product_uom_qty)"/>
+                                                <input type="hidden"
+                                                       class="js_quantity form-control quantity"
+                                                       name="set_qty"
+                                                       t-att-data-line-id="line.id"
+                                                       t-att-data-product-id="line.product_id.id"
+                                                       t-att-value="line._get_displayed_quantity()"/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="ynf-mfd2-cart-line-qty-static" t-esc="int(line.product_uom_qty)"/>
+                                            <input type="hidden"
+                                                   class="js_quantity quantity form-control"
+                                                   name="set_qty"
+                                                   t-att-data-line-id="line.id"
+                                                   t-att-data-product-id="line.product_id.id"
+                                                   t-att-value="line._get_displayed_quantity()"/>
+                                        </t>
+                                        <!-- hidden line_id field (some Odoo flows look for it by name) -->
+                                        <input type="hidden" name="line_id" t-att-value="line.id"/>
+                                    </div>
+
+                                    <!-- Remove (delegates to Odoo's js_delete_product handler) -->
+                                    <button type="button"
+                                            class="ynf-mfd2-cart-line-remove js_delete_product"
+                                            aria-label="Remove from cart" title="Remove from cart">
+                                        <span class="ynf-mfd2-cart-line-remove-text">Remove</span>
+                                        <span class="ynf-mfd2-cart-line-remove-x" aria-hidden="true">✕</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Price (right column) -->
+                            <div class="ynf-mfd2-cart-line-price" name="website_sale_cart_line_price">
+                                <t t-if="line.discount">
+                                    <del class="ynf-mfd2-cart-line-price-strike"
+                                         t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                </t>
+                                <t t-set="product_price" t-value="line._get_cart_display_price()"/>
+                                <span class="ynf-mfd2-cart-line-price-amount">
+                                    <t t-call="website_sale.cart_product_price"/>
+                                </span>
+                                <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                                       class="ynf-mfd2-cart-line-base-unit cart_product_base_unit_price"
+                                       groups="website_sale.group_show_uom_price">
+                                    <t t-call="website_sale.base_unit_price">
+                                        <t t-set="product" t-value="line.product_id"/>
+                                        <t t-set="combination_info"
+                                           t-value="{'base_unit_price': product._get_base_unit_price(product_price/line.product_uom_qty)}"/>
+                                    </t>
+                                </small>
+                            </div>
+                        </li>
+                    </t>
+                </ul>
+
+                <!-- Order summary card -->
+                <section class="ynf-mfd2-cart-summary-wrap">
+                    <div class="ynf-mfd2-cart-summary">
+                        <div class="ynf-mfd2-cart-summary-row">
+                            <span class="ynf-mfd2-cart-summary-key">Subtotal</span>
+                            <span class="ynf-mfd2-cart-summary-val"
+                                  t-out="website_sale_order.amount_untaxed"
+                                  t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </div>
+                        <div class="ynf-mfd2-cart-summary-row">
+                            <span class="ynf-mfd2-cart-summary-key">Shipping</span>
+                            <span class="ynf-mfd2-cart-summary-val">
+                                <t t-if="_to_free &lt;= 0">Free</t>
+                                <t t-else="">At checkout</t>
+                            </span>
+                        </div>
+                        <div class="ynf-mfd2-cart-summary-row" t-if="website_sale_order.amount_tax">
+                            <span class="ynf-mfd2-cart-summary-key">Tax</span>
+                            <span class="ynf-mfd2-cart-summary-val"
+                                  t-out="website_sale_order.amount_tax"
+                                  t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </div>
+                        <div class="ynf-mfd2-cart-summary-rule" aria-hidden="true"/>
+                        <div class="ynf-mfd2-cart-summary-total">
+                            <span class="ynf-mfd2-cart-summary-total-key">Total</span>
+                            <span class="ynf-mfd2-cart-summary-total-val"
+                                  t-out="website_sale_order.amount_total"
+                                  t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </div>
+
+                        <!-- Checkout CTA — uses Odoo's main button anchor so checkout-layout
+                             handlers / disabled state still apply when present. Falls back to
+                             the brand primary button for a clean render. -->
+                        <div class="ynf-mfd2-cart-summary-cta">
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_primary">
+                                <t t-set="label">Checkout →</t>
+                                <t t-set="href" t-value="'/shop/checkout' if website_sale_order._is_cart_ready() else '/shop/cart'"/>
+                                <t t-set="extra_class" t-value="'ynf-mfd2-cart-checkout-btn'"/>
+                            </t>
+                        </div>
+
+                        <p class="ynf-mfd2-cart-summary-note">
+                            <span class="ynf-mfd2-cart-summary-note-tick" aria-hidden="true">✓</span>
+                            100% authentic · secure checkout
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Recommendations: 6 products not in the cart, horizontal rail -->
+                <t t-set="_in_cart_ids" t-value="[l.product_id.product_tmpl_id.id for l in website_sale_order.website_order_line if l.product_id]"/>
+                <t t-set="_recos" t-value="request.env['product.template'].sudo().search([('is_published', '=', True), ('website_published', '=', True), ('id', 'not in', _in_cart_ids)], limit=6)"/>
+                <t t-if="_recos">
+                    <section class="ynf-mfd2-cart-recos">
+                        <header class="ynf-mfd2-cart-recos-head">
+                            <h3 class="ynf-mfd2-cart-recos-title">Add a discovery</h3>
+                        </header>
+                        <t t-call="ynf_storefront.ynf_mfd2_rail">
+                            <t t-foreach="_recos" t-as="reco_product">
+                                <div class="ynf-mfd2-cart-recos-cell">
+                                    <t t-call="ynf_storefront.ynf_mfd2_card">
+                                        <t t-set="product" t-value="reco_product"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
