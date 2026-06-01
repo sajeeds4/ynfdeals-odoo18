@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- /my  — Portal landing page (YNF MFD v2)                      -->
+    <!--                                                              -->
+    <!-- Inherits portal.portal_my_home and replaces the inner card   -->
+    <!-- grid (<div class="o_portal_my_home">) with a single-column   -->
+    <!-- YNF-styled dashboard: greeting, last-order card, quick       -->
+    <!-- actions. We keep the <t t-call="portal.portal_layout"/>      -->
+    <!-- wrapper that the parent template supplies so Odoo's portal   -->
+    <!-- sidebar still renders.                                       -->
+    <!-- ============================================================ -->
+    <template id="portal_my_home_ynf"
+              inherit_id="portal.portal_my_home"
+              name="YNF Portal Landing">
+        <!-- We surgically replace only the inner `o_portal_docs` grid so
+             other modules that inherit `portal.portal_my_home` to inject
+             cards under it (account "Overdue invoices", etc.) still find
+             their xpath target. The grid is kept in the DOM but hidden
+             from view (display:none via the YNF portal scope) — its
+             children become invisible while our YNF dashboard renders
+             below it. -->
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="attributes">
+            <attribute name="class" add="ynf-mfd2-portal-docs-hidden" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_portal_my_home')]" position="inside">
+            <t t-set="ynf_partner" t-value="request.env.user.partner_id"/>
+            <t t-set="ynf_first_name"
+               t-value="(ynf_partner.name or '').split(' ')[0] if ynf_partner else ''"/>
+            <t t-set="ynf_last_order"
+               t-value="(ynf_partner.sale_order_ids
+                          .filtered(lambda o: o.state in ('sale', 'done'))
+                          .sorted(lambda o: o.date_order or False, reverse=True)[:1])
+                       if ynf_partner else None"/>
+
+            <div class="ynf-mfd2-portal">
+                <div class="ynf-mfd2-portal-shell">
+
+                    <!-- Greeting card -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-greet">
+                        <div class="ynf-mfd2-portal-eyebrow">Your account</div>
+                        <h1 class="ynf-mfd2-portal-greet-h">
+                            Hi
+                            <span t-if="ynf_first_name"
+                                  class="ynf-mfd2-portal-greet-name"
+                                  t-out="ynf_first_name"/>
+                            <span t-else=""
+                                  class="ynf-mfd2-portal-greet-name">there</span>
+                            <span class="ynf-mfd2-portal-greet-wave"
+                                  aria-hidden="true">👋</span>
+                        </h1>
+                        <p class="ynf-mfd2-portal-greet-sub">
+                            Welcome back to YNF Deals.
+                        </p>
+                    </section>
+
+                    <!-- Last-order card -->
+                    <section t-if="ynf_last_order"
+                             class="ynf-mfd2-portal-card ynf-mfd2-portal-last">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Last order</div>
+                        <div class="ynf-mfd2-portal-last-row">
+                            <div class="ynf-mfd2-portal-last-name">
+                                <a t-att-href="ynf_last_order.get_portal_url()"
+                                   class="ynf-mfd2-portal-last-link">
+                                    #<t t-out="ynf_last_order.name"/>
+                                </a>
+                            </div>
+                            <div class="ynf-mfd2-portal-last-date">
+                                <span t-field="ynf_last_order.date_order"
+                                      t-options="{'widget': 'date'}"/>
+                            </div>
+                        </div>
+                        <div class="ynf-mfd2-portal-last-meta">
+                            <t t-set="ynf_item_count"
+                               t-value="int(sum(l.product_uom_qty for l in
+                                                ynf_last_order.order_line
+                                                .filtered(lambda l: not l.display_type)))"/>
+                            <span class="ynf-mfd2-portal-last-meta-item">
+                                <t t-out="ynf_item_count"/>
+                                item<t t-if="ynf_item_count != 1">s</t>
+                            </span>
+                            <span class="ynf-mfd2-portal-last-meta-sep">·</span>
+                            <span class="ynf-mfd2-portal-last-meta-item">
+                                <span t-field="ynf_last_order.amount_total"
+                                      t-options="{'widget': 'monetary',
+                                                  'display_currency':
+                                                  ynf_last_order.currency_id}"/>
+                            </span>
+                            <span class="ynf-mfd2-portal-last-meta-sep">·</span>
+                            <t t-set="ynf_fs"
+                               t-value="ynf_last_order.x_ynf_fulfillment_status
+                                        or 'pending'"/>
+                            <span t-if="ynf_fs == 'delivered'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-ok">
+                                Delivered
+                            </span>
+                            <span t-elif="ynf_fs == 'shipped'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-info">
+                                Shipped
+                            </span>
+                            <span t-elif="ynf_fs == 'returned'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-err">
+                                Returned
+                            </span>
+                            <span t-else=""
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-wait">
+                                Pending
+                            </span>
+                        </div>
+                        <a t-att-href="ynf_last_order.get_portal_url()"
+                           class="ynf-mfd2-portal-cta">
+                            View order
+                            <span aria-hidden="true" class="ynf-mfd2-portal-arrow">→</span>
+                        </a>
+                    </section>
+
+                    <!-- Empty-state when no orders yet -->
+                    <section t-else=""
+                             class="ynf-mfd2-portal-card ynf-mfd2-portal-empty">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Last order</div>
+                        <p class="ynf-mfd2-portal-empty-text">
+                            You haven't placed an order yet. When you do,
+                            it'll show up here.
+                        </p>
+                        <a href="/shop" class="ynf-mfd2-portal-cta">
+                            Start shopping
+                            <span aria-hidden="true" class="ynf-mfd2-portal-arrow">→</span>
+                        </a>
+                    </section>
+
+                    <!-- Quick actions -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-actions">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Quick actions</div>
+                        <div class="ynf-mfd2-portal-actions-grid">
+                            <a href="/my/orders"
+                               class="ynf-mfd2-portal-action">
+                                <span class="ynf-mfd2-portal-action-icon"
+                                      aria-hidden="true">📦</span>
+                                <span class="ynf-mfd2-portal-action-label">
+                                    Orders
+                                </span>
+                            </a>
+                            <a href="/my/help"
+                               class="ynf-mfd2-portal-action">
+                                <span class="ynf-mfd2-portal-action-icon"
+                                      aria-hidden="true">🆘</span>
+                                <span class="ynf-mfd2-portal-action-label">
+                                    Help
+                                </span>
+                            </a>
+                            <a href="/my/account"
+                               class="ynf-mfd2-portal-action">
+                                <span class="ynf-mfd2-portal-action-icon"
+                                      aria-hidden="true">📍</span>
+                                <span class="ynf-mfd2-portal-action-label">
+                                    Addresses
+                                </span>
+                            </a>
+                            <a href="/mail/view"
+                               class="ynf-mfd2-portal-action">
+                                <span class="ynf-mfd2-portal-action-icon"
+                                      aria-hidden="true">🔔</span>
+                                <span class="ynf-mfd2-portal-action-label">
+                                    Notifications
+                                </span>
+                            </a>
+                            <a href="/web/session/logout?redirect=/"
+                               class="ynf-mfd2-portal-action
+                                      ynf-mfd2-portal-action-out">
+                                <span class="ynf-mfd2-portal-action-icon"
+                                      aria-hidden="true">🚪</span>
+                                <span class="ynf-mfd2-portal-action-label">
+                                    Sign out
+                                </span>
+                            </a>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- /my/orders/<id>  — Single-order detail (YNF MFD v2)          -->
+    <!--                                                              -->
+    <!-- Inherits sale.sale_order_portal_content (the body of the     -->
+    <!-- order page) and replaces its #content block with a clean     -->
+    <!-- mobile-first detail card stack. We deliberately keep the     -->
+    <!-- #introduction block from the parent untouched so Odoo's      -->
+    <!-- anchor links / "View Details" PDF action remain intact.      -->
+    <!--                                                              -->
+    <!-- All field accessors come from the existing sale.order model: -->
+    <!--   sale_order.name, .date_order, .order_line, .amount_total,  -->
+    <!--   .amount_untaxed, .partner_shipping_id, plus YNF custom     -->
+    <!--   fields x_ynf_gls_session_no, x_ynf_tiktok_tracking_number, -->
+    <!--   x_ynf_tiktok_lot_number, x_ynf_fulfillment_status.         -->
+    <!-- ============================================================ -->
+    <template id="sale_order_portal_content_ynf"
+              inherit_id="sale.sale_order_portal_content"
+              name="YNF Portal Order Detail">
+        <!-- Hide Odoo's stock #informations row + #details/#total tables.
+             We keep them in the DOM so sale_management / sale_loyalty /
+             sale_stock / l10n_br_sales xpaths still resolve, but they
+             render hidden behind our YNF cards. -->
+        <xpath expr="//div[@id='informations']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-portal-hidden" separator=" "/>
+        </xpath>
+        <xpath expr="//section[@id='details']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-portal-hidden" separator=" "/>
+        </xpath>
+        <!-- Inject our YNF order-detail body at the top of #content. -->
+        <xpath expr="//div[@id='content']" position="before">
+            <div class="ynf-mfd2-portal" id="ynf_portal_order_detail">
+                <div class="ynf-mfd2-portal-shell">
+
+                    <!-- Back link -->
+                    <a href="/my/orders"
+                       class="ynf-mfd2-portal-back">
+                        <span aria-hidden="true" class="ynf-mfd2-portal-back-arrow">←</span>
+                        Back to orders
+                    </a>
+
+                    <!-- Header card: order # + date + session/lot -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-order-head">
+                        <div class="ynf-mfd2-portal-card-eyebrow">
+                            <t t-out="sale_order.type_name"/>
+                        </div>
+                        <h1 class="ynf-mfd2-portal-order-num">
+                            #<t t-out="sale_order.name"/>
+                        </h1>
+                        <div class="ynf-mfd2-portal-order-sub">
+                            <span t-field="sale_order.date_order"
+                                  t-options="{'widget': 'date'}"/>
+                            <t t-if="sale_order.x_ynf_gls_session_no">
+                                <span class="ynf-mfd2-portal-sep">·</span>
+                                <span class="ynf-mfd2-portal-session">
+                                    <span class="ynf-mfd2-portal-session-dot"
+                                          aria-hidden="true">●</span>
+                                    Go Live Session
+                                    #<t t-out="sale_order.x_ynf_gls_session_no"/>
+                                </span>
+                            </t>
+                            <t t-set="ynf_lot"
+                               t-value="(sale_order.x_ynf_tiktok_lot_number
+                                         or sale_order.x_ynf_gls_lot_numbers
+                                         or '').strip()"/>
+                            <t t-if="ynf_lot">
+                                <span class="ynf-mfd2-portal-sep">·</span>
+                                <span>Lot #<t t-out="ynf_lot"/></span>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- Status + tracking card -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-track">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Status</div>
+                        <t t-set="ynf_fs"
+                           t-value="sale_order.x_ynf_fulfillment_status or 'pending'"/>
+                        <div class="ynf-mfd2-portal-track-status">
+                            <span t-if="ynf_fs == 'delivered'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-ok">
+                                Delivered
+                            </span>
+                            <span t-elif="ynf_fs == 'shipped'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-info">
+                                Shipped
+                            </span>
+                            <span t-elif="ynf_fs == 'returned'"
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-err">
+                                Returned
+                            </span>
+                            <span t-else=""
+                                  class="ynf-mfd2-portal-badge
+                                         ynf-mfd2-portal-badge-wait">
+                                Pending
+                            </span>
+                        </div>
+                        <t t-set="ynf_tk"
+                           t-value="(sale_order.x_ynf_tiktok_tracking_number
+                                     or '').strip()"/>
+                        <div t-if="ynf_tk" class="ynf-mfd2-portal-track-row">
+                            <span class="ynf-mfd2-portal-track-label">
+                                Tracking
+                            </span>
+                            <a t-att-href="'https://tools.usps.com/go/'
+                                           'TrackConfirmAction?tLabels=' + ynf_tk"
+                               target="_blank" rel="noopener"
+                               class="ynf-mfd2-portal-track-number"
+                               t-att-data-clip="ynf_tk"
+                               t-out="ynf_tk"/>
+                            <button type="button"
+                                    class="ynf-mfd2-portal-clip"
+                                    t-att-data-clip="ynf_tk"
+                                    aria-label="Copy tracking number"
+                                    title="Copy tracking number">
+                                <span aria-hidden="true">📋</span>
+                            </button>
+                        </div>
+                        <div t-else="" class="ynf-mfd2-portal-track-row">
+                            <span class="ynf-mfd2-portal-track-label">
+                                Tracking
+                            </span>
+                            <span class="ynf-mfd2-portal-muted">
+                                Not yet shipped
+                            </span>
+                        </div>
+                        <div t-if="sale_order.commitment_date"
+                             class="ynf-mfd2-portal-track-row">
+                            <span class="ynf-mfd2-portal-track-label">ETA</span>
+                            <span t-field="sale_order.commitment_date"
+                                  t-options="{'widget': 'date'}"/>
+                        </div>
+                    </section>
+
+                    <!-- Items card -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-items">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Items</div>
+                        <ul class="ynf-mfd2-portal-items-list">
+                            <t t-foreach="sale_order.order_line
+                                          .filtered(lambda l: not l.display_type
+                                                              and l.product_id)"
+                               t-as="line">
+                                <li class="ynf-mfd2-portal-item">
+                                    <div class="ynf-mfd2-portal-item-thumb">
+                                        <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_256"
+                                             t-att-alt="line.product_id.display_name"
+                                             loading="lazy"/>
+                                    </div>
+                                    <div class="ynf-mfd2-portal-item-body">
+                                        <div class="ynf-mfd2-portal-item-name"
+                                             t-out="line.product_id.display_name"/>
+                                        <div class="ynf-mfd2-portal-item-meta">
+                                            <span class="ynf-mfd2-portal-item-qty">
+                                                Qty <t t-out="int(line.product_uom_qty)"/>
+                                            </span>
+                                            <span class="ynf-mfd2-portal-sep">·</span>
+                                            <span class="ynf-mfd2-portal-item-price"
+                                                  t-field="line.price_subtotal"
+                                                  t-options="{'widget': 'monetary',
+                                                              'display_currency':
+                                                              sale_order.currency_id}"/>
+                                        </div>
+                                    </div>
+                                </li>
+                            </t>
+                        </ul>
+                    </section>
+
+                    <!-- Totals card -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-totals">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Totals</div>
+                        <div class="ynf-mfd2-portal-totals-row">
+                            <span>Subtotal</span>
+                            <span t-field="sale_order.amount_untaxed"
+                                  t-options="{'widget': 'monetary',
+                                              'display_currency':
+                                              sale_order.currency_id}"/>
+                        </div>
+                        <div t-if="sale_order.amount_tax"
+                             class="ynf-mfd2-portal-totals-row">
+                            <span>Tax</span>
+                            <span t-field="sale_order.amount_tax"
+                                  t-options="{'widget': 'monetary',
+                                              'display_currency':
+                                              sale_order.currency_id}"/>
+                        </div>
+                        <div class="ynf-mfd2-portal-totals-row
+                                    ynf-mfd2-portal-totals-grand">
+                            <span>Total</span>
+                            <span t-field="sale_order.amount_total"
+                                  t-options="{'widget': 'monetary',
+                                              'display_currency':
+                                              sale_order.currency_id}"/>
+                        </div>
+                    </section>
+
+                    <!-- Shipping address -->
+                    <section t-if="sale_order.partner_shipping_id"
+                             class="ynf-mfd2-portal-card ynf-mfd2-portal-ship">
+                        <div class="ynf-mfd2-portal-card-eyebrow">Ship to</div>
+                        <div class="ynf-mfd2-portal-ship-body"
+                             t-field="sale_order.partner_shipping_id"
+                             t-options="{'widget': 'contact',
+                                         'fields': ['name', 'address', 'phone']}"/>
+                    </section>
+
+                    <!-- Help CTA -->
+                    <section class="ynf-mfd2-portal-card ynf-mfd2-portal-help">
+                        <div class="ynf-mfd2-portal-help-head">
+                            Need help with this order?
+                        </div>
+                        <p class="ynf-mfd2-portal-help-sub">
+                            If something's missing, damaged, or off, our team
+                            can help.
+                        </p>
+                        <a href="/my/help" class="ynf-mfd2-portal-cta
+                                                  ynf-mfd2-portal-cta-rose">
+                            Report an issue
+                            <span aria-hidden="true" class="ynf-mfd2-portal-arrow">→</span>
+                        </a>
+                    </section>
+
+                </div>
+            </div>
+
+            <!-- Copy-to-clipboard for the tracking number -->
+            <script type="text/javascript">
+                (function () {
+                    document.addEventListener("click", function (ev) {
+                        var btn = ev.target &amp;&amp; ev.target.closest
+                            &amp;&amp; ev.target.closest(".ynf-mfd2-portal-clip");
+                        if (!btn) { return; }
+                        ev.preventDefault();
+                        var val = btn.getAttribute("data-clip") || "";
+                        if (!val) { return; }
+                        try {
+                            if (navigator.clipboard &amp;&amp; navigator.clipboard.writeText) {
+                                navigator.clipboard.writeText(val);
+                            } else {
+                                var ta = document.createElement("textarea");
+                                ta.value = val;
+                                document.body.appendChild(ta);
+                                ta.select();
+                                document.execCommand("copy");
+                                document.body.removeChild(ta);
+                            }
+                            btn.classList.add("is-copied");
+                            setTimeout(function () {
+                                btn.classList.remove("is-copied");
+                            }, 1200);
+                        } catch (_e) { /* no-op */ }
+                    });
+                }());
+            </script>
+        </xpath>
+    </template>
+
+</odoo>

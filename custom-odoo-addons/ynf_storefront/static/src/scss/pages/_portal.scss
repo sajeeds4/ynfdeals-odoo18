@@ -1,0 +1,717 @@
+/* =========================================================================
+   YNF MFD v2 — Customer Portal (/my and /my/orders/<id>)
+   -------------------------------------------------------------------------
+   Mobile-first single-column layout for the logged-in customer area.
+   Everything is scoped under `.ynf-mfd2-portal` so it cannot leak into
+   the legacy `.ynf-help-*` / `.ynf-portal-*` styles already shipped by
+   `mobile_first_design.scss` for the dispute and session-grouped order
+   list pages.
+
+   Tokens come from Agent 1's v2 tokens partial. Safe `!default`
+   fallbacks are declared here so the file still compiles standalone
+   when imported before the token partial (same pattern as
+   `components/_footer.scss`).
+   ========================================================================= */
+
+$ynf-mfd2-bg:             #f4ecdd !default;  /* warm parchment page */
+$ynf-mfd2-bg-soft:        #efe5d2 !default;  /* slightly muted parchment */
+$ynf-mfd2-card:           #fbf6ea !default;  /* ivory surface */
+$ynf-mfd2-card-soft:      #f6efe0 !default;  /* secondary card tint */
+$ynf-mfd2-oud:            #3a1f1a !default;  /* deep brand text */
+$ynf-mfd2-oud-2:          #5a2f22 !default;  /* hover for oud */
+$ynf-mfd2-ink:            #1b1410 !default;  /* primary text */
+$ynf-mfd2-ink-2:          #5c4a3e !default;  /* secondary text */
+$ynf-mfd2-ink-3:          #8c7766 !default;  /* tertiary / placeholder */
+$ynf-mfd2-saffron:        #c8862e !default;  /* warm gold accent */
+$ynf-mfd2-saffron-2:      #a86f22 !default;  /* hover for saffron */
+$ynf-mfd2-rose:           #9b3a4a !default;  /* sale / help affordance */
+$ynf-mfd2-success:        #5c6b3e !default;  /* delivered */
+$ynf-mfd2-info:           #4a6b7a !default;  /* shipped */
+$ynf-mfd2-warn:           #a86f22 !default;  /* pending */
+$ynf-mfd2-danger:         #8b2418 !default;  /* returned */
+$ynf-mfd2-hairline:       rgba(27, 20, 16, 0.10) !default;
+$ynf-mfd2-hairline-2:     rgba(27, 20, 16, 0.18) !default;
+
+$ynf-mfd2-font-display:   "Cormorant Garamond", "Cormorant",
+                          Georgia, serif !default;
+$ynf-mfd2-font-body:      "Inter", -apple-system, BlinkMacSystemFont,
+                          "Segoe UI", sans-serif !default;
+
+$ynf-mfd2-page-max:       560px !default;
+$ynf-mfd2-radius-sm:      10px !default;
+$ynf-mfd2-radius-md:      16px !default;
+$ynf-mfd2-radius-lg:      22px !default;
+$ynf-mfd2-radius-pill:    999px !default;
+
+$ynf-mfd2-shadow-card:    0 1px 0 rgba(27, 20, 16, 0.04),
+                          0 18px 36px -22px rgba(27, 20, 16, 0.18) !default;
+
+/* =========================================================================
+   Outer scope. Lives inside Odoo's portal wrapper, so we lean on the
+   parent for top-level page chrome and only restyle the *content* column.
+   Bootstrap rules survive globally so the sidebar still works.
+   ========================================================================= */
+.ynf-mfd2-portal {
+    font-family: $ynf-mfd2-font-body;
+    color: $ynf-mfd2-ink;
+    background: $ynf-mfd2-bg;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Make the bg paint to the edge of the portal column even when
+       the surrounding Bootstrap grid uses padding/margin gutters. */
+    margin: 0 -12px;
+    padding: 12px 12px 36px;
+
+    @media (min-width: 992px) {
+        margin: 0;
+        padding: 8px 0 48px;
+        background: transparent; /* sidebar layout keeps its own bg */
+    }
+
+    a {
+        color: $ynf-mfd2-oud;
+        text-decoration: none;
+
+        &:hover, &:focus { color: $ynf-mfd2-saffron-2; }
+    }
+
+    h1, h2, h3, h4 { color: $ynf-mfd2-oud; }
+}
+
+/* Single-column shell, max 560px on desktop, full-bleed on phone. */
+.ynf-mfd2-portal-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: $ynf-mfd2-page-max;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* =========================================================================
+   Card primitive
+   Every section in the portal sits inside one of these ivory cards.
+   ========================================================================= */
+.ynf-mfd2-portal-card {
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-radius-md;
+    padding: 18px 18px 20px;
+    box-shadow: $ynf-mfd2-shadow-card;
+    box-sizing: border-box;
+}
+
+/* Eyebrow label sitting above a card heading. */
+.ynf-mfd2-portal-eyebrow,
+.ynf-mfd2-portal-card-eyebrow {
+    font-family: $ynf-mfd2-font-body;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-saffron-2;
+    margin-bottom: 8px;
+}
+
+/* =========================================================================
+   Greeting card (top of /my)
+   ========================================================================= */
+.ynf-mfd2-portal-greet {
+    padding: 22px 20px 24px;
+    background:
+        linear-gradient(180deg,
+            $ynf-mfd2-card 0%,
+            $ynf-mfd2-card-soft 100%);
+}
+
+.ynf-mfd2-portal-greet-h {
+    font-family: $ynf-mfd2-font-display;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    color: $ynf-mfd2-oud;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ynf-mfd2-portal-greet-name {
+    font-style: italic;
+    color: $ynf-mfd2-saffron;
+}
+
+.ynf-mfd2-portal-greet-wave {
+    font-style: normal;
+    font-size: 26px;
+    line-height: 1;
+}
+
+.ynf-mfd2-portal-greet-sub {
+    margin: 0;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 14px;
+    color: $ynf-mfd2-ink-2;
+}
+
+/* =========================================================================
+   Last-order card
+   ========================================================================= */
+.ynf-mfd2-portal-last-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.ynf-mfd2-portal-last-name {
+    font-family: $ynf-mfd2-font-display;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    color: $ynf-mfd2-oud;
+}
+
+.ynf-mfd2-portal-last-link {
+    color: inherit;
+
+    &:hover, &:focus {
+        color: $ynf-mfd2-saffron-2;
+        text-decoration: underline;
+    }
+}
+
+.ynf-mfd2-portal-last-date {
+    font-size: 13px;
+    color: $ynf-mfd2-ink-3;
+}
+
+.ynf-mfd2-portal-last-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13.5px;
+    color: $ynf-mfd2-ink-2;
+    margin: 4px 0 16px;
+}
+
+.ynf-mfd2-portal-last-meta-item { white-space: nowrap; }
+
+.ynf-mfd2-portal-last-meta-sep,
+.ynf-mfd2-portal-sep {
+    color: $ynf-mfd2-ink-3;
+    opacity: 0.6;
+    user-select: none;
+}
+
+/* =========================================================================
+   Empty state (no orders)
+   ========================================================================= */
+.ynf-mfd2-portal-empty-text {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: $ynf-mfd2-ink-2;
+    line-height: 1.55;
+}
+
+/* =========================================================================
+   CTA pill button — primary (oud)
+   Used for "View order →", "Start shopping →", etc.
+   ========================================================================= */
+.ynf-mfd2-portal-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: $ynf-mfd2-radius-pill;
+    background: $ynf-mfd2-oud;
+    color: $ynf-mfd2-bg !important;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background 180ms ease, transform 180ms ease;
+    border: 0;
+    cursor: pointer;
+
+    &:hover, &:focus {
+        background: $ynf-mfd2-oud-2;
+        color: $ynf-mfd2-bg !important;
+        text-decoration: none !important;
+        transform: translateY(-1px);
+    }
+
+    &.ynf-mfd2-portal-cta-rose {
+        background: $ynf-mfd2-rose;
+
+        &:hover, &:focus { background: darken($ynf-mfd2-rose, 6%); }
+    }
+}
+
+.ynf-mfd2-portal-arrow {
+    font-size: 14px;
+    line-height: 1;
+    transition: transform 180ms ease;
+}
+
+.ynf-mfd2-portal-cta:hover .ynf-mfd2-portal-arrow,
+.ynf-mfd2-portal-cta:focus .ynf-mfd2-portal-arrow {
+    transform: translateX(2px);
+}
+
+/* =========================================================================
+   Quick-actions grid (3 across on phones, fluid).
+   ========================================================================= */
+.ynf-mfd2-portal-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ynf-mfd2-portal-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 80px;
+    padding: 12px 8px;
+    background: $ynf-mfd2-card-soft;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-radius-sm;
+    color: $ynf-mfd2-oud;
+    text-align: center;
+    transition: background 180ms ease, border-color 180ms ease,
+                transform 180ms ease;
+
+    &:hover, &:focus {
+        background: $ynf-mfd2-card;
+        border-color: $ynf-mfd2-saffron;
+        color: $ynf-mfd2-oud;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    &.ynf-mfd2-portal-action-out {
+        color: $ynf-mfd2-rose;
+
+        &:hover, &:focus {
+            color: $ynf-mfd2-rose;
+            border-color: $ynf-mfd2-rose;
+        }
+    }
+}
+
+.ynf-mfd2-portal-action-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.ynf-mfd2-portal-action-label {
+    font-family: $ynf-mfd2-font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* =========================================================================
+   Status badges
+   ========================================================================= */
+.ynf-mfd2-portal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: $ynf-mfd2-radius-pill;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.ynf-mfd2-portal-badge-ok {
+        background: rgba(92, 107, 62, 0.12);
+        color: $ynf-mfd2-success;
+    }
+    &.ynf-mfd2-portal-badge-info {
+        background: rgba(74, 107, 122, 0.12);
+        color: $ynf-mfd2-info;
+    }
+    &.ynf-mfd2-portal-badge-wait {
+        background: rgba(168, 111, 34, 0.14);
+        color: $ynf-mfd2-warn;
+    }
+    &.ynf-mfd2-portal-badge-err {
+        background: rgba(139, 36, 24, 0.12);
+        color: $ynf-mfd2-danger;
+    }
+}
+
+/* =========================================================================
+   Order-detail page — back link
+   ========================================================================= */
+.ynf-mfd2-portal-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: $ynf-mfd2-ink-2;
+    align-self: flex-start;
+
+    &:hover, &:focus {
+        color: $ynf-mfd2-oud;
+        text-decoration: none;
+    }
+}
+
+.ynf-mfd2-portal-back-arrow {
+    font-size: 14px;
+    line-height: 1;
+    transition: transform 180ms ease;
+}
+
+.ynf-mfd2-portal-back:hover .ynf-mfd2-portal-back-arrow,
+.ynf-mfd2-portal-back:focus .ynf-mfd2-portal-back-arrow {
+    transform: translateX(-2px);
+}
+
+/* =========================================================================
+   Order header card
+   ========================================================================= */
+.ynf-mfd2-portal-order-num {
+    font-family: $ynf-mfd2-font-display;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.1;
+    margin: 0 0 6px;
+    color: $ynf-mfd2-oud;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+}
+
+.ynf-mfd2-portal-order-sub {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13.5px;
+    color: $ynf-mfd2-ink-2;
+}
+
+.ynf-mfd2-portal-session {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: $ynf-mfd2-oud;
+    font-weight: 500;
+}
+
+.ynf-mfd2-portal-session-dot {
+    color: $ynf-mfd2-rose;
+    font-size: 9px;
+    line-height: 1;
+}
+
+/* =========================================================================
+   Tracking card
+   ========================================================================= */
+.ynf-mfd2-portal-track-status { margin-bottom: 12px; }
+
+.ynf-mfd2-portal-track-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid $ynf-mfd2-hairline;
+    font-size: 14px;
+
+    &:nth-of-type(2) { border-top: 0; padding-top: 0; }
+}
+
+.ynf-mfd2-portal-track-label {
+    flex: 0 0 70px;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-ink-3;
+}
+
+.ynf-mfd2-portal-track-number {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular,
+                 Menlo, Consolas, monospace;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: $ynf-mfd2-oud;
+    word-break: break-all;
+    flex: 1 1 auto;
+    min-width: 0;
+
+    &:hover, &:focus { color: $ynf-mfd2-saffron-2; }
+}
+
+.ynf-mfd2-portal-muted {
+    color: $ynf-mfd2-ink-3;
+    font-style: italic;
+}
+
+/* Copy-to-clipboard button */
+.ynf-mfd2-portal-clip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    padding: 0;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-radius-sm;
+    background: $ynf-mfd2-bg;
+    color: $ynf-mfd2-ink-2;
+    cursor: pointer;
+    transition: background 180ms ease, border-color 180ms ease;
+    font-size: 14px;
+    line-height: 1;
+
+    &:hover, &:focus {
+        background: $ynf-mfd2-card;
+        border-color: $ynf-mfd2-saffron;
+        outline: 0;
+    }
+
+    &.is-copied {
+        background: rgba(92, 107, 62, 0.16);
+        border-color: $ynf-mfd2-success;
+        color: $ynf-mfd2-success;
+    }
+}
+
+/* =========================================================================
+   Items list (line items, mobile-first cards)
+   ========================================================================= */
+.ynf-mfd2-portal-items-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ynf-mfd2-portal-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-top: 1px solid $ynf-mfd2-hairline;
+
+    &:first-child { border-top: 0; padding-top: 4px; }
+    &:last-child { padding-bottom: 4px; }
+}
+
+.ynf-mfd2-portal-item-thumb {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    background: $ynf-mfd2-bg-soft;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-radius-sm;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.ynf-mfd2-portal-item-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.ynf-mfd2-portal-item-name {
+    font-family: $ynf-mfd2-font-display;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.25;
+    color: $ynf-mfd2-oud;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.ynf-mfd2-portal-item-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 13px;
+    color: $ynf-mfd2-ink-2;
+}
+
+.ynf-mfd2-portal-item-qty {
+    font-family: $ynf-mfd2-font-body;
+    font-weight: 500;
+    color: $ynf-mfd2-ink-2;
+}
+
+.ynf-mfd2-portal-item-price {
+    font-family: $ynf-mfd2-font-body;
+    font-weight: 600;
+    color: $ynf-mfd2-oud;
+}
+
+/* =========================================================================
+   Totals card
+   ========================================================================= */
+.ynf-mfd2-portal-totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    font-size: 14px;
+    color: $ynf-mfd2-ink-2;
+
+    & + .ynf-mfd2-portal-totals-row { border-top: 1px solid $ynf-mfd2-hairline; }
+
+    span:last-child {
+        font-variant-numeric: tabular-nums;
+        color: $ynf-mfd2-oud;
+        font-weight: 500;
+    }
+}
+
+.ynf-mfd2-portal-totals-grand {
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid $ynf-mfd2-hairline-2 !important;
+
+    span:first-child {
+        font-family: $ynf-mfd2-font-display;
+        font-style: italic;
+        font-size: 18px;
+        color: $ynf-mfd2-oud;
+    }
+    span:last-child {
+        font-family: $ynf-mfd2-font-display;
+        font-size: 22px;
+        font-weight: 600;
+        color: $ynf-mfd2-oud;
+    }
+}
+
+/* =========================================================================
+   Ship-to card
+   Hosts the Odoo `contact` widget output — strip its inherited margins.
+   ========================================================================= */
+.ynf-mfd2-portal-ship-body {
+    font-size: 14px;
+    line-height: 1.55;
+    color: $ynf-mfd2-ink;
+
+    address {
+        margin: 0;
+        font-style: normal;
+        color: inherit;
+    }
+
+    span, div { color: inherit; }
+
+    a {
+        color: $ynf-mfd2-oud;
+
+        &:hover, &:focus { color: $ynf-mfd2-saffron-2; }
+    }
+}
+
+/* =========================================================================
+   Help CTA card
+   ========================================================================= */
+.ynf-mfd2-portal-help-head {
+    font-family: $ynf-mfd2-font-display;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    color: $ynf-mfd2-oud;
+    margin-bottom: 4px;
+}
+
+.ynf-mfd2-portal-help-sub {
+    margin: 0 0 14px;
+    font-size: 13.5px;
+    color: $ynf-mfd2-ink-2;
+    line-height: 1.55;
+}
+
+/* =========================================================================
+   Desktop refinements
+   ========================================================================= */
+@media (min-width: 992px) {
+    .ynf-mfd2-portal-card { padding: 22px 24px 24px; }
+
+    .ynf-mfd2-portal-greet-h { font-size: 36px; }
+
+    .ynf-mfd2-portal-order-num { font-size: 34px; }
+
+    .ynf-mfd2-portal-actions-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================================
+   Defensive resets — Odoo's portal shell injects Bootstrap utilities into
+   #content; the parent sale_order_portal_template wraps us in `col-12
+   col-lg-8`, so we lean on flex defaults and just remove the surprise
+   underlines that Bootstrap can leave on portal links.
+   ========================================================================= */
+.ynf-mfd2-portal a:not(.ynf-mfd2-portal-cta) {
+    text-decoration: none;
+}
+
+.ynf-mfd2-portal hr { display: none; }
+
+/* =========================================================================
+   Hide Odoo's stock blocks on the portal pages we've reskinned.
+   We keep the original DOM intact (so downstream module inheritance like
+   sale_management, sale_loyalty, sale_stock, l10n_br_sales, project,
+   account "Overdue invoices", subscription, etc. can still find their
+   xpath targets) but render their nodes invisible behind our YNF cards.
+   ========================================================================= */
+.ynf-mfd2-portal-hidden,
+.o_portal_my_home .ynf-mfd2-portal-docs-hidden,
+.ynf-mfd2-portal-docs-hidden {
+    display: none !important;
+}
+
+/* The parent sale.sale_order_portal_template renders an #introduction
+   block above #content; on the order-detail page our header card already
+   shows the order name, type, and number, so we hide the duplicate when
+   our YNF detail body is present further down the page. */
+#portal_sale_content:has(#ynf_portal_order_detail) #introduction,
+#quote_content:has(#ynf_portal_order_detail) #introduction {
+    display: none;
+}
+
+/* The parent sale page renders "Communication history" (chatter) beneath
+   #content with an <hr/> — we leave it visible but give our card stack
+   a small margin so it doesn't jam straight into the legacy block. */
+#ynf_portal_order_detail + div#content { margin-top: 12px; }
+
