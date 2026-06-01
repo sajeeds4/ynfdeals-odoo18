@@ -1,0 +1,771 @@
+/* =========================================================================
+   YNF Deals — MFD v2 Product Detail page
+   -------------------------------------------------------------------------
+   Mobile-first single-column layout, max-width 560px. All rules scoped to
+   `.ynf-mfd2-product` (the wrap class added by ynf_product_overrides_v2).
+
+   Tokens are owned by Agent 1's _tokens.scss but we declare safe
+   `!default` fallbacks here so the file compiles standalone when imported
+   before that partial.
+   ========================================================================= */
+
+/* ---------- Token fallbacks ---------- */
+$ynf-mfd2-bg:             #ffffff !default;
+$ynf-mfd2-soft:           #faf6ee !default;
+$ynf-mfd2-card:           #ffffff !default;
+$ynf-mfd2-ink:            #2a2118 !default;
+$ynf-mfd2-ink-2:          #5a4a36 !default;
+$ynf-mfd2-ink-3:          #8a7a66 !default;
+$ynf-mfd2-oud:            #1a1410 !default;
+$ynf-mfd2-saffron:        #c8862e !default;
+$ynf-mfd2-saffron-2:      #b3741f !default;
+$ynf-mfd2-saffron-soft:   rgba(200, 134, 46, 0.42) !default;
+$ynf-mfd2-rose:           #6b1f23 !default;
+$ynf-mfd2-hairline:       rgba(160, 127, 58, 0.22) !default;
+$ynf-mfd2-hairline-2:     rgba(160, 127, 58, 0.45) !default;
+$ynf-mfd2-shadow-1:       0 6px 18px rgba(45, 36, 25, 0.08) !default;
+$ynf-mfd2-shadow-2:       0 12px 28px rgba(45, 36, 25, 0.12) !default;
+
+$ynf-mfd2-font-display:   "Cormorant Garamond", "Cormorant", Georgia, serif !default;
+$ynf-mfd2-font-body:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !default;
+
+$ynf-mfd2-page-max:       560px !default;
+$ynf-mfd2-r-sm:           10px !default;
+$ynf-mfd2-r-md:           16px !default;
+$ynf-mfd2-r-lg:           22px !default;
+$ynf-mfd2-r-pill:         999px !default;
+
+$ynf-mfd2-s-1:            4px  !default;
+$ynf-mfd2-s-2:            8px  !default;
+$ynf-mfd2-s-3:            12px !default;
+$ynf-mfd2-s-4:            16px !default;
+$ynf-mfd2-s-5:            20px !default;
+$ynf-mfd2-s-6:            24px !default;
+$ynf-mfd2-s-7:            32px !default;
+
+$ynf-mfd2-step-down-2:    11px !default;
+$ynf-mfd2-step-down-1:    12.5px !default;
+$ynf-mfd2-step-0:         14px !default;
+$ynf-mfd2-step-1:         16px !default;
+$ynf-mfd2-step-2:         19px !default;
+$ynf-mfd2-step-3:         22px !default;
+$ynf-mfd2-step-4:         26px !default;
+$ynf-mfd2-step-5:         30px !default;
+
+$ynf-mfd2-ease:           cubic-bezier(0.22, 1, 0.36, 1) !default;
+$ynf-mfd2-d-fast:         140ms !default;
+$ynf-mfd2-d-slow:         260ms !default;
+
+
+/* =========================================================================
+   Page root
+   ========================================================================= */
+.ynf-mfd2-product {
+    /* Override Odoo's default container padding for a flush mobile feel. */
+    background: $ynf-mfd2-bg;
+
+    .ynf-mfd2-product-row {
+        margin: 0;
+    }
+
+    .ynf-mfd2-product-col {
+        max-width: $ynf-mfd2-page-max;
+        margin: 0 auto;
+        padding: 0 $ynf-mfd2-s-4 96px; /* extra bottom for sticky bar clearance */
+        box-sizing: border-box;
+        width: 100%;
+
+        /* On tablet+ we widen the column slightly and let it breathe more. */
+        @media (min-width: 768px) {
+            max-width: 760px;
+            padding: 0 $ynf-mfd2-s-6 64px; /* no sticky bar above md */
+        }
+    }
+
+    /* The Odoo section container the row sits inside still has utility
+       classes — tame its spacing so our padding rules above own the gutter. */
+    .oe_website_sale {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+/* =========================================================================
+   Back-to-brand link
+   ========================================================================= */
+.ynf-mfd2-product-backbrand {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: $ynf-mfd2-s-4 0 $ynf-mfd2-s-3;
+    padding: 6px 0;
+    background: transparent;
+    border: 0;
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: $ynf-mfd2-ink-3;
+    text-decoration: none;
+    cursor: pointer;
+
+    .ynf-mfd2-product-backbrand-arrow {
+        font-size: 14px;
+        line-height: 1;
+    }
+
+    &:hover {
+        color: $ynf-mfd2-saffron-2;
+    }
+}
+
+
+/* =========================================================================
+   Gallery
+   ========================================================================= */
+.ynf-mfd2-product-gallery {
+    position: relative;
+    margin: 0 0 $ynf-mfd2-s-5;
+}
+
+.ynf-mfd2-product-gallery-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: $ynf-mfd2-soft;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-lg;
+    overflow: hidden;
+}
+
+.ynf-mfd2-product-gallery-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar { display: none; }
+
+    /* When only one slide, lock scrolling so a slight finger drag doesn't
+       force horizontal pan on the page. */
+    &[data-multi="0"] {
+        overflow: hidden;
+    }
+}
+
+.ynf-mfd2-product-gallery-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.ynf-mfd2-product-gallery-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Subtle drop shadow under the bottle to feel premium. */
+    filter: drop-shadow(0 18px 28px rgba(45, 36, 25, 0.10));
+    transition: transform $ynf-mfd2-d-slow $ynf-mfd2-ease;
+}
+
+.ynf-mfd2-product-gallery-tag {
+    position: absolute;
+    top: $ynf-mfd2-s-3;
+    left: $ynf-mfd2-s-3;
+    z-index: 2;
+    padding: 5px 11px;
+    border-radius: $ynf-mfd2-r-pill;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: $ynf-mfd2-saffron;
+    color: $ynf-mfd2-oud;
+    box-shadow: $ynf-mfd2-shadow-1;
+    pointer-events: none;
+}
+
+.ynf-mfd2-product-gallery-wish {
+    position: absolute;
+    top: $ynf-mfd2-s-3;
+    right: $ynf-mfd2-s-3;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    color: $ynf-mfd2-ink-3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                background $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                transform $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+        color: $ynf-mfd2-rose;
+        border-color: $ynf-mfd2-saffron-soft;
+    }
+
+    &:active { transform: scale(0.94); }
+
+    &.is-wished {
+        color: $ynf-mfd2-rose;
+        background: rgba(107, 31, 35, 0.06);
+        border-color: $ynf-mfd2-rose;
+
+        svg { fill: currentColor; }
+    }
+
+    &:focus-visible {
+        outline: 2px solid $ynf-mfd2-saffron;
+        outline-offset: 3px;
+    }
+}
+
+.ynf-mfd2-product-gallery-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin: $ynf-mfd2-s-3 0 0;
+}
+
+.ynf-mfd2-product-gallery-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid $ynf-mfd2-hairline-2;
+    background: transparent;
+    cursor: pointer;
+    transition: background $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                transform $ynf-mfd2-d-fast $ynf-mfd2-ease;
+
+    &.is-active {
+        background: $ynf-mfd2-saffron;
+        border-color: $ynf-mfd2-saffron;
+        transform: scale(1.18);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $ynf-mfd2-saffron;
+        outline-offset: 2px;
+    }
+}
+
+
+/* =========================================================================
+   Info head
+   ========================================================================= */
+.ynf-mfd2-product-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: $ynf-mfd2-s-4;
+}
+
+.ynf-mfd2-product-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $ynf-mfd2-s-3;
+}
+
+.ynf-mfd2-product-brand {
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-2;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-saffron-2;
+}
+
+.ynf-mfd2-product-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: $ynf-mfd2-ink-3;
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+
+    .ynf-mfd2-product-rating-stars {
+        position: relative;
+        display: inline-block;
+        width: 70px;
+        height: 12px;
+        background-image: linear-gradient(to right, #d8c9a8 0, #d8c9a8 100%);
+        -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 12'><g fill='black'><polygon points='6,1 7.5,4.5 11,5 8.5,7.5 9,11 6,9.2 3,11 3.5,7.5 1,5 4.5,4.5'/><polygon points='20,1 21.5,4.5 25,5 22.5,7.5 23,11 20,9.2 17,11 17.5,7.5 15,5 18.5,4.5'/><polygon points='34,1 35.5,4.5 39,5 36.5,7.5 37,11 34,9.2 31,11 31.5,7.5 29,5 32.5,4.5'/><polygon points='48,1 49.5,4.5 53,5 50.5,7.5 51,11 48,9.2 45,11 45.5,7.5 43,5 46.5,4.5'/><polygon points='62,1 63.5,4.5 67,5 64.5,7.5 65,11 62,9.2 59,11 59.5,7.5 57,5 60.5,4.5'/></g></svg>") no-repeat center / contain;
+        mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 12'><g fill='black'><polygon points='6,1 7.5,4.5 11,5 8.5,7.5 9,11 6,9.2 3,11 3.5,7.5 1,5 4.5,4.5'/><polygon points='20,1 21.5,4.5 25,5 22.5,7.5 23,11 20,9.2 17,11 17.5,7.5 15,5 18.5,4.5'/><polygon points='34,1 35.5,4.5 39,5 36.5,7.5 37,11 34,9.2 31,11 31.5,7.5 29,5 32.5,4.5'/><polygon points='48,1 49.5,4.5 53,5 50.5,7.5 51,11 48,9.2 45,11 45.5,7.5 43,5 46.5,4.5'/><polygon points='62,1 63.5,4.5 67,5 64.5,7.5 65,11 62,9.2 59,11 59.5,7.5 57,5 60.5,4.5'/></g></svg>") no-repeat center / contain;
+
+        span {
+            position: absolute;
+            inset: 0 auto 0 0;
+            background: $ynf-mfd2-saffron;
+        }
+    }
+
+    &:hover { color: $ynf-mfd2-ink; }
+}
+
+.ynf-mfd2-product-name {
+    margin: 6px 0 0;
+    font-family: $ynf-mfd2-font-display;
+    font-weight: 600;
+    font-size: $ynf-mfd2-step-5;
+    line-height: 1.05;
+    color: $ynf-mfd2-ink;
+    letter-spacing: -0.01em;
+
+    @media (min-width: 768px) {
+        font-size: 36px;
+    }
+}
+
+.ynf-mfd2-product-family {
+    margin-top: 8px;
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-0;
+    color: $ynf-mfd2-ink-3;
+}
+
+.ynf-mfd2-product-inspired {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 5px 11px;
+    background: rgba(200, 134, 46, 0.08);
+    border: 1px solid $ynf-mfd2-saffron-soft;
+    border-radius: $ynf-mfd2-r-pill;
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+    color: $ynf-mfd2-saffron-2;
+    align-self: flex-start;
+
+    .ynf-mfd2-product-inspired-spark {
+        color: $ynf-mfd2-saffron;
+        font-size: 11px;
+    }
+    .ynf-mfd2-product-inspired-label { font-weight: 500; }
+    .ynf-mfd2-product-inspired-name {
+        font-weight: 700;
+        color: $ynf-mfd2-ink;
+    }
+}
+
+
+/* =========================================================================
+   Form / price / variants
+   ========================================================================= */
+.ynf-mfd2-product-form {
+    display: flex;
+    flex-direction: column;
+    gap: $ynf-mfd2-s-4;
+}
+
+.ynf-mfd2-product-jsblock {
+    display: flex;
+    flex-direction: column;
+    gap: $ynf-mfd2-s-4;
+}
+
+.ynf-mfd2-product-priceblock {
+    /* Style Odoo's product_price markup. Use parent-level fonts since the
+       core template renders an <h4>/<span> we don't control. */
+    font-family: $ynf-mfd2-font-display;
+    font-size: 28px;
+    font-weight: 600;
+    color: $ynf-mfd2-saffron-2;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+
+    .oe_price, .oe_currency_value,
+    .oe_price_h4, h4 {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        font-size: 28px;
+        color: $ynf-mfd2-saffron-2;
+        margin: 0;
+    }
+
+    del, .text-decoration-line-through {
+        font-size: 16px;
+        color: $ynf-mfd2-ink-3;
+        font-weight: 500;
+        opacity: 0.7;
+        margin-left: 8px;
+    }
+}
+
+.ynf-mfd2-product-desc {
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-0;
+    line-height: 1.65;
+    color: $ynf-mfd2-ink-2;
+
+    p { margin: 0 0 10px; }
+    p:last-child { margin-bottom: 0; }
+}
+
+.ynf-mfd2-product-variants {
+    .js_add_cart_variants {
+        display: flex;
+        flex-direction: column;
+        gap: $ynf-mfd2-s-3;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .variant_attribute {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .attribute_name {
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-2;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-ink-3;
+    }
+
+    select.form-select,
+    input.form-control {
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-0;
+        color: $ynf-mfd2-ink;
+        border: 1px solid $ynf-mfd2-hairline;
+        border-radius: $ynf-mfd2-r-sm;
+        padding: 10px 12px;
+        background: $ynf-mfd2-card;
+
+        &:focus {
+            outline: 2px solid $ynf-mfd2-saffron;
+            outline-offset: 1px;
+            border-color: $ynf-mfd2-saffron;
+            box-shadow: none;
+        }
+    }
+}
+
+.ynf-mfd2-product-unavail {
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+    border-radius: $ynf-mfd2-r-sm;
+    margin: 0;
+}
+
+
+/* =========================================================================
+   Notes wrap — small spacing reset around the component
+   ========================================================================= */
+.ynf-mfd2-product-notes-wrap {
+    margin: $ynf-mfd2-s-2 0 0;
+}
+
+
+/* =========================================================================
+   Quantity stepper
+   ========================================================================= */
+.ynf-mfd2-product-qty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $ynf-mfd2-s-3;
+}
+
+.ynf-mfd2-product-qty-label {
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-2;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-ink-3;
+    margin: 0;
+}
+
+.ynf-mfd2-product-qty-control {
+    display: inline-flex;
+    align-items: center;
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-pill;
+    overflow: hidden;
+}
+
+.ynf-mfd2-product-qty-btn {
+    background: transparent;
+    border: 0;
+    padding: 10px 16px;
+    font-family: $ynf-mfd2-font-display;
+    font-size: 20px;
+    font-weight: 500;
+    color: $ynf-mfd2-ink;
+    cursor: pointer;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    transition: background $ynf-mfd2-d-fast $ynf-mfd2-ease;
+
+    &:hover { background: rgba(200, 134, 46, 0.08); }
+    &:active { background: rgba(200, 134, 46, 0.16); }
+
+    &:focus-visible {
+        outline: 2px solid $ynf-mfd2-saffron;
+        outline-offset: -2px;
+    }
+}
+
+.ynf-mfd2-product-qty-input {
+    width: 36px;
+    text-align: center;
+    border: 0;
+    background: transparent;
+    font-family: $ynf-mfd2-font-display;
+    font-weight: 600;
+    font-size: 16px;
+    color: $ynf-mfd2-ink;
+    padding: 0;
+    appearance: textfield;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+
+/* =========================================================================
+   CTA — main add-to-cart button
+   ========================================================================= */
+.ynf-mfd2-product-cta {
+    margin-top: $ynf-mfd2-s-2;
+}
+
+.ynf-mfd2-product-add {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    font-size: $ynf-mfd2-step-down-1;
+    letter-spacing: 0.14em;
+}
+
+
+/* =========================================================================
+   Perks band
+   ========================================================================= */
+.ynf-mfd2-product-perks {
+    display: flex;
+    flex-direction: column;
+    gap: $ynf-mfd2-s-3;
+    margin: $ynf-mfd2-s-6 0 0;
+    padding: $ynf-mfd2-s-4 $ynf-mfd2-s-4;
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-md;
+    box-shadow: $ynf-mfd2-shadow-1;
+}
+
+.ynf-mfd2-product-perk {
+    display: flex;
+    align-items: flex-start;
+    gap: $ynf-mfd2-s-3;
+}
+
+.ynf-mfd2-product-perk-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: $ynf-mfd2-saffron;
+}
+
+.ynf-mfd2-product-perk-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ynf-mfd2-product-perk-title {
+    font-family: $ynf-mfd2-font-display;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: $ynf-mfd2-ink;
+    line-height: 1.2;
+}
+
+.ynf-mfd2-product-perk-sub {
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+    color: $ynf-mfd2-ink-3;
+    line-height: 1.45;
+}
+
+
+/* =========================================================================
+   After-matter (accordion / attrs / docs / terms) — neutral spacing
+   ========================================================================= */
+.ynf-mfd2-product-aftermatter {
+    margin-top: $ynf-mfd2-s-6;
+
+    .accordion {
+        margin-top: 0;
+    }
+
+    .accordion-button {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        color: $ynf-mfd2-ink;
+    }
+}
+
+.ynf-mfd2-product-attrs {
+    table {
+        border-color: $ynf-mfd2-hairline;
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-1;
+    }
+}
+
+
+/* =========================================================================
+   Related rail
+   ========================================================================= */
+.ynf-mfd2-product-related {
+    margin-top: $ynf-mfd2-s-7;
+
+    .ynf-mfd2-section-head {
+        margin-bottom: $ynf-mfd2-s-3;
+    }
+
+    .ynf-mfd2-section-head-title {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        font-size: 22px;
+        color: $ynf-mfd2-ink;
+        margin: 0;
+    }
+
+    /* Reuse the rail component; this just nudges card width on this page. */
+    .ynf-mfd2-rail-track > * {
+        flex: 0 0 158px;
+
+        @media (min-width: 768px) {
+            flex: 0 0 200px;
+        }
+    }
+}
+
+
+/* =========================================================================
+   Sticky add-to-cart bar (mobile only)
+   ========================================================================= */
+.ynf-mfd2-product-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    transform: translateY(110%);
+    transition: transform 240ms $ynf-mfd2-ease, opacity 200ms $ynf-mfd2-ease;
+    opacity: 0;
+    pointer-events: none;
+
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid $ynf-mfd2-hairline;
+    box-shadow: 0 -10px 30px rgba(45, 36, 25, 0.10);
+    padding: 11px max(env(safe-area-inset-right, 0px), 14px)
+             calc(11px + env(safe-area-inset-bottom, 0px))
+             max(env(safe-area-inset-left, 0px), 14px);
+
+    &.is-visible {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.ynf-mfd2-product-sticky-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: $ynf-mfd2-page-max;
+    margin: 0 auto;
+}
+
+.ynf-mfd2-product-sticky-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.ynf-mfd2-product-sticky-qty-line {
+    font-family: $ynf-mfd2-font-body;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-ink-3;
+
+    span { color: $ynf-mfd2-ink; }
+}
+
+.ynf-mfd2-product-sticky-price {
+    .ynf-mfd2-price {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        font-size: 20px;
+        color: $ynf-mfd2-ink;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.ynf-mfd2-product-sticky-add {
+    flex: 1 1 auto;
+    min-height: 46px;
+    justify-content: center;
+}
+
+
+/* =========================================================================
+   Reduced motion
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .ynf-mfd2-product-sticky { transition: none; }
+    .ynf-mfd2-product-gallery-img { transition: none; }
+    .ynf-mfd2-product-gallery-dot { transition: none; }
+}

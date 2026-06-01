@@ -21,6 +21,7 @@ Mobile-first storefront for ynfdeals.com.
         "views/portal_templates.xml",
         "views/login_templates.xml",
         "views/dev_gate_templates.xml",
+        "views/product_templates.xml",
     ],
     "assets": {
         "web.assets_frontend": [
@@ -28,7 +29,9 @@ Mobile-first storefront for ynfdeals.com.
             "ynf_storefront/static/src/scss/mobile_first_design.scss",
             "ynf_storefront/static/src/scss/components/_footer.scss",
             "ynf_storefront/static/src/scss/pages/_cart.scss",
+            "ynf_storefront/static/src/scss/pages/_product.scss",
             "ynf_storefront/static/src/js/ynf_theme.js",
+            "ynf_storefront/static/src/js/ynf_product.js",
         ],
     },
     "license": "LGPL-3",
