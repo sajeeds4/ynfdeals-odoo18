@@ -559,3 +559,168 @@ h1, h2, h3, h4, .h1, .h2, .h3,
     p { margin: 0 0 10px; }
     a { color: $ynf-gold-dark; }
 }
+
+/* =========================================================================
+   Desktop polish + fix duplicate header (Odoo's default `o_header_standard`
+   was rendering alongside our custom .ynf-header). CSS override beats the
+   xpath approach which Odoo's website module sometimes ignores.
+   ========================================================================= */
+
+/* Hide Odoo's default header — we render our own .ynf-header */
+header#top.o_header_standard,
+header#top[data-name="Header"]:not(.ynf-header) {
+    display: none !important;
+}
+
+/* Wider canvas on tablet+ desktop (was 720px which is mobile prototype size) */
+.ynf-wrap {
+    @media (min-width: 768px)  { max-width: 960px; }
+    @media (min-width: 1200px) { max-width: 1200px; padding: 0 32px; }
+}
+
+/* Hero — full-width feel on desktop, much bigger headline */
+.ynf-hero {
+    @media (min-width: 768px) {
+        margin: 24px 0 0;
+        padding: 56px 56px;
+        min-height: 420px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        h1 { font-size: clamp(44px, 5vw, 72px) !important; }
+        .lead { font-size: 17px; max-width: 560px; }
+        .ynf-hero-cta { margin-top: 28px; gap: 14px; }
+    }
+    @media (min-width: 1200px) {
+        padding: 72px 72px;
+        min-height: 500px;
+        h1 { font-size: 76px !important; }
+    }
+}
+
+/* Live strip — make it pop on desktop */
+.ynf-live-strip {
+    background: linear-gradient(135deg, #1a1410 0%, #2a1f14 100%);
+    border: 1px solid $ynf-border;
+    border-radius: $radius-lg;
+    padding: 28px 32px;
+    color: $ynf-bg;
+    display: block;
+    h2 { color: #fff; margin: 8px 0 0;
+        @media (min-width: 768px) { font-size: 28px; } }
+    .ynf-eyebrow-gold { font-size: 11px; }
+    &:hover { transform: translateY(-1px); box-shadow: $shadow-lift; }
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+/* Collections — give the empty cards real visual weight */
+.ynf-coll-grid {
+    @media (min-width: 768px) { gap: 16px; padding: 0; }
+}
+.ynf-coll-card {
+    background: linear-gradient(160deg, $ynf-bg-soft 0%, #d9c89a 60%, #c8a965 100%);
+    aspect-ratio: 0.85;
+    box-shadow: $shadow-card;
+    transition: transform .15s ease, box-shadow .2s ease;
+    &:hover { transform: translateY(-2px); box-shadow: $shadow-lift; }
+    .ynf-coll-overlay {
+        background: linear-gradient(to top, rgba(20, 15, 10, 0.92) 0%, rgba(20, 15, 10, 0.55) 50%, transparent 100%);
+        padding: 28px 14px 16px;
+    }
+    h3 {
+        font-family: $ynf-serif !important;
+        font-weight: 600;
+        font-size: 18px !important;
+        letter-spacing: 0.02em;
+        @media (min-width: 768px) { font-size: 22px !important; }
+    }
+    /* gold ornament center */
+    &::before {
+        content: "◆"; color: $ynf-gold-dark; font-size: 16px;
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.4;
+    }
+}
+
+/* Section spacing — give the page room to breathe on desktop */
+section.ynf-wrap {
+    @media (min-width: 768px) { margin-top: 72px !important; }
+    &:first-child { @media (min-width: 768px) { margin-top: 24px !important; } }
+}
+
+/* Section titles — bigger on desktop */
+.ynf-section-title {
+    @media (min-width: 768px) {
+        margin-bottom: 32px;
+        h2 { font-size: clamp(32px, 4vw, 44px) !important; }
+        .eyebrow { font-size: 12px; }
+    }
+}
+
+/* Product rails — proper card sizes on desktop */
+.ynf-rail {
+    @media (min-width: 768px) {
+        gap: 20px;
+        > * { flex: 0 0 220px; }
+    }
+}
+
+/* Bundles — bigger and more polished on desktop */
+.ynf-bundle {
+    @media (min-width: 768px) { flex: 0 0 320px;
+        .ynf-bundle-imgs img { height: 130px; }
+        h3 { font-size: 20px; }
+    }
+}
+
+/* Mood cards — 4-col on desktop */
+.ynf-moods {
+    @media (min-width: 768px) { gap: 16px; }
+    @media (min-width: 1200px) { grid-template-columns: repeat(4, 1fr); }
+}
+.ynf-mood-card {
+    @media (min-width: 768px) { padding: 24px;
+        h3 { font-size: 20px; }
+        p { font-size: 13px; }
+        .ynf-mood-ic { width: 44px; height: 44px; font-size: 18px; }
+    }
+}
+
+/* Spotlight, dropalert, authenticity — bigger padding on desktop */
+.ynf-spotlight, .ynf-auth, .ynf-dropalert, .ynf-quizcard {
+    @media (min-width: 768px) {
+        padding: 56px 48px;
+        h2 { font-size: 40px !important; }
+        p { font-size: 16px; }
+    }
+}
+
+/* Editorial — larger images on desktop */
+.ynf-editorial img, .ynf-editorial .ynf-edslot {
+    @media (min-width: 768px) { height: 420px; }
+}
+.ynf-edgrid img, .ynf-edgrid .ynf-edslot {
+    @media (min-width: 768px) { height: 240px; }
+}
+
+/* Stats — bigger numbers on desktop */
+.ynf-stats {
+    @media (min-width: 768px) {
+        padding: 36px 24px;
+        .n { font-size: 38px; }
+        .l { font-size: 11px; }
+    }
+}
+
+/* Testimonial cards — readable on desktop */
+.ynf-testi {
+    @media (min-width: 768px) { flex: 0 0 340px; padding: 28px;
+        .q { font-size: 19px; }
+    }
+}
+
+/* Page wrap should NOT use mobile-only padding-bottom on desktop */
+@media (min-width: 768px) {
+    #wrapwrap { padding-bottom: 0 !important; }
+}
