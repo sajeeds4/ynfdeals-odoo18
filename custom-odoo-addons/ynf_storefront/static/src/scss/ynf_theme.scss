@@ -842,3 +842,179 @@ section.ynf-wrap {
         > .ynf-section-title { padding-top: 30px; }
     }
 }
+
+/* =========================================================================
+   Cinematic hero (replaces .ynf-hero on homepage) — full-bleed video
+   background with custom fade-in/out loop, Instrument Serif headline,
+   Inter body. Black/white/gray palette. Responsive mobile + desktop.
+   ========================================================================= */
+.ynf-cinema {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 110px);  // viewport minus marquee + header
+    overflow: hidden;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1.5rem 6rem;
+    margin: 0 !important;
+
+    @media (min-width: 768px) {
+        padding: 6rem 2rem 10rem;
+        min-height: calc(100vh - 110px);
+    }
+}
+
+.ynf-cinema-video {
+    position: absolute;
+    top: 300px;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: calc(100% - 300px);
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0;
+    /* Smooth opacity transitions even between RAF frames */
+    transition: opacity 0.1s linear;
+    pointer-events: none;
+
+    @media (max-width: 767px) {
+        // Bring video higher on mobile so it's visible behind smaller hero text
+        top: 220px;
+        height: calc(100% - 220px);
+    }
+}
+
+.ynf-cinema-overlay {
+    position: absolute;
+    top: 300px;
+    left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.2) 20%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.3) 80%,
+        #ffffff 100%);
+
+    @media (max-width: 767px) {
+        top: 220px;
+    }
+}
+
+.ynf-cinema-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ynf-cinema-eyebrow {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: #000000;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: ynf-cinema-fade-rise 0.8s ease-out 0s forwards;
+    sup {
+        font-size: 0.6em;
+        top: -0.6em;
+        position: relative;
+        letter-spacing: 0;
+    }
+}
+
+.ynf-cinema-headline {
+    font-family: "Instrument Serif", Georgia, "Times New Roman", serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(40px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -1.5px;
+    color: #000000;
+    margin: 0;
+    max-width: 1100px;
+    opacity: 0;
+    animation: ynf-cinema-fade-rise 0.8s ease-out 0.1s forwards;
+
+    em {
+        color: #6f6f6f;
+        font-style: italic;
+        font-weight: 400;
+    }
+
+    @media (min-width: 768px) {
+        font-size: clamp(64px, 7vw, 112px);
+        letter-spacing: -2.46px;
+    }
+    @media (min-width: 1200px) {
+        font-size: 128px;
+    }
+}
+
+.ynf-cinema-desc {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6f6f6f;
+    max-width: 580px;
+    margin: 2rem auto 0;
+    opacity: 0;
+    animation: ynf-cinema-fade-rise 0.8s ease-out 0.3s forwards;
+
+    @media (min-width: 768px) {
+        font-size: 18px;
+    }
+}
+
+.ynf-cinema-cta {
+    display: inline-block;
+    margin-top: 3rem;
+    padding: 1.25rem 3.5rem;
+    background: #000000;
+    color: #ffffff !important;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+    opacity: 0;
+    animation: ynf-cinema-fade-rise 0.8s ease-out 0.5s forwards;
+    cursor: pointer;
+
+    &:hover {
+        background: #000000;
+        color: #ffffff !important;
+        transform: scale(1.03);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        text-decoration: none !important;
+    }
+    &:active { transform: scale(0.99); }
+}
+
+@keyframes ynf-cinema-fade-rise {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Respect reduced motion — skip the fade-in animations + reveal immediately */
+@media (prefers-reduced-motion: reduce) {
+    .ynf-cinema-eyebrow,
+    .ynf-cinema-headline,
+    .ynf-cinema-desc,
+    .ynf-cinema-cta {
+        opacity: 1;
+        animation: none;
+    }
+}
