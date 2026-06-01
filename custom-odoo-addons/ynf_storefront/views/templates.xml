@@ -200,7 +200,8 @@
          Fragrance finder · Testimonials · Stats · Authenticity · Drop alert. -->
     <template id="ynf_homepage" name="YNF Homepage">
         <t t-call="website.layout">
-            <t t-set="pub" t-value="[('sale_ok','=',True),('website_published','=',True)]"/>
+            <!-- Only surface products that actually have a photo so the homepage isn't a wall of placeholders. -->
+            <t t-set="pub" t-value="[('sale_ok','=',True),('is_published','=',True),'|',('image_1920','!=',False),('x_ynf_image_url','!=',False)]"/>
             <t t-set="newest" t-value="request.env['product.template'].sudo().search(pub, limit=8, order='create_date desc')"/>
             <t t-set="cheap" t-value="request.env['product.template'].sudo().search(pub + [('list_price','&lt;=',31)], limit=8)"/>
             <t t-set="bundle_src" t-value="request.env['product.template'].sudo().search(pub, limit=9)"/>
