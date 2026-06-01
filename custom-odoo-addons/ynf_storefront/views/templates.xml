@@ -207,25 +207,66 @@
             <t t-set="bundle_src" t-value="request.env['product.template'].sudo().search(pub, limit=9)"/>
             <div id="wrap" class="ynf-homepage">
 
-                <!-- CINEMATIC HERO — looping video bg with fade in/out + Instrument Serif headline -->
-                <section class="ynf-cinema" aria-label="YNF Deals cinematic hero">
-                    <video class="ynf-cinema-video" muted="muted" playsinline="playsinline" preload="metadata" aria-hidden="true">
-                        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4" type="video/mp4"/>
-                    </video>
-                    <div class="ynf-cinema-overlay" aria-hidden="true"/>
-                    <div class="ynf-cinema-content">
-                        <span class="ynf-cinema-eyebrow">YNF DEALS<sup>®</sup></span>
-                        <h1 class="ynf-cinema-headline">
-                            Beyond <em>the noise,</em><br/>
-                            we craft <em>the eternal.</em>
+                <!-- EDITORIAL 2-COLUMN HERO — premium fragrance-retail pattern.
+                     Left: brand statement, CTAs, price-from hook, brand pills.
+                     Right: featured product bottle on softer brass backdrop.
+                     Mobile collapses to stacked (bottle first, then copy). -->
+                <t t-set="featured" t-value="
+                    request.env['product.template'].sudo().search([('active','=',True),('name','ilike','khamrah 100ml')], limit=1)
+                    or request.env['product.template'].sudo().search([('active','=',True),'|',('image_1920','!=',False),('x_ynf_image_url','!=',False)], limit=1)
+                "/>
+                <t t-set="from_price" t-value="14.99"/>
+                <t t-if="featured">
+                <section class="ynf-ed-hero">
+                    <!-- LEFT — brand statement column -->
+                    <div class="ynf-ed-text">
+                        <span class="ynf-ed-eyebrow">
+                            <i aria-hidden="true">◆</i>
+                            <span>New drop · Lattafa</span>
+                        </span>
+                        <h1 class="ynf-ed-headline">
+                            Discover <em>the night</em><br/>
+                            <em>cabinet.</em>
                         </h1>
-                        <p class="ynf-cinema-desc">
+                        <p class="ynf-ed-lead">
                             Hand-picked Arabian &amp; niche fragrances at live-auction prices.
-                            Shipped fast, 100% authentic — for those who collect more than scents.
+                            Smoke, dried rose, oud — composed by the houses that shape the genre.
                         </p>
-                        <a href="/shop" class="ynf-cinema-cta">Begin Journey</a>
+                        <div class="ynf-ed-price">
+                            <span class="ynf-ed-price-label">From</span>
+                            <span class="ynf-ed-price-value">$<t t-esc="'%.2f' % from_price"/></span>
+                            <span class="ynf-ed-price-sub">100% authentic · free shipping over $75</span>
+                        </div>
+                        <div class="ynf-ed-ctas">
+                            <a href="/shop?brand=lattafa" class="ynf-ed-cta-primary">Shop the collection</a>
+                            <a href="/live" class="ynf-ed-cta-secondary">Watch live tonight →</a>
+                        </div>
+                        <div class="ynf-ed-brands">
+                            <span>Lattafa</span><span>Armaf</span><span>Rasasi</span><span>Afnan</span>
+                        </div>
                     </div>
+                    <!-- RIGHT — featured bottle column -->
+                    <a t-attf-href="/shop/product/#{slug(featured)}" class="ynf-ed-product" t-att-aria-label="featured.name">
+                        <div class="ynf-ed-product-tag">★ Featured · <t t-esc="featured.name"/></div>
+                        <div class="ynf-ed-product-stage" aria-hidden="true"/>
+                        <div class="ynf-ed-product-bottle">
+                            <img t-if="featured.x_ynf_image_url" t-att-src="featured.x_ynf_image_url" t-att-alt="featured.name" loading="eager"/>
+                            <img t-else="t-else" t-attf-src="/web/image/product.template/#{featured.id}/image_1024" t-att-alt="featured.name" loading="eager"/>
+                        </div>
+                        <div class="ynf-ed-product-info">
+                            <div class="ynf-ed-product-name" t-esc="featured.name"/>
+                            <div class="ynf-ed-product-price">$<t t-esc="'%.0f' % (featured.list_price or 0)"/></div>
+                        </div>
+                    </a>
                 </section>
+                <!-- thin promo strip right under the hero -->
+                <section class="ynf-ed-promo">
+                    <span><i aria-hidden="true">◆</i> 100% authentic guarantee</span>
+                    <span><i aria-hidden="true">◆</i> Free shipping over $75</span>
+                    <span><i aria-hidden="true">◆</i> Ships in 2 business days</span>
+                    <span><i aria-hidden="true">◆</i> Live auctions nightly · 8 PM ET</span>
+                </section>
+                </t>
 
                 <!-- LIVE STRIP -->
                 <section class="ynf-wrap" style="margin-top:30px;">

@@ -844,177 +844,338 @@ section.ynf-wrap {
 }
 
 /* =========================================================================
-   Cinematic hero (replaces .ynf-hero on homepage) — full-bleed video
-   background with custom fade-in/out loop, Instrument Serif headline,
-   Inter body. Black/white/gray palette. Responsive mobile + desktop.
+   EDITORIAL 2-COLUMN HERO — premium fragrance retail pattern (Lattafa /
+   Tom Ford / Maison Margiela). Desktop: copy left, bottle right.
+   Mobile: stacked (bottle on top, copy below).
    ========================================================================= */
-.ynf-cinema {
-    position: relative;
-    width: 100%;
-    min-height: calc(100vh - 110px);  // viewport minus marquee + header
+.ynf-ed-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 18px 0 0;
+    background: #fff;
+    border: 1px solid $ynf-border-soft;
+    border-radius: $radius-lg;
     overflow: hidden;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 4rem 1.5rem 6rem;
-    margin: 0 !important;
+    box-shadow: $shadow-card;
 
     @media (min-width: 768px) {
-        padding: 6rem 2rem 10rem;
-        min-height: calc(100vh - 110px);
+        grid-template-columns: 1.05fr 1fr;
+        min-height: 560px;
+        margin: 28px 0 0;
+    }
+    @media (min-width: 1200px) {
+        min-height: 620px;
     }
 }
 
-.ynf-cinema-video {
-    position: absolute;
-    top: 300px;
-    left: 0; right: 0; bottom: 0;
-    width: 100%;
-    height: calc(100% - 300px);
-    object-fit: cover;
-    z-index: 0;
-    opacity: 0;
-    /* Smooth opacity transitions even between RAF frames */
-    transition: opacity 0.1s linear;
-    pointer-events: none;
-
-    @media (max-width: 767px) {
-        // Bring video higher on mobile so it's visible behind smaller hero text
-        top: 220px;
-        height: calc(100% - 220px);
-    }
-}
-
-.ynf-cinema-overlay {
-    position: absolute;
-    top: 300px;
-    left: 0; right: 0; bottom: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(to bottom,
-        #ffffff 0%,
-        rgba(255, 255, 255, 0.2) 20%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.3) 80%,
-        #ffffff 100%);
-
-    @media (max-width: 767px) {
-        top: 220px;
-    }
-}
-
-.ynf-cinema-content {
-    position: relative;
-    z-index: 2;
-    max-width: 1280px;
-    margin: 0 auto;
+/* LEFT — text column */
+.ynf-ed-text {
+    padding: 36px 28px 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
+    justify-content: center;
+    gap: 18px;
 
-.ynf-cinema-eyebrow {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    color: #000000;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: ynf-cinema-fade-rise 0.8s ease-out 0s forwards;
-    sup {
-        font-size: 0.6em;
-        top: -0.6em;
-        position: relative;
-        letter-spacing: 0;
+    @media (min-width: 768px) {
+        padding: 56px 48px;
+        gap: 22px;
+    }
+    @media (min-width: 1200px) {
+        padding: 72px 64px;
     }
 }
 
-.ynf-cinema-headline {
+.ynf-ed-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $ynf-sans;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: $ynf-gold-dark;
+    i { color: $ynf-gold; font-style: normal; font-size: 9px; }
+    @media (min-width: 768px) { font-size: 12px; }
+}
+
+.ynf-ed-headline {
     font-family: "Instrument Serif", Georgia, "Times New Roman", serif !important;
     font-weight: 400 !important;
-    font-size: clamp(40px, 8vw, 96px);
-    line-height: 0.95;
-    letter-spacing: -1.5px;
-    color: #000000;
+    font-size: clamp(42px, 7vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -1.2px;
+    color: #1a1410;
     margin: 0;
-    max-width: 1100px;
-    opacity: 0;
-    animation: ynf-cinema-fade-rise 0.8s ease-out 0.1s forwards;
 
     em {
-        color: #6f6f6f;
+        color: $ynf-gold-dark;
         font-style: italic;
         font-weight: 400;
     }
-
-    @media (min-width: 768px) {
-        font-size: clamp(64px, 7vw, 112px);
-        letter-spacing: -2.46px;
-    }
-    @media (min-width: 1200px) {
-        font-size: 128px;
-    }
+    @media (min-width: 768px) { font-size: clamp(56px, 5.5vw, 84px); }
+    @media (min-width: 1200px) { font-size: 92px; }
 }
 
-.ynf-cinema-desc {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 16px;
+.ynf-ed-lead {
+    font-family: $ynf-sans;
+    font-size: 15px;
     line-height: 1.6;
-    color: #6f6f6f;
-    max-width: 580px;
-    margin: 2rem auto 0;
-    opacity: 0;
-    animation: ynf-cinema-fade-rise 0.8s ease-out 0.3s forwards;
+    color: $ynf-text-muted;
+    max-width: 520px;
+    margin: 0;
+    @media (min-width: 768px) { font-size: 16.5px; }
+}
 
-    @media (min-width: 768px) {
-        font-size: 18px;
+.ynf-ed-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    .ynf-ed-price-label {
+        font-family: $ynf-sans;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: $ynf-text-muted;
+    }
+    .ynf-ed-price-value {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-weight: 400;
+        font-size: 36px;
+        color: $ynf-gold-dark;
+        line-height: 1;
+        @media (min-width: 768px) { font-size: 44px; }
+    }
+    .ynf-ed-price-sub {
+        flex-basis: 100%;
+        font-family: $ynf-sans;
+        font-size: 11.5px;
+        color: $ynf-text-dim;
+        letter-spacing: 0.02em;
     }
 }
 
-.ynf-cinema-cta {
-    display: inline-block;
-    margin-top: 3rem;
-    padding: 1.25rem 3.5rem;
-    background: #000000;
-    color: #ffffff !important;
-    border: 1px solid #000000;
-    border-radius: 999px;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none !important;
-    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
-    opacity: 0;
-    animation: ynf-cinema-fade-rise 0.8s ease-out 0.5s forwards;
-    cursor: pointer;
+.ynf-ed-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-top: 6px;
+}
 
+.ynf-ed-cta-primary {
+    display: inline-block;
+    background: #1a1410;
+    color: #fff !important;
+    border: 1px solid #1a1410;
+    border-radius: $radius-pill;
+    font-family: $ynf-sans;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 14px 28px;
+    text-decoration: none !important;
+    transition: transform .15s ease, background .15s ease, box-shadow .2s ease;
     &:hover {
-        background: #000000;
-        color: #ffffff !important;
-        transform: scale(1.03);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        background: $ynf-gold-dark;
+        border-color: $ynf-gold-dark;
+        color: #fff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(124, 97, 40, 0.32);
         text-decoration: none !important;
     }
-    &:active { transform: scale(0.99); }
 }
 
-@keyframes ynf-cinema-fade-rise {
-    0%   { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* Respect reduced motion — skip the fade-in animations + reveal immediately */
-@media (prefers-reduced-motion: reduce) {
-    .ynf-cinema-eyebrow,
-    .ynf-cinema-headline,
-    .ynf-cinema-desc,
-    .ynf-cinema-cta {
-        opacity: 1;
-        animation: none;
+.ynf-ed-cta-secondary {
+    font-family: $ynf-sans;
+    font-size: 14px;
+    font-weight: 600;
+    color: $ynf-gold-dark !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid transparent;
+    padding: 4px 0;
+    transition: border-color .15s ease, color .15s ease;
+    &:hover {
+        color: #1a1410 !important;
+        border-bottom-color: $ynf-gold;
+        text-decoration: none !important;
     }
+}
+
+.ynf-ed-brands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px solid $ynf-border-soft;
+    span {
+        display: inline-flex;
+        align-items: center;
+        font-family: $ynf-sans;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: $ynf-text-muted;
+        padding: 5px 12px;
+        border: 1px solid $ynf-border-soft;
+        border-radius: $radius-pill;
+        background: $ynf-bg;
+        &::before {
+            content: "●";
+            color: $ynf-gold;
+            font-size: 8px;
+            margin-right: 6px;
+        }
+    }
+}
+
+/* RIGHT — featured product column */
+.ynf-ed-product {
+    position: relative;
+    display: block;
+    text-decoration: none !important;
+    overflow: hidden;
+    min-height: 380px;
+    background:
+        radial-gradient(ellipse at 50% 55%, rgba(200, 134, 46, 0.22) 0%, transparent 65%),
+        linear-gradient(165deg, #f4ecdd 0%, #e8d8b3 55%, #d4b56e 100%);
+    transition: background .25s ease;
+
+    /* On mobile this column appears on top of the text */
+    @media (max-width: 767px) {
+        order: -1;
+        min-height: 340px;
+    }
+    @media (min-width: 768px) { min-height: 560px; }
+    @media (min-width: 1200px) { min-height: 620px; }
+
+    &:hover {
+        background:
+            radial-gradient(ellipse at 50% 55%, rgba(200, 134, 46, 0.32) 0%, transparent 65%),
+            linear-gradient(165deg, #f4ecdd 0%, #e8d8b3 55%, #c9a961 100%);
+        text-decoration: none !important;
+    }
+}
+
+.ynf-ed-product-stage {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60' fill='none' stroke='%237c6128' stroke-width='0.5'%3E%3Cpath d='M30 4 L46 18 L46 42 L30 56 L14 42 L14 18 Z'/%3E%3Cpath d='M30 14 L40 22 L40 38 L30 46 L20 38 L20 22 Z'/%3E%3C/svg%3E");
+    background-size: 100px;
+    opacity: 0.10;
+    pointer-events: none;
+}
+
+.ynf-ed-product-tag {
+    position: absolute;
+    top: 18px; left: 20px;
+    z-index: 3;
+    font-family: $ynf-sans;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $ynf-gold-dark;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 6px 12px;
+    border-radius: $radius-pill;
+    @media (min-width: 768px) { top: 28px; left: 32px; font-size: 12px; }
+}
+
+.ynf-ed-product-bottle {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -52%);
+    z-index: 2;
+    width: 70%; max-width: 320px;
+    aspect-ratio: 0.7;
+    display: flex; align-items: center; justify-content: center;
+    animation: ynf-ed-float 6s ease-in-out infinite;
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto; height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 30px 36px rgba(46, 27, 8, 0.35));
+        /* Soft radial mask so PNG white background fades into the brass */
+        -webkit-mask-image: radial-gradient(ellipse 62% 78% at center, #000 50%, transparent 92%);
+                mask-image: radial-gradient(ellipse 62% 78% at center, #000 50%, transparent 92%);
+    }
+    @media (min-width: 768px) { width: 65%; max-width: 380px; }
+}
+@keyframes ynf-ed-float {
+    0%, 100% { transform: translate(-50%, -52%); }
+    50%      { transform: translate(-50%, -55%); }
+}
+
+.ynf-ed-product-info {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 3;
+    padding: 18px 22px 22px;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 12px;
+    color: #1a1410;
+    /* fade under the info so text stays legible */
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 100%);
+    @media (min-width: 768px) { padding: 22px 32px 28px; }
+}
+
+.ynf-ed-product-name {
+    font-family: $ynf-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1a1410;
+    line-height: 1.2;
+    flex: 1 1 auto;
+    @media (min-width: 768px) { font-size: 18px; }
+}
+
+.ynf-ed-product-price {
+    font-family: $ynf-sans;
+    font-weight: 700;
+    font-size: 18px;
+    color: $ynf-gold-dark;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    @media (min-width: 768px) { font-size: 20px; }
+}
+
+/* Promo strip directly under the hero */
+.ynf-ed-promo {
+    margin: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 24px;
+    padding: 14px 16px;
+    background: $ynf-bg;
+    border: 1px solid $ynf-border-soft;
+    border-radius: $radius-md;
+    font-family: $ynf-sans;
+    font-size: 12px;
+    font-weight: 500;
+    color: $ynf-text-muted;
+    letter-spacing: 0.02em;
+    span {
+        display: inline-flex; align-items: center; gap: 7px;
+        i { color: $ynf-gold; font-style: normal; font-size: 9px; }
+    }
+    @media (min-width: 768px) {
+        font-size: 13px;
+        gap: 14px 40px;
+        margin: 18px 0 0;
+        padding: 18px 24px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ynf-ed-product-bottle { animation: none; }
 }
