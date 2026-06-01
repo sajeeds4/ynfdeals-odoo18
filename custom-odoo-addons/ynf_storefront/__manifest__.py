@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "YNF Deals — Storefront",
-    "version": "18.0.14.0.0",
+    "version": "18.0.15.0.0",
     "summary": "Mobile-first light-luxury storefront for ynfdeals.com (curated homepage, live auctions, dupe badges, portal customizations).",
     "description": """
 YNF Deals storefront

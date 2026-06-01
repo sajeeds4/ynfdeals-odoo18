@@ -223,35 +223,26 @@
 })();
 
 /* ============================================================
-   Cinematic hero video — manual fade in/out loop.
-   - Fades opacity 0 → 1 over the first 0.5s of playback.
-   - Fades opacity 1 → 0 over the last 0.5s before the end.
-   - On `ended`: opacity 0, wait 100ms, reset currentTime, play() again.
-   This is a seamless loop without the visible black frame the native
-   `loop` attribute leaves on most browsers.
+   Cinematic hero video — manual fade in/out loop (.av-cinema).
+   - Fades opacity 0→1 over the first 0.5s of playback.
+   - Fades opacity 1→0 over the last 0.5s before the end.
+   - On `ended`: set opacity 0, wait 100ms, reset currentTime, play() again.
    ============================================================ */
 (function () {
-    function init() {
-        const video = document.querySelector('.ynf-cinema-video');
+    function initAvCinema() {
+        var video = document.querySelector('.av-cinema-video');
         if (!video) return;
-        const FADE = 0.5;  // seconds of fade in/out
+        var FADE = 0.5;
 
         function tick() {
             if (video.paused || !isFinite(video.duration) || video.duration <= 0) {
-                requestAnimationFrame(tick);
-                return;
+                requestAnimationFrame(tick); return;
             }
-            const t = video.currentTime;
-            const d = video.duration;
-            let opacity;
-            if (t < FADE) {
-                opacity = Math.max(0, Math.min(1, t / FADE));
-            } else if (t > d - FADE) {
-                opacity = Math.max(0, Math.min(1, (d - t) / FADE));
-            } else {
-                opacity = 1;
-            }
-            video.style.opacity = String(opacity);
+            var t = video.currentTime, d = video.duration, op;
+            if (t < FADE)            op = Math.max(0, Math.min(1, t / FADE));
+            else if (t > d - FADE)   op = Math.max(0, Math.min(1, (d - t) / FADE));
+            else                     op = 1;
+            video.style.opacity = String(op);
             requestAnimationFrame(tick);
         }
 
@@ -260,29 +251,27 @@
             setTimeout(function () {
                 try {
                     video.currentTime = 0;
-                    const p = video.play();
-                    if (p && typeof p.catch === 'function') p.catch(function () { /* autoplay blocked — give up quietly */ });
-                } catch (e) { /* noop */ }
+                    var p = video.play();
+                    if (p && typeof p.catch === 'function') p.catch(function () {});
+                } catch (e) {}
             }, 100);
         });
 
-        // Kick things off — modern browsers require muted+playsinline for autoplay
-        const p = video.play();
+        var p = video.play();
         if (p && typeof p.catch === 'function') {
             p.catch(function () {
-                // Autoplay blocked (rare with muted). Try once on first user interaction.
-                const startOnTap = function () {
+                /* Autoplay blocked. Try once on first user interaction. */
+                var go = function () {
                     video.play().catch(function () {});
-                    document.removeEventListener('click', startOnTap);
-                    document.removeEventListener('touchstart', startOnTap);
+                    document.removeEventListener('click', go);
+                    document.removeEventListener('touchstart', go);
                 };
-                document.addEventListener('click', startOnTap, { once: true });
-                document.addEventListener('touchstart', startOnTap, { once: true });
+                document.addEventListener('click', go, { once: true });
+                document.addEventListener('touchstart', go, { once: true });
             });
         }
         requestAnimationFrame(tick);
     }
-
-    if (document.readyState !== 'loading') init();
-    else document.addEventListener('DOMContentLoaded', init);
+    if (document.readyState !== 'loading') initAvCinema();
+    else document.addEventListener('DOMContentLoaded', initAvCinema);
 })();

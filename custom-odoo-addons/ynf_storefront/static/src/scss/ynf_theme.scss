@@ -1592,3 +1592,155 @@ body, #wrap, .ynf-homepage, .o_wsale_products_page {
 
 /* Single subtle fade-in is allowed */
 .ynf-rev { opacity: 1 !important; transform: none !important; }
+
+/* =========================================================================
+   CINEMATIC HERO (.av-cinema) — Aethera-spec, YNF-adapted.
+   Looping CloudFront video background with custom fade-in/out, Instrument
+   Serif headline with gray italic emphasis, black pill CTA, staggered
+   fade-rise animations. White canvas per spec.
+   ========================================================================= */
+.av-cinema {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    /* Push past the fixed header + marquee */
+    padding-top: calc(8rem - 75px);
+    padding-bottom: 10rem;
+}
+
+/* Video background layer */
+.av-cinema-video-wrap {
+    position: absolute;
+    top: 300px;          /* per spec */
+    inset: auto 0 0 0;
+    height: calc(100% - 300px);
+    z-index: 0;
+    pointer-events: none;
+    @media (max-width: 767px) {
+        top: 200px;
+        height: calc(100% - 200px);
+    }
+}
+.av-cinema-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;   /* fade in is driven by JS in ynf_theme.js */
+}
+.av-cinema-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        #FFFFFF 0%,
+        rgba(255, 255, 255, 0.2) 22%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.35) 80%,
+        #FFFFFF 100%);
+    pointer-events: none;
+}
+
+/* Foreground content */
+.av-cinema-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 8px;
+}
+
+.av-cinema-headline {
+    font-family: "Instrument Serif", Georgia, serif !important;
+    font-weight: 400 !important;
+    color: #000000 !important;
+    margin: 0;
+    line-height: 0.95;
+    letter-spacing: -1.2px;
+    font-size: clamp(40px, 9vw, 56px);
+    max-width: 90rem;
+
+    em {
+        color: #6F6F6F !important;
+        font-style: italic;
+        font-weight: 400;
+    }
+
+    @media (min-width: 640px) {
+        font-size: clamp(56px, 8vw, 80px);
+        letter-spacing: -2px;
+    }
+    @media (min-width: 768px) {
+        font-size: clamp(72px, 8vw, 112px);
+        letter-spacing: -2.46px;
+    }
+}
+
+.av-cinema-desc {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    font-weight: 400;
+    color: #6F6F6F !important;
+    margin: 2rem auto 0;
+    line-height: 1.65;
+    max-width: 36rem;
+    font-size: 16px;
+    @media (min-width: 640px) { font-size: 18px; max-width: 42rem; }
+}
+
+.av-cinema-cta {
+    display: inline-block;
+    background: #000000;
+    color: #FFFFFF !important;
+    text-decoration: none !important;
+    border-radius: 9999px;
+    padding: 20px 56px;
+    margin-top: 3rem;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+    border: 0;
+    cursor: pointer;
+    &:hover {
+        transform: scale(1.03);
+        background: #000000;
+        color: #FFFFFF !important;
+        text-decoration: none !important;
+    }
+    &:active { transform: scale(0.99); }
+}
+
+/* fade-rise animations — staggered entrance */
+@keyframes av-fade-rise {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.av-fade-rise    { animation: av-fade-rise 0.8s ease-out 0s   both; }
+.av-fade-rise-d1 { animation: av-fade-rise 0.8s ease-out 0.2s both; }
+.av-fade-rise-d2 { animation: av-fade-rise 0.8s ease-out 0.4s both; }
+
+/* Hide the Sephora-mode hero now that we've gone cinematic */
+.sx-hero { display: none !important; }
+
+/* Make sure the Sephora-mode body-background override doesn't darken our hero */
+.ynf-homepage .av-cinema { background: #FFFFFF !important; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .av-fade-rise, .av-fade-rise-d1, .av-fade-rise-d2 {
+        animation: none !important;
+        opacity: 1;
+        transform: none;
+    }
+    .av-cinema-cta:hover { transform: none !important; }
+}

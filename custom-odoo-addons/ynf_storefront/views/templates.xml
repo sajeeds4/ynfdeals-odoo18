@@ -211,15 +211,26 @@
                 <!-- SEPHORA-STYLE HERO + QUICK CATEGORY STRIP (busy-commerce mode).
                      Replaces the previous brass-cinematic Stitch hero per user direction:
                      "kill the gold, busy commerce, Sephora/Ulta style". -->
-                <section class="sx-hero">
-                    <div class="sx-hero-inner">
-                        <span class="sx-hero-tag">Save up to 30%</span>
-                        <h1 class="sx-hero-title">Live tonight, 8 PM ET.<br/>Bid from $1.</h1>
-                        <p class="sx-hero-sub">Authentic fragrances at live-auction prices. Free shipping over $75. Ships in 2 business days.</p>
-                        <a href="/live" class="sx-hero-cta">
-                            Watch live
-                            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-                        </a>
+                <!-- CINEMATIC HERO (Aethera-spec, YNF-adapted): looping CloudFront video bg,
+                     Instrument Serif headline w/ gray italic emphasis, black pill CTA, fade-rise
+                     staggered animations. White bg per spec. -->
+                <section class="av-cinema">
+                    <div class="av-cinema-video-wrap" aria-hidden="true">
+                        <video class="av-cinema-video" muted="muted" playsinline="playsinline" preload="metadata">
+                            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_083109_283f3553-e28f-428b-a723-d639c617eb2b.mp4" type="video/mp4"/>
+                        </video>
+                        <div class="av-cinema-overlay"/>
+                    </div>
+                    <div class="av-cinema-content">
+                        <h1 class="av-cinema-headline av-fade-rise">
+                            Beyond <em>the noise,</em><br/>
+                            we craft <em>the eternal.</em>
+                        </h1>
+                        <p class="av-cinema-desc av-fade-rise-d1">
+                            Curating Arabian and niche fragrances for collectors, makers, and quiet
+                            obsessives. Through the noise, we craft havens for slow rituals and pure flows.
+                        </p>
+                        <a href="/shop" class="av-cinema-cta av-fade-rise-d2">Begin Journey</a>
                     </div>
                 </section>
                 <section class="sx-quick-cats">
