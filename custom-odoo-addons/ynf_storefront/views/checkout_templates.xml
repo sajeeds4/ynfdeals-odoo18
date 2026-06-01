@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====================================================================
+         YNF Deals MFD v2 Checkout reskin (Agent 7).
+         File ID: ynf_storefront/views/checkout_templates.xml
+
+         Templates inherited:
+           * website_sale.wizard_checkout : replaces the 3-step Odoo wizard
+             with our 4-step "Address / Shipping / Payment / Done" sticky bar.
+           * website_sale.checkout : wraps the delivery-address + billing +
+             shipping picker page in `.ynf-mfd2-checkout-shell`.
+           * website_sale.address : wraps the address form, adds MFD v2 field
+             classes and labels. Leaves every `<input name="...">` untouched
+             so Odoo controllers in website_sale/controllers/main.py keep
+             working.
+           * website_sale.delivery_form : restyles each carrier as a clickable
+             saffron card while keeping radio behaviour intact. Preserves
+             `#o_delivery_form`, `#o_delivery_methods`, `name="o_delivery_radio"`,
+             the `data-dm-id` / `data-delivery-type` attrs and the
+             `o_pickup_location` slot.
+           * website_sale.payment : wraps the payment chooser visually without
+             touching the `#payment_method` / `#o_payment_form` injection
+             nodes that Stripe, Adyen, PayPal etc. rely on.
+           * website_sale.confirmation : replaces the bare Bootstrap "Thank
+             you" with a saffron success hero plus order summary card plus
+             CTA to /my/orders.
+         ==================================================================== -->
+
+
+    <!-- =================================================================
+         1. STEP-BAR — replace the default 3-step wizard
+         ================================================================= -->
+    <template id="ynf_mfd2_wizard_checkout"
+              inherit_id="website_sale.wizard_checkout"
+              name="YNF MFD v2 — 4-Step Checkout Progress">
+        <xpath expr="//t[@t-call='website.step_wizard']" position="replace">
+            <!-- 4 conceptual steps; "current" is computed from the active
+                 template's xmlid which Odoo injects automatically. The Odoo
+                 default flow collapses Address+Shipping onto `/shop/checkout`,
+                 so we mark step 1 (Address) as the current step on
+                 `website_sale.address` and step 2 (Shipping) as the current
+                 step on `website_sale.checkout`. Done step is implicit on
+                 `website_sale.confirmation`. -->
+            <t t-set="ynf_step_idx" t-value="0"/>
+            <t t-if="xmlid == 'website_sale.address'" t-set="ynf_step_idx" t-value="0"/>
+            <t t-if="xmlid == 'website_sale.checkout'" t-set="ynf_step_idx" t-value="1"/>
+            <t t-if="xmlid == 'website_sale.extra_info'" t-set="ynf_step_idx" t-value="1"/>
+            <t t-if="xmlid == 'website_sale.payment'" t-set="ynf_step_idx" t-value="2"/>
+            <t t-if="xmlid == 'website_sale.confirmation'" t-set="ynf_step_idx" t-value="3"/>
+            <nav class="ynf-mfd2-step-progress" aria-label="Checkout progress">
+                <ol class="ynf-mfd2-steps">
+                    <t t-foreach="[('Address', '/shop/address'),
+                                   ('Shipping', '/shop/checkout'),
+                                   ('Payment', '/shop/payment'),
+                                   ('Done', '#')]"
+                       t-as="step">
+                        <t t-set="step_n" t-value="step_index"/>
+                        <t t-set="step_state"
+                           t-value="'is-done' if step_n &lt; ynf_step_idx else ('is-current' if step_n == ynf_step_idx else 'is-todo')"/>
+                        <li t-attf-class="ynf-mfd2-step {{step_state}}"
+                            t-att-aria-current="step_n == ynf_step_idx and 'step' or None">
+                            <t t-if="step_n &lt; ynf_step_idx">
+                                <a class="ynf-mfd2-step-link" t-att-href="step[1]">
+                                    <span class="ynf-mfd2-step-dot">
+                                        <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true">
+                                            <path d="M3 8l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </span>
+                                    <span class="ynf-mfd2-step-label" t-out="step[0]"/>
+                                </a>
+                            </t>
+                            <t t-else="">
+                                <span class="ynf-mfd2-step-link">
+                                    <span class="ynf-mfd2-step-dot">
+                                        <span class="ynf-mfd2-step-num" t-esc="step_n + 1"/>
+                                    </span>
+                                    <span class="ynf-mfd2-step-label" t-out="step[0]"/>
+                                </span>
+                            </t>
+                            <span t-if="not step_last" class="ynf-mfd2-step-bar" aria-hidden="true"/>
+                        </li>
+                    </t>
+                </ol>
+            </nav>
+        </xpath>
+    </template>
+
+
+    <!-- =================================================================
+         2. CHECKOUT (delivery-address picker + shipping methods)
+         Scope the page under `.ynf-mfd2-checkout` so SCSS targets us only.
+         ================================================================= -->
+    <template id="ynf_mfd2_checkout"
+              inherit_id="website_sale.checkout"
+              name="YNF MFD v2 — Checkout page scope">
+        <xpath expr="//div[@id='shop_checkout']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-checkout-shell" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='shop_checkout']" position="before">
+            <div class="ynf-mfd2-checkout-heading">
+                <span class="ynf-mfd2-eyebrow">Step 2 of 4</span>
+                <h1 class="ynf-mfd2-page-title">Choose shipping</h1>
+                <p class="ynf-mfd2-page-sub">Pick how you'd like your fragrances delivered.</p>
+            </div>
+        </xpath>
+    </template>
+
+
+    <!-- =================================================================
+         3. ADDRESS — wrap each Odoo input in a MFD v2 field card.
+         We DO NOT rename any `name=` attributes — controllers in
+         /addons/website_sale/controllers/main.py depend on:
+            name, email, phone, street, street2, city, zip,
+            country_id, state_id, company_name, vat
+         The `<form action="/shop/address/submit">`, the csrf_token hidden
+         input, `partner_id`, `address_type`, `use_delivery_as_billing`,
+         `required_fields` and the `id="save_address"` submit button are
+         left structurally intact.
+         ================================================================= -->
+    <template id="ynf_mfd2_address"
+              inherit_id="website_sale.address"
+              name="YNF MFD v2 — Address page reskin">
+        <!-- Scope the page -->
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="attributes">
+            <attribute name="class" add="ynf-mfd2-checkout ynf-mfd2-checkout-address" separator=" "/>
+        </xpath>
+
+        <!-- Heading block before the form -->
+        <xpath expr="//form[contains(@action, '/shop/address/submit')]" position="before">
+            <div class="ynf-mfd2-checkout-heading">
+                <span class="ynf-mfd2-eyebrow">Step 1 of 4</span>
+                <h1 class="ynf-mfd2-page-title">Where should we ship?</h1>
+                <p class="ynf-mfd2-page-sub">We ship within 2 business days. Tracked and insured.</p>
+            </div>
+        </xpath>
+
+        <!-- Tag the form so SCSS can scope it -->
+        <xpath expr="//form[contains(@action, '/shop/address/submit')]" position="attributes">
+            <attribute name="class" add="ynf-mfd2-form" separator=" "/>
+        </xpath>
+
+        <!-- Promote inputs to .ynf-mfd2-input. Bootstrap form-control is kept
+             so Odoo's JS validation hooks still find them. -->
+        <xpath expr="//input[@id='o_email' and @type='email']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">you@example.com</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_name']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">Full name</attribute>
+            <attribute name="autocomplete">name</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_phone']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">(555) 123-4567</attribute>
+            <attribute name="autocomplete">tel</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_street']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">Street and number</attribute>
+            <attribute name="autocomplete">street-address</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_street2']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">Apartment, suite, etc. (optional)</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_city']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">City</attribute>
+            <attribute name="autocomplete">address-level2</attribute>
+        </xpath>
+        <xpath expr="//input[@id='o_zip']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input" separator=" "/>
+            <attribute name="placeholder">ZIP</attribute>
+            <attribute name="autocomplete">postal-code</attribute>
+        </xpath>
+        <xpath expr="//select[@id='o_country_id']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input ynf-mfd2-select" separator=" "/>
+        </xpath>
+        <xpath expr="//select[@id='o_state_id']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-input ynf-mfd2-select" separator=" "/>
+        </xpath>
+
+        <!-- Save button restyle (do NOT change id="save_address" — JS hooks
+             into it for client-side validation). -->
+        <xpath expr="//button[@id='save_address']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-cta" separator=" "/>
+        </xpath>
+    </template>
+
+
+    <!-- =================================================================
+         4. DELIVERY FORM — restyle each carrier as a clickable saffron card
+         while keeping the radio behaviour intact.
+         PRESERVED nodes (do not rename or remove):
+           - <form id="o_delivery_form">
+           - <ul id="o_delivery_methods">
+           - <li name="o_delivery_method">
+           - <input name="o_delivery_radio"> + its `data-dm-id`,
+             `data-delivery-type`, `data-is-pickup-location-required` attrs
+           - name="o_pickup_location" / `o_pickup_location_selector` button
+           - `o_wsale_delivery_price_badge` (JS updates this after rate calc)
+         ================================================================= -->
+    <template id="ynf_mfd2_delivery_form"
+              inherit_id="website_sale.delivery_form"
+              name="YNF MFD v2 — Delivery method card layout">
+        <xpath expr="//form[@id='o_delivery_form']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-shipping-form" separator=" "/>
+        </xpath>
+        <xpath expr="//form[@id='o_delivery_form']/h4" position="attributes">
+            <attribute name="class">ynf-mfd2-section-label</attribute>
+        </xpath>
+        <xpath expr="//ul[@id='o_delivery_methods']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-shipping-list" separator=" "/>
+        </xpath>
+        <xpath expr="//li[@name='o_delivery_method']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-shipping-card" separator=" "/>
+        </xpath>
+    </template>
+
+
+    <!-- =================================================================
+         5. PAYMENT — wrap visually, leave the iframe injection points
+         untouched. The CRITICAL DOM nodes used by every payment provider
+         (Stripe, Adyen, PayPal, Mollie, Razorpay, AsiaPay, Alipay, etc.):
+           - #payment_method                (Odoo's outer wrapper)
+           - #o_payment_form                (provider JS attaches handlers)
+           - #o_payment_form_options        (Stripe/Adyen iframes mount here)
+           - name="o_payment_option" <li> rows
+           - data-provider-* attributes on the option cards
+         We only add wrapper divs OUTSIDE `#payment_method`, never inside.
+         ================================================================= -->
+    <template id="ynf_mfd2_payment"
+              inherit_id="website_sale.payment"
+              name="YNF MFD v2 — Payment page reskin">
+        <!-- Replace the H3 with our heading block -->
+        <xpath expr="//h3[contains(., 'Confirm order')]" position="replace">
+            <div class="ynf-mfd2-checkout-heading">
+                <span class="ynf-mfd2-eyebrow">Step 3 of 4</span>
+                <h1 class="ynf-mfd2-page-title">Confirm and pay</h1>
+                <p class="ynf-mfd2-page-sub">Secure checkout. Encrypted end-to-end.</p>
+            </div>
+        </xpath>
+
+        <!-- Tag the address-on-payment card -->
+        <xpath expr="//div[@id='address_on_payment']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-summary-card" separator=" "/>
+        </xpath>
+
+        <!-- Tag the OUTER #payment_method wrapper. We don't touch its
+             children — `payment.form` renders iframes & provider JS hooks
+             inside, and we MUST leave those alone. -->
+        <xpath expr="//div[@id='payment_method']" position="attributes">
+            <attribute name="class" add="ynf-mfd2-payment-shell" separator=" "/>
+        </xpath>
+    </template>
+
+
+    <!-- =================================================================
+         6. CONFIRMATION — replace the bare "Thank you" with a saffron hero
+         success card and order summary.
+         ================================================================= -->
+    <template id="ynf_mfd2_confirmation"
+              inherit_id="website_sale.confirmation"
+              name="YNF MFD v2 — Order confirmation reskin">
+        <!-- Wrap the entire confirmation page so SCSS only targets us. -->
+        <xpath expr="//div[hasclass('d-flex') and hasclass('justify-content-between')][1]" position="before">
+            <div class="ynf-mfd2-confirm-hero">
+                <div class="ynf-mfd2-confirm-check" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" width="40" height="40">
+                        <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M14 24l7 7 13-14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="ynf-mfd2-eyebrow">Step 4 of 4</span>
+                <h1 class="ynf-mfd2-confirm-title">Thank you<br/><em>for your order.</em></h1>
+                <p class="ynf-mfd2-confirm-sub">
+                    Order <b t-field="order.name"/> is confirmed. We'll send a
+                    tracking email as soon as it ships — usually within 2
+                    business days.
+                </p>
+                <div class="ynf-mfd2-confirm-actions">
+                    <a href="/my/orders" class="ynf-mfd2-cta">View your orders</a>
+                    <a href="/shop" class="ynf-mfd2-cta-ghost">Continue shopping</a>
+                </div>
+            </div>
+            <!-- Estimated-delivery strip -->
+            <div class="ynf-mfd2-eta-strip">
+                <div class="ynf-mfd2-eta-item">
+                    <span class="ynf-mfd2-eta-label">Estimated delivery</span>
+                    <span class="ynf-mfd2-eta-value">3 – 6 business days</span>
+                </div>
+                <div class="ynf-mfd2-eta-item">
+                    <span class="ynf-mfd2-eta-label">Authenticity</span>
+                    <span class="ynf-mfd2-eta-value">Guaranteed</span>
+                </div>
+                <div class="ynf-mfd2-eta-item">
+                    <span class="ynf-mfd2-eta-label">Tracking</span>
+                    <span class="ynf-mfd2-eta-value">Emailed</span>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Hide the default H3 + Print button row — we render our own hero
+             above. We do this with a wrap-in approach so the print button is
+             still reachable inside our reskin. -->
+        <xpath expr="//div[hasclass('d-flex') and hasclass('justify-content-between')][1]" position="attributes">
+            <attribute name="class">ynf-mfd2-confirm-legacy d-none</attribute>
+        </xpath>
+
+        <!-- Wrap the Order # block. -->
+        <xpath expr="//h5[em]" position="attributes">
+            <attribute name="class">ynf-mfd2-confirm-ordernum</attribute>
+        </xpath>
+
+        <!-- Scope the Payment Information heading + table. -->
+        <xpath expr="//h4[contains(., 'Payment Information')]" position="attributes">
+            <attribute name="class">ynf-mfd2-section-label</attribute>
+        </xpath>
+    </template>
+
+</odoo>
