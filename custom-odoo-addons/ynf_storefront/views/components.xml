@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    YNF Deals - MFD v2 reusable QWeb component library.
+    Each template id follows: ynf_storefront.ynf_mfd2_<name>
+    Other agents can t-call these from page templates and feed params via t-set.
+-->
+<odoo>
+
+    <!-- ============================================================
+         1. ynf_mfd2_btn_primary  — dark-oud pill button (parchment text)
+         Params: label (str), href (str|None), extra_class (str|None)
+         ============================================================ -->
+    <template id="ynf_mfd2_btn_primary" name="YNF MFD2 Button (primary)">
+        <t t-set="_label" t-value="label or 'Continue'"/>
+        <t t-set="_href" t-value="href or ''"/>
+        <t t-set="_extra" t-value="extra_class or ''"/>
+        <t t-if="_href">
+            <a t-att-href="_href" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-primary #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </a>
+        </t>
+        <t t-else="">
+            <button type="submit" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-primary #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </button>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         2. ynf_mfd2_btn_brass  — saffron pill button (oud text)
+         Params: label, href, extra_class
+         ============================================================ -->
+    <template id="ynf_mfd2_btn_brass" name="YNF MFD2 Button (brass)">
+        <t t-set="_label" t-value="label or 'Continue'"/>
+        <t t-set="_href" t-value="href or ''"/>
+        <t t-set="_extra" t-value="extra_class or ''"/>
+        <t t-if="_href">
+            <a t-att-href="_href" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-brass #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </a>
+        </t>
+        <t t-else="">
+            <button type="submit" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-brass #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </button>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         3. ynf_mfd2_btn_ghost  — transparent pill with oud border
+         Params: label, href, extra_class
+         ============================================================ -->
+    <template id="ynf_mfd2_btn_ghost" name="YNF MFD2 Button (ghost)">
+        <t t-set="_label" t-value="label or 'Cancel'"/>
+        <t t-set="_href" t-value="href or ''"/>
+        <t t-set="_extra" t-value="extra_class or ''"/>
+        <t t-if="_href">
+            <a t-att-href="_href" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-ghost #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </a>
+        </t>
+        <t t-else="">
+            <button type="button" t-attf-class="ynf-mfd2-btn ynf-mfd2-btn-ghost #{_extra}">
+                <span class="ynf-mfd2-btn-label" t-esc="_label"/>
+            </button>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         4. ynf_mfd2_chip  — rounded pill filter
+         Params: label, active (bool), href (str|None)
+         ============================================================ -->
+    <template id="ynf_mfd2_chip" name="YNF MFD2 Chip">
+        <t t-set="_label" t-value="label or ''"/>
+        <t t-set="_active" t-value="active or False"/>
+        <t t-set="_href" t-value="href or ''"/>
+        <t t-set="_chip_cls" t-value="'ynf-mfd2-chip ynf-mfd2-chip-active' if _active else 'ynf-mfd2-chip'"/>
+        <t t-if="_href">
+            <a t-att-href="_href" t-att-class="_chip_cls" t-att-aria-pressed="'true' if _active else 'false'">
+                <span class="ynf-mfd2-chip-label" t-esc="_label"/>
+            </a>
+        </t>
+        <t t-else="">
+            <button type="button" t-att-class="_chip_cls" t-att-aria-pressed="'true' if _active else 'false'">
+                <span class="ynf-mfd2-chip-label" t-esc="_label"/>
+            </button>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         5. ynf_mfd2_tag  — badge: sale (rose), new (saffron), low-stock (rose), best (oud/wine)
+         Params: label (str), kind (str: "sale" | "new" | "low-stock" | "best")
+         ============================================================ -->
+    <template id="ynf_mfd2_tag" name="YNF MFD2 Tag">
+        <t t-set="_label" t-value="label or ''"/>
+        <t t-set="_kind" t-value="kind or 'new'"/>
+        <span t-attf-class="ynf-mfd2-tag ynf-mfd2-tag-#{_kind}">
+            <span class="ynf-mfd2-tag-label" t-esc="_label"/>
+        </span>
+    </template>
+
+    <!-- ============================================================
+         6. ynf_mfd2_eyebrow  — uppercase mini-label, letter-spaced
+         Params: label (str)
+         ============================================================ -->
+    <template id="ynf_mfd2_eyebrow" name="YNF MFD2 Eyebrow">
+        <span class="ynf-mfd2-eyebrow" t-esc="label or ''"/>
+    </template>
+
+    <!-- ============================================================
+         7. ynf_mfd2_section_head  — eyebrow + h2 + optional action link
+         Params: eyebrow, title, action_label (optional), action_href (optional)
+         ============================================================ -->
+    <template id="ynf_mfd2_section_head" name="YNF MFD2 Section Head">
+        <t t-set="_eyebrow" t-value="eyebrow or ''"/>
+        <t t-set="_title" t-value="title or ''"/>
+        <t t-set="_action_label" t-value="action_label or ''"/>
+        <t t-set="_action_href" t-value="action_href or ''"/>
+        <header class="ynf-mfd2-section-head">
+            <div class="ynf-mfd2-section-head-text">
+                <t t-if="_eyebrow">
+                    <t t-call="ynf_storefront.ynf_mfd2_eyebrow">
+                        <t t-set="label" t-value="_eyebrow"/>
+                    </t>
+                </t>
+                <h2 class="ynf-mfd2-section-head-title" t-esc="_title"/>
+            </div>
+            <t t-if="_action_label and _action_href">
+                <a t-att-href="_action_href" class="ynf-mfd2-section-head-action">
+                    <span class="ynf-mfd2-section-head-action-label" t-esc="_action_label"/>
+                    <span class="ynf-mfd2-section-head-action-arrow" aria-hidden="true">→</span>
+                </a>
+            </t>
+        </header>
+    </template>
+
+    <!-- ============================================================
+         8. ynf_mfd2_rail  — horizontal-scroll wrapper. Body via t-out="0".
+         No params. Children supplied between <t t-call="...">...</t>.
+         ============================================================ -->
+    <template id="ynf_mfd2_rail" name="YNF MFD2 Horizontal Rail">
+        <div class="ynf-mfd2-rail" role="region" aria-label="Scroll horizontally">
+            <div class="ynf-mfd2-rail-track">
+                <t t-out="0"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- ============================================================
+         9. ynf_mfd2_card  — product card. Reads product.template or product.product.
+         Params: product (recordset, len=1)
+         Fields: name, list_price, image_1920, x_ynf_image_url, x_ynf_family,
+                 x_ynf_inspired_by. Brand inferred from first word of name.
+         ============================================================ -->
+    <template id="ynf_mfd2_card" name="YNF MFD2 Product Card">
+        <t t-set="_p" t-value="product"/>
+        <t t-set="_brand" t-value="(_p.name.split(' ')[0] if _p and _p.name else '').upper()"/>
+        <t t-set="_inspired" t-value="getattr(_p, 'x_ynf_inspired_by', False)"/>
+        <t t-set="_family" t-value="getattr(_p, 'x_ynf_family', False)"/>
+        <t t-set="_img_url" t-value="getattr(_p, 'x_ynf_image_url', False)"/>
+        <t t-set="_price" t-value="_p.list_price or 0.0"/>
+        <article class="ynf-mfd2-card">
+            <a t-attf-href="/shop/product/#{slug(_p)}" class="ynf-mfd2-card-link" t-att-aria-label="_p.name">
+                <div class="ynf-mfd2-card-media">
+                    <img t-if="_img_url" t-att-src="_img_url" t-att-alt="_p.name" loading="lazy" class="ynf-mfd2-card-img"/>
+                    <img t-else="t-else" t-attf-src="/web/image/product.template/#{_p.id}/image_512" t-att-alt="_p.name" loading="lazy" class="ynf-mfd2-card-img"/>
+                </div>
+                <div class="ynf-mfd2-card-body">
+                    <div class="ynf-mfd2-card-row-top">
+                        <span class="ynf-mfd2-card-brand" t-esc="_brand"/>
+                    </div>
+                    <h3 class="ynf-mfd2-card-name" t-esc="_p.name"/>
+                    <t t-if="_inspired">
+                        <span class="ynf-mfd2-card-inspired">
+                            <span class="ynf-mfd2-card-inspired-spark" aria-hidden="true">✦</span>
+                            <span class="ynf-mfd2-card-inspired-label">Inspired by</span>
+                            <span class="ynf-mfd2-card-inspired-name" t-esc="_inspired"/>
+                        </span>
+                    </t>
+                    <t t-elif="_family">
+                        <span class="ynf-mfd2-card-family" t-esc="_family"/>
+                    </t>
+                    <div class="ynf-mfd2-card-row-bottom">
+                        <t t-call="ynf_storefront.ynf_mfd2_price">
+                            <t t-set="amount" t-value="_price"/>
+                            <t t-set="size" t-value="'md'"/>
+                        </t>
+                        <span class="ynf-mfd2-card-size">100 ml</span>
+                    </div>
+                </div>
+            </a>
+            <form action="/shop/cart/update" method="post" class="ynf-mfd2-card-addform">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="product_id" t-att-value="_p.product_variant_id.id if hasattr(_p, 'product_variant_id') else _p.id"/>
+                <input type="hidden" name="add_qty" value="1"/>
+                <button type="submit" class="ynf-mfd2-card-add" aria-label="Add to bag" title="Add to bag">
+                    <span class="ynf-mfd2-card-add-glyph" aria-hidden="true">+</span>
+                    <span class="ynf-mfd2-card-add-text">Add</span>
+                </button>
+            </form>
+        </article>
+    </template>
+
+    <!-- ============================================================
+         10. ynf_mfd2_notes_pyramid  — Top / Heart / Base rows
+         Param: product (recordset). Skips empty rows.
+         ============================================================ -->
+    <template id="ynf_mfd2_notes_pyramid" name="YNF MFD2 Notes Pyramid">
+        <t t-set="_p" t-value="product"/>
+        <t t-set="_top" t-value="getattr(_p, 'x_ynf_note_top', False)"/>
+        <t t-set="_mid" t-value="getattr(_p, 'x_ynf_note_mid', False)"/>
+        <t t-set="_base" t-value="getattr(_p, 'x_ynf_note_base', False)"/>
+        <t t-if="_top or _mid or _base">
+            <div class="ynf-mfd2-notes">
+                <t t-if="_top">
+                    <div class="ynf-mfd2-notes-row ynf-mfd2-notes-row-top">
+                        <span class="ynf-mfd2-notes-label">Top</span>
+                        <span class="ynf-mfd2-notes-glyph" aria-hidden="true">✦</span>
+                        <span class="ynf-mfd2-notes-value" t-esc="_top"/>
+                    </div>
+                </t>
+                <t t-if="_mid">
+                    <div class="ynf-mfd2-notes-row ynf-mfd2-notes-row-mid">
+                        <span class="ynf-mfd2-notes-label">Heart</span>
+                        <span class="ynf-mfd2-notes-glyph" aria-hidden="true">❋</span>
+                        <span class="ynf-mfd2-notes-value" t-esc="_mid"/>
+                    </div>
+                </t>
+                <t t-if="_base">
+                    <div class="ynf-mfd2-notes-row ynf-mfd2-notes-row-base">
+                        <span class="ynf-mfd2-notes-label">Base</span>
+                        <span class="ynf-mfd2-notes-glyph" aria-hidden="true">◆</span>
+                        <span class="ynf-mfd2-notes-value" t-esc="_base"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================
+         11. ynf_mfd2_brand_pill  — circular brand button
+         Params: brand_name (str), href (str)
+         ============================================================ -->
+    <template id="ynf_mfd2_brand_pill" name="YNF MFD2 Brand Pill">
+        <t t-set="_brand_name" t-value="brand_name or ''"/>
+        <t t-set="_href" t-value="href or '/shop'"/>
+        <t t-set="_initial" t-value="(_brand_name[:1] or '·').upper()"/>
+        <a t-att-href="_href" class="ynf-mfd2-brand-pill" t-attf-aria-label="Shop #{_brand_name}">
+            <span class="ynf-mfd2-brand-pill-circle">
+                <span class="ynf-mfd2-brand-pill-initial" t-esc="_initial"/>
+            </span>
+            <span class="ynf-mfd2-brand-pill-name" t-esc="_brand_name"/>
+            <span class="ynf-mfd2-brand-pill-tag">HOUSE</span>
+        </a>
+    </template>
+
+    <!-- ============================================================
+         12. ynf_mfd2_stat_cell  — animated stat: number + label
+         Params: value (str|num), label (str). data-to drives JS count-up.
+         ============================================================ -->
+    <template id="ynf_mfd2_stat_cell" name="YNF MFD2 Stat Cell">
+        <t t-set="_value" t-value="value if value is not None else 0"/>
+        <t t-set="_label" t-value="label or ''"/>
+        <div class="ynf-mfd2-stat">
+            <span class="ynf-mfd2-stat-num ynf-count" t-att-data-to="_value">0</span>
+            <span class="ynf-mfd2-stat-label" t-esc="_label"/>
+        </div>
+    </template>
+
+    <!-- ============================================================
+         13. ynf_mfd2_step_progress  — checkout progress bar
+         Params: current_step (1..N), steps (list of dicts {label, complete})
+         ============================================================ -->
+    <template id="ynf_mfd2_step_progress" name="YNF MFD2 Step Progress">
+        <t t-set="_current" t-value="current_step or 1"/>
+        <t t-set="_steps" t-value="steps or []"/>
+        <ol class="ynf-mfd2-steps" t-att-data-current="_current">
+            <t t-foreach="_steps" t-as="step">
+                <t t-set="_idx" t-value="step_index + 1"/>
+                <t t-set="_complete" t-value="step.get('complete') or (_idx &lt; _current)"/>
+                <t t-set="_is_current" t-value="_idx == _current"/>
+                <t t-set="_li_cls" t-value="'ynf-mfd2-step ynf-mfd2-step-complete' if _complete else ('ynf-mfd2-step ynf-mfd2-step-current' if _is_current else 'ynf-mfd2-step')"/>
+                <li t-att-class="_li_cls" t-att-aria-current="'step' if _is_current else None">
+                    <span class="ynf-mfd2-step-dot">
+                        <t t-if="_complete"><span aria-hidden="true">✓</span></t>
+                        <t t-else=""><span t-esc="_idx"/></t>
+                    </span>
+                    <span class="ynf-mfd2-step-label" t-esc="step.get('label') or ''"/>
+                </li>
+            </t>
+        </ol>
+    </template>
+
+    <!-- ============================================================
+         14. ynf_mfd2_empty_state  — icon + display heading + sub + CTA
+         Params: icon_svg (str, raw inline SVG markup), title, body, cta_label, cta_href
+         icon_svg is rendered via t-raw — only pass trusted markup from templates.
+         ============================================================ -->
+    <template id="ynf_mfd2_empty_state" name="YNF MFD2 Empty State">
+        <t t-set="_icon" t-value="icon_svg or ''"/>
+        <t t-set="_title" t-value="title or 'Nothing here yet'"/>
+        <t t-set="_body" t-value="body or ''"/>
+        <t t-set="_cta_label" t-value="cta_label or ''"/>
+        <t t-set="_cta_href" t-value="cta_href or ''"/>
+        <div class="ynf-mfd2-empty" role="status">
+            <div class="ynf-mfd2-empty-icon" aria-hidden="true">
+                <t t-if="_icon"><t t-raw="_icon"/></t>
+                <t t-else="">
+                    <svg viewBox="0 0 48 48" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="24" cy="24" r="18"/>
+                        <path d="M16 28c2 2 5 3 8 3s6-1 8-3"/>
+                        <circle cx="18" cy="20" r="1.2" fill="currentColor"/>
+                        <circle cx="30" cy="20" r="1.2" fill="currentColor"/>
+                    </svg>
+                </t>
+            </div>
+            <h3 class="ynf-mfd2-empty-title" t-esc="_title"/>
+            <t t-if="_body">
+                <p class="ynf-mfd2-empty-body" t-esc="_body"/>
+            </t>
+            <t t-if="_cta_label and _cta_href">
+                <div class="ynf-mfd2-empty-cta">
+                    <t t-call="ynf_storefront.ynf_mfd2_btn_primary">
+                        <t t-set="label" t-value="_cta_label"/>
+                        <t t-set="href" t-value="_cta_href"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <!-- ============================================================
+         15. ynf_mfd2_price  — currency-aware price (USD-default, tabular-nums)
+         Params: amount (float), size ("sm"|"md"|"lg"), striked (bool)
+         ============================================================ -->
+    <template id="ynf_mfd2_price" name="YNF MFD2 Price">
+        <t t-set="_amount" t-value="amount if amount is not None else 0.0"/>
+        <t t-set="_size" t-value="size or 'md'"/>
+        <t t-set="_striked" t-value="striked or False"/>
+        <t t-set="_price_cls" t-value="'ynf-mfd2-price ynf-mfd2-price-' + _size + (' ynf-mfd2-price-striked' if _striked else '')"/>
+        <span t-att-class="_price_cls">
+            <span class="ynf-mfd2-price-sym">$</span><span class="ynf-mfd2-price-amount" t-esc="'%.2f' % float(_amount)"/>
+        </span>
+    </template>
+
+</odoo>

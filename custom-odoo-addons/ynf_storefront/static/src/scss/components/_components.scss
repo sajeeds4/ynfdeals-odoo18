@@ -1,0 +1,771 @@
+/* =========================================================================
+   YNF Deals — MFD v2 component library styles
+   Mobile-first. All rules are scoped to .ynf-mfd2-* class roots so they
+   do not leak into Odoo's stock website CSS.
+
+   Tokens are imported by the parent build (Agent 1 owns _tokens.scss).
+   Reference: $ynf-mfd2-bg, $ynf-mfd2-card, $ynf-mfd2-ink, $ynf-mfd2-oud,
+   $ynf-mfd2-saffron, $ynf-mfd2-rose, $ynf-mfd2-hairline, $ynf-mfd2-font-display,
+   $ynf-mfd2-font-body, $ynf-mfd2-step-down-1..$ynf-mfd2-step-5, $ynf-mfd2-s-1..7,
+   $ynf-mfd2-r-sm, $ynf-mfd2-r-md, $ynf-mfd2-r-pill, $ynf-mfd2-shadow-1/2,
+   $ynf-mfd2-ease, $ynf-mfd2-d-fast, $ynf-mfd2-d-slow, $ynf-mfd2-max-w, $ynf-mfd2-gutter.
+   ========================================================================= */
+
+
+/* ---------- 1-3. Buttons ----------
+   pill min-height 44px tap-friendly; flush at full width on mobile,
+   sized to content on tablet+. */
+.ynf-mfd2-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $ynf-mfd2-s-2;
+    min-height: 44px;
+    padding: $ynf-mfd2-s-3 $ynf-mfd2-s-5;
+    border-radius: $ynf-mfd2-r-pill;
+    border: 1px solid transparent;
+    font-family: $ynf-mfd2-font-body;
+    font-weight: 600;
+    font-size: $ynf-mfd2-step-down-1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                background-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                box-shadow $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    white-space: nowrap;
+
+    &:focus-visible {
+        outline: 2px solid $ynf-mfd2-saffron;
+        outline-offset: 3px;
+    }
+
+    &:active { transform: translateY(1px); }
+
+    .ynf-mfd2-btn-label { display: inline-block; }
+}
+
+.ynf-mfd2-btn-primary {
+    background: $ynf-mfd2-oud;
+    color: $ynf-mfd2-bg;
+    box-shadow: $ynf-mfd2-shadow-1;
+
+    &:hover {
+        background: darken($ynf-mfd2-oud, 4%);
+        color: $ynf-mfd2-bg;
+    }
+}
+
+.ynf-mfd2-btn-brass {
+    background: $ynf-mfd2-saffron;
+    color: $ynf-mfd2-oud;
+    box-shadow: $ynf-mfd2-shadow-1;
+
+    &:hover {
+        background: $ynf-mfd2-saffron-2;
+        color: $ynf-mfd2-oud;
+    }
+}
+
+.ynf-mfd2-btn-ghost {
+    background: transparent;
+    color: $ynf-mfd2-oud;
+    border-color: $ynf-mfd2-oud;
+
+    &:hover {
+        background: $ynf-mfd2-oud;
+        color: $ynf-mfd2-bg;
+    }
+}
+
+
+/* ---------- 4. Chip ----------
+   Filter pill. Min hit area 36px tall. */
+.ynf-mfd2-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: $ynf-mfd2-s-1;
+    padding: 9px 14px;
+    min-height: 36px;
+    background: $ynf-mfd2-card;
+    color: $ynf-mfd2-ink-2;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-pill;
+    font-family: $ynf-mfd2-font-body;
+    font-size: $ynf-mfd2-step-down-1;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+
+    &:focus-visible {
+        outline: 2px solid $ynf-mfd2-saffron;
+        outline-offset: 2px;
+    }
+
+    &:hover {
+        color: $ynf-mfd2-ink;
+        border-color: $ynf-mfd2-saffron;
+    }
+
+    .ynf-mfd2-chip-label { display: inline-block; }
+}
+
+.ynf-mfd2-chip-active {
+    background: $ynf-mfd2-oud;
+    color: $ynf-mfd2-bg;
+    border-color: $ynf-mfd2-oud;
+
+    &:hover {
+        background: $ynf-mfd2-oud;
+        color: $ynf-mfd2-bg;
+        border-color: $ynf-mfd2-saffron;
+    }
+}
+
+
+/* ---------- 5. Tag (badges) ----------
+   Compact 2-line uppercase pip used on cards. */
+.ynf-mfd2-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: $ynf-mfd2-r-pill;
+    font-family: $ynf-mfd2-font-body;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+
+    .ynf-mfd2-tag-label { display: inline-block; }
+}
+
+.ynf-mfd2-tag-sale       { background: $ynf-mfd2-rose;    color: #fff; }
+.ynf-mfd2-tag-new        { background: $ynf-mfd2-saffron; color: $ynf-mfd2-oud; }
+.ynf-mfd2-tag-low-stock  { background: $ynf-mfd2-rose;    color: #fff; }
+.ynf-mfd2-tag-best       { background: $ynf-mfd2-oud;     color: $ynf-mfd2-saffron; }
+
+
+/* ---------- 6. Eyebrow ---------- */
+.ynf-mfd2-eyebrow {
+    display: inline-block;
+    font-family: $ynf-mfd2-font-body;
+    font-weight: 600;
+    font-size: $ynf-mfd2-step-down-1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $ynf-mfd2-saffron-2;
+    line-height: 1.4;
+}
+
+
+/* ---------- 7. Section head ---------- */
+.ynf-mfd2-section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: $ynf-mfd2-s-4;
+    margin-bottom: $ynf-mfd2-s-4;
+
+    .ynf-mfd2-section-head-text {
+        display: flex;
+        flex-direction: column;
+        gap: $ynf-mfd2-s-1;
+        min-width: 0;
+    }
+
+    .ynf-mfd2-section-head-title {
+        margin: 0;
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 500;
+        font-size: $ynf-mfd2-step-4;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        color: $ynf-mfd2-oud;
+        text-wrap: balance;
+    }
+
+    .ynf-mfd2-section-head-action {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: $ynf-mfd2-s-1;
+        padding: 6px 0 6px $ynf-mfd2-s-2;
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-1;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-saffron-2;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+
+        &:hover {
+            color: $ynf-mfd2-oud;
+            .ynf-mfd2-section-head-action-arrow { transform: translateX(3px); }
+        }
+
+        .ynf-mfd2-section-head-action-arrow {
+            display: inline-block;
+            transition: transform $ynf-mfd2-d-fast $ynf-mfd2-ease;
+        }
+    }
+}
+
+
+/* ---------- 8. Rail (horizontal scroll) ---------- */
+.ynf-mfd2-rail {
+    position: relative;
+    /* Bleed past the page gutter on mobile so the first card aligns flush. */
+    margin-left: calc(-1 * #{$ynf-mfd2-gutter});
+    margin-right: calc(-1 * #{$ynf-mfd2-gutter});
+
+    .ynf-mfd2-rail-track {
+        display: flex;
+        gap: $ynf-mfd2-s-3;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: $ynf-mfd2-s-2 $ynf-mfd2-gutter $ynf-mfd2-s-3;
+
+        &::-webkit-scrollbar { display: none; }
+
+        > * {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            min-width: 0;
+        }
+    }
+}
+
+
+/* ---------- 9. Product card ----------
+   Inside a column of $ynf-mfd2-max-w (~560px) the card occupies the
+   full column width on its own, or roughly half when grid'd 2-up. */
+.ynf-mfd2-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-md;
+    overflow: hidden;
+    box-shadow: $ynf-mfd2-shadow-1;
+    transition: transform $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                box-shadow $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    width: 100%;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $ynf-mfd2-shadow-2;
+        border-color: $ynf-mfd2-saffron;
+    }
+
+    .ynf-mfd2-card-link {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        text-decoration: none;
+        color: inherit;
+        flex: 1;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .ynf-mfd2-card-media {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        background: $ynf-mfd2-soft;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: $ynf-mfd2-s-4 $ynf-mfd2-s-3 $ynf-mfd2-s-3;
+        overflow: hidden;
+
+        .ynf-mfd2-card-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            mix-blend-mode: multiply;
+        }
+    }
+
+    .ynf-mfd2-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: $ynf-mfd2-s-2;
+        padding: $ynf-mfd2-s-3 $ynf-mfd2-s-3 $ynf-mfd2-s-4;
+        flex: 1;
+    }
+
+    .ynf-mfd2-card-row-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .ynf-mfd2-card-brand {
+        font-family: $ynf-mfd2-font-body;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-saffron-2;
+        line-height: 1;
+    }
+
+    .ynf-mfd2-card-name {
+        margin: 0;
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 500;
+        font-size: $ynf-mfd2-step-2;
+        line-height: 1.12;
+        letter-spacing: -0.005em;
+        color: $ynf-mfd2-ink;
+        text-wrap: balance;
+    }
+
+    .ynf-mfd2-card-family {
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-1;
+        color: $ynf-mfd2-ink-3;
+        line-height: 1.3;
+    }
+
+    .ynf-mfd2-card-inspired {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 8px 4px;
+        border: 1px solid $ynf-mfd2-hairline;
+        border-radius: $ynf-mfd2-r-pill;
+        background: rgba(200, 134, 46, 0.10);
+        color: $ynf-mfd2-saffron-2;
+        font-family: $ynf-mfd2-font-body;
+        font-size: 10.5px;
+        font-weight: 600;
+        line-height: 1.2;
+        align-self: flex-start;
+
+        .ynf-mfd2-card-inspired-spark { color: $ynf-mfd2-saffron; font-size: 11px; }
+        .ynf-mfd2-card-inspired-label { letter-spacing: 0.04em; }
+        .ynf-mfd2-card-inspired-name  { font-weight: 700; }
+    }
+
+    .ynf-mfd2-card-row-bottom {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: $ynf-mfd2-s-1;
+    }
+
+    .ynf-mfd2-card-size {
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-1;
+        color: $ynf-mfd2-ink-3;
+    }
+
+    /* Floating + Add button bottom-right of media */
+    .ynf-mfd2-card-addform {
+        position: absolute;
+        right: $ynf-mfd2-s-2;
+        /* Sit just above the body fold */
+        top: calc(100% / 2 - 22px);
+        margin: 0;
+    }
+
+    .ynf-mfd2-card-add {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: $ynf-mfd2-saffron;
+        color: $ynf-mfd2-oud;
+        border: 0;
+        cursor: pointer;
+        box-shadow: $ynf-mfd2-shadow-2;
+        transition: transform $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                    background-color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+            background: $ynf-mfd2-saffron-2;
+            transform: scale(1.06);
+        }
+
+        .ynf-mfd2-card-add-glyph {
+            font-family: $ynf-mfd2-font-body;
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .ynf-mfd2-card-add-text {
+            position: absolute;
+            width: 1px; height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+    }
+}
+
+
+/* ---------- 10. Notes pyramid ---------- */
+.ynf-mfd2-notes {
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-md;
+    padding: $ynf-mfd2-s-2 0;
+    background: $ynf-mfd2-card;
+
+    .ynf-mfd2-notes-row {
+        display: grid;
+        grid-template-columns: 60px 24px 1fr;
+        gap: $ynf-mfd2-s-3;
+        align-items: center;
+        padding: $ynf-mfd2-s-3 $ynf-mfd2-s-4;
+
+        & + .ynf-mfd2-notes-row {
+            border-top: 1px solid $ynf-mfd2-hairline;
+        }
+    }
+
+    .ynf-mfd2-notes-label {
+        font-family: $ynf-mfd2-font-body;
+        font-size: 9.5px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-saffron-2;
+    }
+
+    .ynf-mfd2-notes-glyph {
+        text-align: center;
+        font-size: 14px;
+        color: $ynf-mfd2-ink-3;
+    }
+
+    .ynf-mfd2-notes-row-top  .ynf-mfd2-notes-glyph { color: $ynf-mfd2-saffron; }
+    .ynf-mfd2-notes-row-mid  .ynf-mfd2-notes-glyph { color: $ynf-mfd2-rose; }
+    .ynf-mfd2-notes-row-base .ynf-mfd2-notes-glyph { color: $ynf-mfd2-oud; }
+
+    .ynf-mfd2-notes-value {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 500;
+        font-size: $ynf-mfd2-step-2;
+        line-height: 1.2;
+        color: $ynf-mfd2-ink;
+    }
+}
+
+
+/* ---------- 11. Brand pill ----------
+   Used inside a rail. Compact stack: circle + name + HOUSE tag. */
+.ynf-mfd2-brand-pill {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $ynf-mfd2-s-1;
+    padding: $ynf-mfd2-s-3 $ynf-mfd2-s-3 $ynf-mfd2-s-2;
+    min-width: 96px;
+    background: $ynf-mfd2-card;
+    border: 1px solid $ynf-mfd2-hairline;
+    border-radius: $ynf-mfd2-r-md;
+    text-decoration: none;
+    color: inherit;
+    transition: transform $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                border-color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+        border-color: $ynf-mfd2-saffron;
+        transform: translateY(-2px);
+    }
+
+    .ynf-mfd2-brand-pill-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1.5px solid $ynf-mfd2-saffron;
+        background: $ynf-mfd2-bg;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ynf-mfd2-brand-pill-initial {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        font-size: 22px;
+        color: $ynf-mfd2-oud;
+        line-height: 1;
+    }
+
+    .ynf-mfd2-brand-pill-name {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 600;
+        font-size: $ynf-mfd2-step-1;
+        color: $ynf-mfd2-ink;
+        line-height: 1.1;
+    }
+
+    .ynf-mfd2-brand-pill-tag {
+        font-family: $ynf-mfd2-font-body;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        color: $ynf-mfd2-saffron-2;
+        text-transform: uppercase;
+    }
+}
+
+
+/* ---------- 12. Stat cell ---------- */
+.ynf-mfd2-stat {
+    display: flex;
+    flex-direction: column;
+    gap: $ynf-mfd2-s-1;
+    align-items: flex-start;
+    padding: $ynf-mfd2-s-3 0;
+
+    .ynf-mfd2-stat-num {
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 500;
+        font-size: $ynf-mfd2-step-5;
+        line-height: 0.98;
+        letter-spacing: -0.015em;
+        color: $ynf-mfd2-oud;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .ynf-mfd2-stat-label {
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-down-1;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-ink-2;
+    }
+}
+
+
+/* ---------- 13. Step progress (checkout) ---------- */
+.ynf-mfd2-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $ynf-mfd2-s-2;
+    position: relative;
+
+    /* Connecting line behind dots */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        right: 14px;
+        height: 1px;
+        background: $ynf-mfd2-hairline;
+        z-index: 0;
+    }
+
+    .ynf-mfd2-step {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: $ynf-mfd2-s-1;
+        position: relative;
+        z-index: 1;
+        min-width: 0;
+    }
+
+    .ynf-mfd2-step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: $ynf-mfd2-card;
+        border: 1.5px solid $ynf-mfd2-hairline;
+        font-family: $ynf-mfd2-font-body;
+        font-weight: 600;
+        font-size: $ynf-mfd2-step-down-1;
+        color: $ynf-mfd2-ink-3;
+        line-height: 1;
+        transition: background-color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                    color $ynf-mfd2-d-fast $ynf-mfd2-ease,
+                    border-color $ynf-mfd2-d-fast $ynf-mfd2-ease;
+    }
+
+    .ynf-mfd2-step-label {
+        font-family: $ynf-mfd2-font-body;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: $ynf-mfd2-ink-3;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .ynf-mfd2-step-current {
+        .ynf-mfd2-step-dot {
+            background: $ynf-mfd2-oud;
+            border-color: $ynf-mfd2-oud;
+            color: $ynf-mfd2-bg;
+            box-shadow: 0 0 0 3px rgba(200, 134, 46, 0.18);
+        }
+        .ynf-mfd2-step-label {
+            color: $ynf-mfd2-ink;
+            font-weight: 600;
+        }
+    }
+
+    .ynf-mfd2-step-complete {
+        .ynf-mfd2-step-dot {
+            background: $ynf-mfd2-saffron;
+            border-color: $ynf-mfd2-saffron;
+            color: $ynf-mfd2-oud;
+        }
+        .ynf-mfd2-step-label { color: $ynf-mfd2-ink-2; }
+    }
+}
+
+
+/* ---------- 14. Empty state ---------- */
+.ynf-mfd2-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: $ynf-mfd2-s-3;
+    padding: $ynf-mfd2-s-7 $ynf-mfd2-s-4;
+
+    .ynf-mfd2-empty-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $ynf-mfd2-ink-3;
+        margin-bottom: $ynf-mfd2-s-1;
+    }
+
+    .ynf-mfd2-empty-title {
+        margin: 0;
+        font-family: $ynf-mfd2-font-display;
+        font-weight: 500;
+        font-size: $ynf-mfd2-step-4;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        color: $ynf-mfd2-oud;
+        text-wrap: balance;
+    }
+
+    .ynf-mfd2-empty-body {
+        margin: 0;
+        max-width: 36ch;
+        font-family: $ynf-mfd2-font-body;
+        font-size: $ynf-mfd2-step-1;
+        color: $ynf-mfd2-ink-2;
+        line-height: 1.55;
+    }
+
+    .ynf-mfd2-empty-cta {
+        margin-top: $ynf-mfd2-s-3;
+    }
+}
+
+
+/* ---------- 15. Price ---------- */
+.ynf-mfd2-price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1px;
+    font-family: $ynf-mfd2-font-body;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: $ynf-mfd2-ink;
+    line-height: 1;
+    white-space: nowrap;
+
+    .ynf-mfd2-price-sym {
+        font-size: 0.7em;
+        opacity: 0.85;
+        margin-right: 1px;
+    }
+}
+
+.ynf-mfd2-price-sm  { font-size: $ynf-mfd2-step-down-1; }
+.ynf-mfd2-price-md  { font-size: $ynf-mfd2-step-2; }
+.ynf-mfd2-price-lg  { font-size: $ynf-mfd2-step-4; }
+
+.ynf-mfd2-price-striked {
+    text-decoration: line-through;
+    color: $ynf-mfd2-ink-3;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+
+/* ---------- Responsive polish ----------
+   At desktop the host page centers a $ynf-mfd2-max-w column. We only
+   tweak the rail bleed to use the actual padding the page applies. */
+@media (min-width: 768px) {
+    .ynf-mfd2-rail {
+        margin-left: calc(-1 * #{$ynf-mfd2-gutter} / 2);
+        margin-right: calc(-1 * #{$ynf-mfd2-gutter} / 2);
+
+        .ynf-mfd2-rail-track {
+            padding-left: calc(#{$ynf-mfd2-gutter} / 2);
+            padding-right: calc(#{$ynf-mfd2-gutter} / 2);
+        }
+    }
+
+    .ynf-mfd2-section-head .ynf-mfd2-section-head-title {
+        font-size: $ynf-mfd2-step-5;
+    }
+}
+
+
+/* ---------- Accessibility: respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .ynf-mfd2-btn,
+    .ynf-mfd2-chip,
+    .ynf-mfd2-card,
+    .ynf-mfd2-brand-pill,
+    .ynf-mfd2-card-add,
+    .ynf-mfd2-section-head-action,
+    .ynf-mfd2-section-head-action-arrow {
+        transition: none !important;
+    }
+    .ynf-mfd2-card:hover { transform: none; }
+    .ynf-mfd2-brand-pill:hover { transform: none; }
+}
