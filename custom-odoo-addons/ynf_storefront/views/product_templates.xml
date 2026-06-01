@@ -70,9 +70,9 @@
 
                 <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
                 <t t-set="_brand" t-value="(product.name.split(' ')[0] if product.name else '').upper()"/>
-                <t t-set="_inspired" t-value="getattr(product, 'x_ynf_inspired_by', False)"/>
-                <t t-set="_family" t-value="getattr(product, 'x_ynf_family', False)"/>
-                <t t-set="_img_url" t-value="getattr(product, 'x_ynf_image_url', False)"/>
+                <t t-set="_inspired" t-value="product.x_ynf_inspired_by or False"/>
+                <t t-set="_family" t-value="product.x_ynf_family or False"/>
+                <t t-set="_img_url" t-value="product.x_ynf_image_url or False"/>
                 <t t-set="_product_images" t-value="(product_variant._get_images() if product_variant else product._get_images())"/>
                 <t t-set="_image_count" t-value="len(_product_images)"/>
                 <t t-set="_ribbon" t-value="product_variant.sudo().variant_ribbon_id or product.sudo().website_ribbon_id"/>

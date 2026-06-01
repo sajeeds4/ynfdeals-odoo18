@@ -707,9 +707,9 @@ $ynf-mfd2-d-slow:         260ms !default;
     -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid $ynf-mfd2-hairline;
     box-shadow: 0 -10px 30px rgba(45, 36, 25, 0.10);
-    padding: 11px max(env(safe-area-inset-right, 0px), 14px)
+    padding: 11px #{"max(env(safe-area-inset-right, 0px), 14px)"}
              calc(11px + env(safe-area-inset-bottom, 0px))
-             max(env(safe-area-inset-left, 0px), 14px);
+             #{"max(env(safe-area-inset-left, 0px), 14px)"};
 
     &.is-visible {
         transform: translateY(0);

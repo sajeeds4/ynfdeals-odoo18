@@ -1,0 +1,958 @@
+/* =========================================================================
+   YNF Deals — Odoo 18 theme styles (compliant reskin)
+   Drop into: custom-odoo-addons/ynf_website_theme/static/src/scss/ynf_theme.scss
+   Add to __manifest__.py web.assets_frontend AFTER theme_variables.scss so the
+   $ynf-* variables resolve. Targets Bootstrap 5 + website_sale selectors only —
+   no core template edits required.
+   ========================================================================= */
+
+// MFD v2 design tokens — inlined here (Odoo forbids @import of local SCSS).
+// Loaded first in web.assets_frontend so subsequent partials resolve.
+$ynf-mfd2-font-display:    "Cormorant Garamond", "Cormorant", Georgia, serif !default;
+$ynf-mfd2-font-body:       "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !default;
+$ynf-mfd2-step-down-2:     0.70rem !default;
+$ynf-mfd2-step-down-1:     0.82rem !default;
+$ynf-mfd2-step-0:          1.00rem !default;
+$ynf-mfd2-step-1:          1.20rem !default;
+$ynf-mfd2-step-2:          1.44rem !default;
+$ynf-mfd2-step-3:          1.73rem !default;
+$ynf-mfd2-step-4:          2.07rem !default;
+$ynf-mfd2-step-5:          2.49rem !default;
+$ynf-mfd2-saffron:         #C8862E !default;
+$ynf-mfd2-saffron-2:       #A87223 !default;
+$ynf-mfd2-saffron-deep:    #8E6018 !default;
+$ynf-mfd2-saffron-dark:    #7C5212 !default;
+$ynf-mfd2-saffron-soft:    rgba(200, 134, 46, 0.14) !default;
+$ynf-mfd2-saffron-tint:    rgba(200, 134, 46, 0.08) !default;
+$ynf-mfd2-saffron-tint-2:  rgba(200, 134, 46, 0.22) !default;
+$ynf-mfd2-oud:             #3A1F1A !default;
+$ynf-mfd2-oud-2:           #5A2F22 !default;
+$ynf-mfd2-bukhoor:         #1A1410 !default;
+$ynf-mfd2-bukhoor-soft:    #221A13 !default;
+$ynf-mfd2-parchment:       #F4ECDD !default;
+$ynf-mfd2-paper:           #FBF6EA !default;
+$ynf-mfd2-rose:            #C2877A !default;
+$ynf-mfd2-wine:            #5A1E1E !default;
+$ynf-mfd2-bg:              $ynf-mfd2-parchment !default;
+$ynf-mfd2-bg-soft:         #EFE5D2 !default;
+$ynf-mfd2-page-bg:         $ynf-mfd2-parchment !default;
+$ynf-mfd2-surface:         $ynf-mfd2-paper !default;
+$ynf-mfd2-surface-soft:    #F6EFE0 !default;
+$ynf-mfd2-card:            $ynf-mfd2-paper !default;
+$ynf-mfd2-card-soft:       #F6EFE0 !default;
+$ynf-mfd2-soft:            #F6EFE0 !default;
+$ynf-mfd2-ink:             #2A1F14 !default;
+$ynf-mfd2-ink-2:           #5C4A3E !default;
+$ynf-mfd2-ink-3:           #8C7766 !default;
+$ynf-mfd2-ink-dim:         #6B5B48 !default;
+$ynf-mfd2-ink-mute:        #968570 !default;
+$ynf-mfd2-ink-l:           $ynf-mfd2-parchment !default;
+$ynf-mfd2-ink-l-dim:       rgba(244, 236, 221, 0.78) !default;
+$ynf-mfd2-ink-l-mute:      rgba(244, 236, 221, 0.55) !default;
+$ynf-mfd2-ink-l-faint:     rgba(244, 236, 221, 0.18) !default;
+$ynf-mfd2-line:            rgba(42, 31, 20, 0.10) !default;
+$ynf-mfd2-line-strong:     rgba(42, 31, 20, 0.20) !default;
+$ynf-mfd2-hairline:        rgba(160, 127, 58, 0.22) !default;
+$ynf-mfd2-hairline-2:      rgba(160, 127, 58, 0.45) !default;
+$ynf-mfd2-hairline-strong: rgba(160, 127, 58, 0.45) !default;
+$ynf-mfd2-success:         #2F6F4F !default;
+$ynf-mfd2-info:            #4A6B7A !default;
+$ynf-mfd2-warn:            #B8762A !default;
+$ynf-mfd2-danger:          #8B2418 !default;
+$ynf-mfd2-s-1:             4px  !default;
+$ynf-mfd2-s-2:             8px  !default;
+$ynf-mfd2-s-3:             12px !default;
+$ynf-mfd2-s-4:             16px !default;
+$ynf-mfd2-s-5:             20px !default;
+$ynf-mfd2-s-6:             24px !default;
+$ynf-mfd2-s-7:             32px !default;
+$ynf-mfd2-gutter:          16px !default;
+$ynf-mfd2-radius-sm:       4px  !default;
+$ynf-mfd2-radius-md:       8px  !default;
+$ynf-mfd2-radius-lg:       16px !default;
+$ynf-mfd2-radius-pill:     999px !default;
+$ynf-mfd2-r-sm:            $ynf-mfd2-radius-sm !default;
+$ynf-mfd2-r-md:            $ynf-mfd2-radius-md !default;
+$ynf-mfd2-r-lg:            $ynf-mfd2-radius-lg !default;
+$ynf-mfd2-r-pill:          $ynf-mfd2-radius-pill !default;
+$ynf-mfd2-page-max:        560px  !default;
+$ynf-mfd2-max-w:           1280px !default;
+$ynf-mfd2-shadow-1:        0 1px 2px rgba(42, 31, 20, 0.06), 0 1px 1px rgba(42, 31, 20, 0.04) !default;
+$ynf-mfd2-shadow-2:        0 4px 12px rgba(42, 31, 20, 0.08), 0 2px 4px rgba(42, 31, 20, 0.05) !default;
+$ynf-mfd2-shadow-card:     0 2px 8px rgba(42, 31, 20, 0.06) !default;
+$ynf-mfd2-shadow-lift:     0 8px 24px rgba(42, 31, 20, 0.12) !default;
+$ynf-mfd2-d-fast:          140ms !default;
+$ynf-mfd2-d-slow:          260ms !default;
+$ynf-mfd2-ease:            cubic-bezier(0.22, 1, 0.36, 1) !default;
+
+/* Premium typography — loaded via <link> in website.layout (//head),
+   not a remote @import (Odoo's SCSS compiler rejects remote url imports). */
+$ynf-serif: var(--ynf-font-serif, "Cormorant Garamond", Georgia, serif);
+$ynf-sans:  var(--ynf-font-sans, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+
+/* Design tokens (self-contained — no external _variables needed) */
+$ynf-bg:          #ffffff;
+$ynf-bg-soft:     #f7f7f7;
+$ynf-bg-card:     #ffffff;
+$ynf-border:      rgba(168, 134, 58, 0.30);
+$ynf-border-soft: rgba(20, 14, 6, 0.08);
+$ynf-text:        #2a2118;
+$ynf-text-muted:  #6e6151;
+$ynf-text-dim:    #a8997f;
+$ynf-gold:        #a07f3a;
+$ynf-gold-light:  #c9a961;
+$ynf-gold-dark:   #7c6128;
+$ynf-gold-soft:   rgba(160, 127, 58, 0.10);
+$ynf-wine:        #6b1f23;
+$ynf-success:     #4e9266;
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:   14px;
+$radius-pill: 999px;
+$shadow-card: 0 6px 20px rgba(42, 33, 24, 0.08);
+$shadow-lift: 0 14px 40px rgba(42, 33, 24, 0.14);
+$shadow-gold: 0 4px 16px rgba(160, 127, 58, 0.22);
+
+/* ---- Page canvas + base type ---- */
+body, .o_wsale_products_page, #wrap {
+    background: #ffffff;
+    color: $ynf-text;
+    font-family: $ynf-sans;
+    -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .h1, .h2, .h3,
+.ynf-section-title h2, .ynf-hero h1 {
+    font-family: $ynf-serif !important;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: $ynf-text;
+}
+.eyebrow {
+    font-family: $ynf-sans;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $ynf-gold;
+}
+
+/* ---- Buttons → gold full-pill (premium) ---- */
+.btn-primary,
+.btn-primary:focus {
+    background: $ynf-gold;
+    border-color: $ynf-gold;
+    color: #fff;
+    border-radius: $radius-pill;
+    font-family: $ynf-sans;
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 13px 26px;
+    box-shadow: $shadow-gold;
+    transition: transform .12s ease, filter .2s ease;
+}
+.btn-primary:hover { background: $ynf-gold; filter: brightness(1.05); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-outline-primary {
+    color: $ynf-gold-dark;
+    border-color: $ynf-gold;
+    border-radius: $radius-pill;
+    font-weight: 600;
+    padding: 13px 26px;
+}
+.btn-outline-primary:hover { background: $ynf-gold; border-color: $ynf-gold; color: #fff; }
+
+/* ---- HERO (uses existing .ynf-hero markup) ---- */
+.ynf-hero {
+    background: #ffffff;
+    border: 1px solid $ynf-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lift;
+    margin: 18px 16px 0;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+
+    .ynf-hero-eyebrow { font-family: $ynf-sans; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: $ynf-gold; }
+    h1 {
+        font-size: clamp(34px, 9vw, 56px);
+        line-height: 1.04;
+        margin: 14px 0 0;
+        em { color: $ynf-gold; font-style: italic; }
+    }
+    .lead { color: $ynf-text-muted; font-size: 15px; max-width: 460px; margin-top: 12px; }
+    .ynf-hero-cta { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    /* gold ornament */
+    &::after {
+        content: "◆"; color: $ynf-gold; font-size: 9px;
+        position: absolute; left: 24px; bottom: 18px;
+    }
+}
+
+/* ---- Section titles ---- */
+.ynf-section-title { text-align: center; margin-bottom: 22px;
+    .eyebrow { display: block; margin-bottom: 6px; }
+    h2 { font-size: clamp(24px, 6vw, 34px); }
+}
+
+/* ---- Collections cards ---- */
+.ynf-coll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; }
+.ynf-coll-card {
+    position: relative; aspect-ratio: 0.72; border: 1px solid $ynf-border-soft;
+    border-radius: $radius-md; overflow: hidden; display: flex; align-items: flex-end;
+    text-decoration: none; background: $ynf-bg-soft;
+    .ynf-coll-overlay { width: 100%; padding: 18px 8px 9px; text-align: center;
+        background: linear-gradient(to top, rgba(42,33,24,.82), transparent); }
+    h3 { color: #fff; font-size: 13px; margin: 0; }
+    .ynf-coll-cta { display: none; }
+}
+
+/* ---- website_sale product GRID card ---- */
+.oe_product, .o_wsale_products_item {
+    .oe_product_image, .o_wsale_product_information { background: #fff; }
+}
+#products_grid .oe_product,
+.o_wsale_products_grid .oe_product {
+    border: 1px solid $ynf-border-soft;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: $shadow-card;
+    transition: transform .12s ease, box-shadow .2s ease;
+    .oe_product_image, .oe_product_image_link {
+        background: #f4f1ea; display: flex; align-items: center; justify-content: center;
+        aspect-ratio: 1 / 1; padding: 14px;
+        img { mix-blend-mode: multiply; object-fit: contain; max-height: 100%; width: auto; }
+    }
+    .o_wsale_product_information { padding: 12px 13px 14px; }
+    h6, .o_wsale_products_item_title {
+        font-family: $ynf-serif; font-weight: 600; font-size: 16px; color: $ynf-text;
+    }
+    .product_price, .oe_currency_value {
+        font-family: $ynf-sans; font-weight: 600; color: $ynf-gold-dark; font-size: 16px;
+        font-variant-numeric: tabular-nums;
+    }
+}
+#products_grid .oe_product:active { transform: scale(.985); }
+
+/* "Inspired by" / brand chip — render from a product attribute or custom field,
+   e.g. <span class="ynf-inspired" t-if="product.x_ynf_inspired_by">…</span> */
+.ynf-inspired {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+    padding: 3px 9px; border-radius: $radius-pill;
+    border: 1px solid $ynf-border; background: $ynf-gold-soft;
+    color: $ynf-gold-dark; font-size: 10.5px; font-weight: 600;
+}
+
+/* ---- Product detail page ---- */
+.ynf-product-detail {
+    h1 { font-family: $ynf-serif; font-weight: 600; font-size: clamp(28px, 8vw, 44px); }
+    .product_price .oe_currency_value { color: $ynf-gold-dark; font-family: $ynf-sans; font-weight: 600; }
+    #add_to_cart, .js_add_cart_json {
+        background: $ynf-gold; border-color: $ynf-gold; border-radius: $radius-pill; font-weight: 600;
+    }
+    .ynf-notes-row { display: grid; grid-template-columns: 60px 1fr; gap: 12px;
+        padding: 11px 0; border-top: 1px solid $ynf-border-soft;
+        .label { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: $ynf-gold; }
+        .val { font-family: $ynf-sans; font-size: 13.5px; color: $ynf-text; }
+    }
+}
+
+/* ---- Sticky mobile add-to-cart bar (optional, wrap PDP buy block) ---- */
+.ynf-buy-sticky {
+    position: sticky; bottom: 0; z-index: 6;
+    background: rgba(255,255,255,.94); backdrop-filter: blur(12px);
+    border-top: 1px solid $ynf-border-soft; padding: 12px 16px;
+}
+
+/* ---- Announcement / promo bar (see ynf_views.xml) ---- */
+.ynf-announce { background: $ynf-gold; color: #fff; overflow: hidden; }
+.ynf-announce .ynf-marquee {
+    display: inline-flex; white-space: nowrap; padding: 6px 0;
+    animation: ynf-marquee 22s linear infinite;
+    span { padding: 0 4px; font-size: 11px; font-weight: 500; }
+    .sep { color: rgba(255,255,255,.55); padding: 0 16px; }
+}
+@keyframes ynf-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ynf-marquee { animation: none; } }
+
+/* ---- Footer (dark espresso, gold labels) ---- */
+.ynf-footer, footer.o_footer {
+    background: $ynf-text; color: $ynf-bg;
+    .o_footer_copyright { color: rgba(250,247,241,.5); }
+    a { color: rgba(250,247,241,.8); }
+    h5, .ynf-foot-h { color: $ynf-gold-light; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+}
+
+/* ---- Scroll reveal + count-up ---- */
+.ynf-rev { opacity: 0; transform: translateY(16px);
+    transition: opacity .55s cubic-bezier(.22,.61,.36,1), transform .55s cubic-bezier(.22,.61,.36,1); }
+.ynf-rev.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .ynf-rev { opacity: 1 !important; transform: none !important; transition: none; } }
+
+/* ---- Curated homepage sections ---- */
+.ynf-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+.ynf-rail { display: flex; gap: 13px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
+    &::-webkit-scrollbar { display: none; } > * { flex: 0 0 168px; } }
+
+.ynf-moods { display: grid; grid-template-columns: 1fr 1fr; gap: 11px;
+    @media (min-width: 768px) { grid-template-columns: repeat(4,1fr); } }
+.ynf-mood-card { display: block; text-align: left; text-decoration: none; background: #fff;
+    border: 1px solid $ynf-border-soft; border-radius: $radius-lg; padding: 16px; box-shadow: $shadow-card;
+    h3 { font-family: $ynf-serif; font-weight: 600; font-size: 17px; color: $ynf-text; margin: 6px 0 2px; }
+    p { font-size: 11.5px; color: $ynf-text-muted; margin: 0; }
+    .ynf-mood-ic { width: 30px; height: 30px; border-radius: 50%; background: $ynf-gold-soft;
+        border: 1px solid $ynf-border; display: flex; align-items: center; justify-content: center; color: $ynf-gold; } }
+
+.ynf-bundle { flex: 0 0 250px; background: #fff; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    overflow: hidden; box-shadow: $shadow-card; text-decoration: none; display: block;
+    .ynf-bundle-imgs { display: flex; justify-content: center; gap: 6px; background: #f4f1ea; padding: 14px;
+        img { height: 96px; mix-blend-mode: multiply; &:not(:first-child) { margin-left: -16px; } } }
+    .ynf-bundle-b { padding: 12px 14px; }
+    h3 { font-family: $ynf-serif; font-weight: 600; font-size: 17px; margin: 0; color: $ynf-text; }
+    .price { font-family: $ynf-sans; font-weight: 600; color: $ynf-gold-dark; }
+    .strike { text-decoration: line-through; color: $ynf-text-dim; font-size: 12px; margin-left: 6px; }
+    .save { float: right; background: $ynf-wine; color: #fff; border-radius: $radius-pill; font-size: 9.5px;
+        font-weight: 700; padding: 4px 9px; text-transform: uppercase; } }
+
+.ynf-spotlight, .ynf-auth { background: $ynf-text; color: $ynf-bg; border-radius: $radius-lg; padding: 24px 20px; }
+.ynf-spotlight { background: linear-gradient(150deg, #2a2118, #15110c);
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 30px; color: #fff; margin: 8px 0; }
+    p { color: rgba(255,255,255,.74); font-size: 13.5px; } }
+.ynf-eyebrow-gold { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: $ynf-gold-light; }
+
+.ynf-editorial { position: relative; border-radius: $radius-lg; overflow: hidden; box-shadow: $shadow-lift;
+    img, .ynf-edslot { width: 100%; height: 270px; object-fit: cover; display: block; background: $ynf-bg-soft; }
+    .ynf-ed-cap { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column;
+        justify-content: flex-end; padding: 22px 20px; color: #fff;
+        background: linear-gradient(to top, rgba(20,15,10,.8), transparent 55%);
+        h2 { font-family: $ynf-serif; font-style: italic; font-weight: 500; font-size: 30px; margin: 8px 0 0; } } }
+.ynf-edgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 16px;
+    img, .ynf-edslot { width: 100%; height: 150px; object-fit: cover; border-radius: $radius-lg; background: $ynf-bg-soft; } }
+.ynf-quote { font-family: $ynf-serif; font-style: italic; font-size: 18px; text-align: center;
+    color: $ynf-text-muted; margin: 16px 4px 0; }
+
+.ynf-quizcard { border: 1px solid $ynf-border; border-radius: $radius-lg; text-align: center; padding: 24px 20px;
+    background: #ffffff;
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 26px; margin: 10px 0 8px; em { color: $ynf-gold; } } }
+
+.ynf-testi { flex: 0 0 250px; background: #fff; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    padding: 18px; box-shadow: $shadow-card;
+    .q { font-family: $ynf-serif; font-style: italic; font-size: 17px; color: $ynf-text; }
+    .who { font-size: 13px; font-weight: 600; } .verif { font-size: 11px; color: $ynf-success; } }
+
+.ynf-stats { background: $ynf-bg-soft; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    padding: 22px 14px; display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; text-align: center;
+    .n { font-family: $ynf-serif; font-weight: 600; font-size: 24px; color: $ynf-gold-dark; }
+    .l { font-size: 9.5px; color: $ynf-text-muted; margin-top: 6px; } }
+
+.ynf-auth { .row { display: flex; gap: 13px; margin-bottom: 14px; } i { color: $ynf-gold-light; }
+    h4 { font-family: $ynf-serif; font-weight: 600; font-size: 15px; margin: 0; }
+    p { font-size: 12.5px; color: rgba(250,247,241,.66); margin: 0; } }
+
+.ynf-dropalert { background: linear-gradient(135deg, $ynf-gold, $ynf-gold-dark); color: #fff;
+    border-radius: $radius-lg; padding: 24px 20px; box-shadow: $shadow-gold;
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 26px; margin: 0; }
+    form { display: flex; gap: 9px; }
+    input { flex: 1; min-width: 0; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4);
+        border-radius: $radius-pill; padding: 13px 16px; color: #fff; }
+    button { background: #fff; color: $ynf-gold-dark; border: 0; border-radius: $radius-pill; padding: 13px 20px; font-weight: 700; }
+    .ynf-dropalert-done { font-family: $ynf-serif; font-weight: 600; font-size: 17px; } }
+
+/* ---- Butterfly ---- */
+.ynf-butterfly { position: fixed; top: 0; left: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+    pointer-events: none; z-index: 1080; filter: drop-shadow(0 3px 3px rgba(42,33,24,.28)); }
+.ynf-bf-l, .ynf-bf-r { transform-box: fill-box; }
+.ynf-bf-l { transform-origin: 100% 48%; animation: ynf-flap-l .26s ease-in-out infinite; }
+.ynf-bf-r { transform-origin: 0% 48%; animation: ynf-flap-r .26s ease-in-out infinite; }
+@keyframes ynf-flap-l { 0%,100% { transform: perspective(80px) rotateY(10deg); } 46% { transform: perspective(80px) rotateY(84deg); } }
+@keyframes ynf-flap-r { 0%,100% { transform: perspective(80px) rotateY(-10deg); } 46% { transform: perspective(80px) rotateY(-84deg); } }
+@media (prefers-reduced-motion: reduce) { .ynf-bf-l, .ynf-bf-r { animation: none; } }
+
+/* ---- Cookie bar (Odoo ships one; just reskin) ---- */
+.o_cookies_bar, #cookies-consent {
+    background: $ynf-text !important; color: $ynf-bg !important; border-radius: $radius-lg;
+    .btn { border-radius: $radius-pill; }
+}
+
+/* ============================================================
+   /web/login — YNF themed sign-in
+   ============================================================ */
+.ynf-login-body {
+    margin: 0;
+    background: #faf7f2;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: $ynf-text;
+}
+.ynf-login-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    background: $ynf-bg;
+}
+
+/* LEFT — dark hero */
+.ynf-login-hero {
+    background: radial-gradient(ellipse at top right, #3d2d1c 0%, #1c1209 70%);
+    color: #f3e9d6;
+    padding: 56px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.ynf-login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 64px;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    font-weight: 600;
+}
+.ynf-login-logo {
+    width: 32px; height: 32px;
+    border: 1.5px solid $ynf-gold;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    span {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        color: $ynf-gold;
+        font-size: 18px;
+        line-height: 1;
+    }
+}
+.ynf-login-brandname { color: #f3e9d6; }
+.ynf-login-welcome {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 72px;
+    line-height: 1;
+    margin: 0 0 20px 0;
+    color: #f8efdd;
+    em {
+        font-style: italic;
+        color: $ynf-gold-light;
+        font-weight: 500;
+    }
+}
+.ynf-login-sub {
+    font-size: 15px;
+    line-height: 1.55;
+    color: #c9bca0;
+    max-width: 360px;
+    margin: 0 0 48px 0;
+}
+.ynf-login-feats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    li {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        strong {
+            display: block;
+            color: #f3e9d6;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        span {
+            display: block;
+            font-size: 13.5px;
+            color: #a89878;
+            line-height: 1.5;
+        }
+    }
+}
+.ynf-login-feat-ico {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    background: rgba(201, 169, 97, 0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $ynf-gold-light;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* RIGHT — form card */
+.ynf-login-card {
+    padding: 56px 8vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+}
+.ynf-login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0 0 6px 0;
+    color: $ynf-text;
+}
+.ynf-login-greet {
+    font-size: 14px;
+    color: $ynf-text-muted;
+    margin: 0 0 24px 0;
+}
+.ynf-login-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #f3ede1;
+    border-radius: $radius-pill;
+    padding: 4px;
+    margin-bottom: 28px;
+    .ynf-login-tab {
+        text-align: center;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: $radius-pill;
+        color: $ynf-text-muted;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .18s ease;
+        &.is-active {
+            background: #fff;
+            color: $ynf-text;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        &:hover:not(.is-active) { color: $ynf-text; }
+    }
+}
+.ynf-login-form { display: flex; flex-direction: column; gap: 16px; }
+.ynf-login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: $ynf-text-muted;
+        text-transform: uppercase;
+        margin: 0;
+    }
+}
+.ynf-login-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e6dcc6;
+    border-radius: $radius-md;
+    background: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    &:focus-within {
+        border-color: $ynf-gold;
+        box-shadow: 0 0 0 3px $ynf-gold-soft;
+    }
+    input {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        padding: 12px 14px 12px 40px;
+        font-size: 14.5px;
+        color: $ynf-text;
+        outline: none;
+        font-family: inherit;
+        &::placeholder { color: $ynf-text-dim; }
+    }
+}
+.ynf-login-iicon {
+    position: absolute;
+    left: 14px;
+    color: $ynf-gold;
+    font-size: 14px;
+    pointer-events: none;
+}
+.ynf-login-show {
+    background: none;
+    border: 0;
+    padding: 0 14px;
+    font-size: 12px;
+    color: $ynf-gold;
+    cursor: pointer;
+    font-weight: 500;
+    &:hover { color: $ynf-gold-dark; }
+}
+.ynf-login-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin: 4px 0 4px 0;
+}
+.ynf-login-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    cursor: pointer;
+    color: $ynf-text-muted;
+    input { accent-color: $ynf-gold; width: 16px; height: 16px; }
+}
+.ynf-login-forgot {
+    color: $ynf-gold;
+    text-decoration: none;
+    font-weight: 500;
+    &:hover { color: $ynf-gold-dark; text-decoration: underline; }
+}
+.ynf-login-cta {
+    background: linear-gradient(180deg, $ynf-gold 0%, $ynf-gold-dark 100%);
+    color: #fff;
+    border: 0;
+    padding: 14px;
+    border-radius: $radius-pill;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: filter .15s ease, transform .15s ease;
+    &:hover { filter: brightness(1.07); }
+    &:active { transform: translateY(1px); }
+}
+.ynf-login-or {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 14px 0;
+    color: $ynf-text-dim;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    &::before, &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #ecdfc4;
+    }
+}
+.ynf-login-social {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.ynf-login-social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 14px;
+    border: 1px solid #e6dcc6;
+    border-radius: $radius-pill;
+    color: $ynf-text;
+    background: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .15s ease;
+    img { width: 18px; height: 18px; }
+    .fa-apple { font-size: 17px; }
+    &:hover { border-color: $ynf-gold; color: $ynf-gold-dark; }
+}
+.ynf-login-guest {
+    display: block;
+    text-align: center;
+    padding: 11px 14px;
+    border: 1px dashed #d4c79f;
+    border-radius: $radius-pill;
+    color: $ynf-text;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    transition: all .15s ease;
+    span { color: $ynf-gold; margin-left: 4px; }
+    &:hover { border-color: $ynf-gold; background: $ynf-gold-soft; }
+}
+.ynf-login-trust {
+    text-align: center;
+    color: $ynf-text-muted;
+    font-size: 12.5px;
+    margin: 4px 0;
+    .fa-check-circle { color: $ynf-gold; margin-right: 4px; }
+}
+.ynf-login-legal {
+    text-align: center;
+    color: $ynf-text-dim;
+    font-size: 11.5px;
+    margin: 6px 0 0 0;
+    a { color: $ynf-gold; text-decoration: none; &:hover { text-decoration: underline; } }
+}
+
+/* Mobile — collapse to single column, hide hero */
+@media (max-width: 900px) {
+    .ynf-login-wrap { grid-template-columns: 1fr; }
+    .ynf-login-hero { display: none; }
+    .ynf-login-card { padding: 40px 24px; max-width: none; }
+    .ynf-login-welcome { font-size: 48px; }
+}
+
+/* ============================================================
+   Header (custom YNF) + mobile drawer + search overlay
+   ============================================================ */
+.ynf-hide-odoo-header { display: none !important; }
+
+.ynf-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #ecdfc4;
+}
+.ynf-header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 18px;
+
+    @media (max-width: 767.98px) {
+        padding: 10px 14px;
+        grid-template-columns: auto 1fr auto;
+    }
+}
+.ynf-header-burger {
+    background: transparent;
+    border: 0;
+    color: $ynf-text;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: $radius-md;
+    &:hover { background: $ynf-gold-soft; color: $ynf-gold-dark; }
+}
+.ynf-header-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: $ynf-text;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    justify-self: start;
+
+    @media (max-width: 767.98px) { justify-self: center; gap: 8px; }
+}
+.ynf-header-logo {
+    width: 28px; height: 28px;
+    border: 1.5px solid $ynf-gold;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    span {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        color: $ynf-gold;
+        font-size: 16px; line-height: 1;
+    }
+}
+.ynf-header-brandname { color: $ynf-text; }
+.ynf-header-nav {
+    justify-self: center;
+    align-items: center;
+    gap: 28px;
+}
+.ynf-header-link {
+    color: $ynf-text;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    position: relative;
+    padding: 4px 0;
+    white-space: nowrap;
+    &:hover { color: $ynf-gold-dark; }
+    &.is-active {
+        color: $ynf-gold-dark;
+        &::after {
+            content: ''; position: absolute;
+            left: 0; right: 0; bottom: -4px;
+            height: 2px; background: $ynf-gold; border-radius: 2px;
+        }
+    }
+}
+.ynf-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    justify-self: end;
+}
+.ynf-header-iconbtn {
+    background: transparent;
+    border: 0;
+    color: $ynf-text;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    transition: background .15s ease, color .15s ease;
+    &:hover { background: $ynf-gold-soft; color: $ynf-gold-dark; }
+}
+.ynf-header-cart-badge {
+    position: absolute;
+    top: 2px; right: 0;
+    min-width: 16px; height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: $ynf-gold;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Mobile drawer */
+.ynf-mobile-drawer {
+    position: fixed; inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    visibility: hidden;
+    &.is-open { pointer-events: auto; visibility: visible; }
+}
+.ynf-mobile-drawer-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(28, 18, 9, 0.45);
+    opacity: 0;
+    transition: opacity .25s ease;
+    .ynf-mobile-drawer.is-open & { opacity: 1; }
+}
+.ynf-mobile-drawer-panel {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 84vw; max-width: 340px;
+    background: #fff;
+    box-shadow: 2px 0 24px rgba(0,0,0,0.15);
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    display: flex; flex-direction: column;
+    .ynf-mobile-drawer.is-open & { transform: translateX(0); }
+}
+.ynf-mobile-drawer-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #ecdfc4;
+}
+.ynf-mobile-drawer-close {
+    background: transparent; border: 0;
+    color: $ynf-text; cursor: pointer;
+    padding: 6px; border-radius: 50%;
+    &:hover { background: $ynf-gold-soft; }
+}
+.ynf-mobile-drawer-nav {
+    display: flex; flex-direction: column;
+    padding: 12px 0;
+    a {
+        padding: 14px 22px;
+        color: $ynf-text;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        &:hover { background: $ynf-gold-soft; border-left-color: $ynf-gold; color: $ynf-gold-dark; }
+    }
+    .ynf-mobile-drawer-divider {
+        margin-top: 8px;
+        border-top: 1px solid #ecdfc4;
+        padding-top: 18px;
+    }
+}
+
+/* Search overlay (full-screen) */
+.ynf-search-overlay {
+    position: fixed; inset: 0;
+    z-index: 250;
+    pointer-events: none;
+    visibility: hidden;
+    &.is-open { pointer-events: auto; visibility: visible; }
+}
+.ynf-search-overlay-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(28, 18, 9, 0.55);
+    opacity: 0;
+    transition: opacity .2s ease;
+    .ynf-search-overlay.is-open & { opacity: 1; }
+}
+.ynf-search-overlay-form {
+    position: relative;
+    margin: 18vh auto 0;
+    max-width: 680px;
+    background: #fff;
+    border-radius: $radius-pill;
+    padding: 8px 8px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 16px 60px rgba(0,0,0,0.3);
+    transform: translateY(-12px);
+    opacity: 0;
+    transition: transform .25s ease, opacity .25s ease;
+    .ynf-search-overlay.is-open & { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 767.98px) {
+        margin: 12vh 16px 0;
+        padding: 6px 6px 6px 14px;
+        gap: 8px;
+        border-radius: $radius-lg;
+    }
+}
+.ynf-search-overlay-icon { color: $ynf-gold; flex-shrink: 0; }
+.ynf-search-overlay-form input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    padding: 12px 0;
+    font-size: 16px;
+    color: $ynf-text;
+    outline: none;
+    font-family: inherit;
+    &::placeholder { color: $ynf-text-dim; }
+}
+.ynf-search-overlay-go {
+    background: linear-gradient(180deg, $ynf-gold 0%, $ynf-gold-dark 100%);
+    color: #fff;
+    border: 0;
+    padding: 11px 22px;
+    border-radius: $radius-pill;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    &:hover { filter: brightness(1.07); }
+}
+.ynf-search-overlay-close {
+    background: transparent;
+    border: 0; color: $ynf-text-muted;
+    padding: 6px; cursor: pointer;
+    position: absolute;
+    top: calc(18vh - 44px); right: 0;
+    border-radius: 50%;
+    &:hover { color: $ynf-gold; }
+    @media (max-width: 767.98px) {
+        top: calc(12vh - 40px); right: 16px;
+    }
+}
+
+/* Push the page content down so it doesn't sit under the sticky header */
+body { padding-top: 0; }

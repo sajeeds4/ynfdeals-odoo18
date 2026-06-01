@@ -167,7 +167,7 @@
                                 </t>
 
                                 <!-- Inspired-by hint (uses x_ynf_inspired_by if available) -->
-                                <t t-set="_inspired" t-value="getattr(line.product_id, 'x_ynf_inspired_by', False)"/>
+                                <t t-set="_inspired" t-value="line.product_id.x_ynf_inspired_by or False"/>
                                 <t t-if="_inspired">
                                     <span class="ynf-mfd2-cart-line-inspired">
                                         <span class="ynf-mfd2-cart-line-inspired-spark" aria-hidden="true">✦</span>

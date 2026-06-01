@@ -155,9 +155,9 @@
     <template id="ynf_mfd2_card" name="YNF MFD2 Product Card">
         <t t-set="_p" t-value="product"/>
         <t t-set="_brand" t-value="(_p.name.split(' ')[0] if _p and _p.name else '').upper()"/>
-        <t t-set="_inspired" t-value="getattr(_p, 'x_ynf_inspired_by', False)"/>
-        <t t-set="_family" t-value="getattr(_p, 'x_ynf_family', False)"/>
-        <t t-set="_img_url" t-value="getattr(_p, 'x_ynf_image_url', False)"/>
+        <t t-set="_inspired" t-value="_p.x_ynf_inspired_by or False"/>
+        <t t-set="_family" t-value="_p.x_ynf_family or False"/>
+        <t t-set="_img_url" t-value="_p.x_ynf_image_url or False"/>
         <t t-set="_price" t-value="_p.list_price or 0.0"/>
         <article class="ynf-mfd2-card">
             <a t-attf-href="/shop/product/#{slug(_p)}" class="ynf-mfd2-card-link" t-att-aria-label="_p.name">
@@ -191,7 +191,7 @@
             </a>
             <form action="/shop/cart/update" method="post" class="ynf-mfd2-card-addform">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="hidden" name="product_id" t-att-value="_p.product_variant_id.id if hasattr(_p, 'product_variant_id') else _p.id"/>
+                <input type="hidden" name="product_id" t-att-value="_p.product_variant_id.id if 'product_variant_id' in _p._fields else _p.id"/>
                 <input type="hidden" name="add_qty" value="1"/>
                 <button type="submit" class="ynf-mfd2-card-add" aria-label="Add to bag" title="Add to bag">
                     <span class="ynf-mfd2-card-add-glyph" aria-hidden="true">+</span>
@@ -207,9 +207,9 @@
          ============================================================ -->
     <template id="ynf_mfd2_notes_pyramid" name="YNF MFD2 Notes Pyramid">
         <t t-set="_p" t-value="product"/>
-        <t t-set="_top" t-value="getattr(_p, 'x_ynf_note_top', False)"/>
-        <t t-set="_mid" t-value="getattr(_p, 'x_ynf_note_mid', False)"/>
-        <t t-set="_base" t-value="getattr(_p, 'x_ynf_note_base', False)"/>
+        <t t-set="_top" t-value="_p.x_ynf_note_top or False"/>
+        <t t-set="_mid" t-value="_p.x_ynf_note_mid or False"/>
+        <t t-set="_base" t-value="_p.x_ynf_note_base or False"/>
         <t t-if="_top or _mid or _base">
             <div class="ynf-mfd2-notes">
                 <t t-if="_top">
