@@ -233,6 +233,28 @@
                         <a href="/shop" class="av-cinema-cta av-fade-rise-d2">Begin Journey</a>
                     </div>
                 </section>
+                <!-- SCROLLING BRAND MARQUEE — premium-house roll under the hero -->
+                <section class="av-brand-marquee" aria-label="Featured houses">
+                    <div class="av-brand-track">
+                        <!-- duplicated x2 for seamless loop -->
+                        <span>Lattafa</span><span class="av-brand-sep">◆</span>
+                        <span>Armaf</span><span class="av-brand-sep">◆</span>
+                        <span>Rasasi</span><span class="av-brand-sep">◆</span>
+                        <span>Afnan</span><span class="av-brand-sep">◆</span>
+                        <span>Maison Alhambra</span><span class="av-brand-sep">◆</span>
+                        <span>Al Rehab</span><span class="av-brand-sep">◆</span>
+                        <span>Al Haramain</span><span class="av-brand-sep">◆</span>
+                        <span>Rasasi</span><span class="av-brand-sep">◆</span>
+                        <span>Lattafa</span><span class="av-brand-sep">◆</span>
+                        <span>Armaf</span><span class="av-brand-sep">◆</span>
+                        <span>Rasasi</span><span class="av-brand-sep">◆</span>
+                        <span>Afnan</span><span class="av-brand-sep">◆</span>
+                        <span>Maison Alhambra</span><span class="av-brand-sep">◆</span>
+                        <span>Al Rehab</span><span class="av-brand-sep">◆</span>
+                        <span>Al Haramain</span><span class="av-brand-sep">◆</span>
+                        <span>Rasasi</span><span class="av-brand-sep">◆</span>
+                    </div>
+                </section>
                 <section class="sx-quick-cats">
                     <div class="sx-quick-cats-row">
                         <a href="/shop?attribute_value=him" class="sx-quick-cat">

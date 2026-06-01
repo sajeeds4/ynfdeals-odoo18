@@ -1744,3 +1744,204 @@ body, #wrap, .ynf-homepage, .o_wsale_products_page {
     }
     .av-cinema-cta:hover { transform: none !important; }
 }
+
+/* =========================================================================
+   AV CINEMA — MOTION LAYER
+   Letter-by-letter reveal, cursor parallax, grain/vignette overlays,
+   magnetic CTA, smooth-scroll. Adds depth without going cartoonish.
+   Every motion respects prefers-reduced-motion.
+   ========================================================================= */
+
+/* ── Smooth-scroll for in-page anchors ───────────────────────────── */
+html { scroll-behavior: smooth; }
+
+/* ── Page-load reveal mask — white wipe off the top ──────────────── */
+.av-cinema::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    z-index: 9;
+    pointer-events: none;
+    transform-origin: top;
+    animation: av-wipe-off 0.95s cubic-bezier(0.77, 0, 0.18, 1) 0.05s forwards;
+}
+@keyframes av-wipe-off {
+    0%   { transform: scaleY(1); }
+    100% { transform: scaleY(0); }
+}
+
+/* ── Cinematic grain overlay over the video ──────────────────────── */
+.av-cinema-video-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.62'/%3E%3C/svg%3E");
+    background-size: 240px 240px;
+    animation: av-grain 0.6s steps(6) infinite;
+}
+@keyframes av-grain {
+    0%   { transform: translate(0,    0); }
+    20%  { transform: translate(-3%,  4%); }
+    40%  { transform: translate(5%,  -2%); }
+    60%  { transform: translate(-4%, -3%); }
+    80%  { transform: translate(2%,   5%); }
+    100% { transform: translate(0,    0); }
+}
+
+/* ── Vignette darkening on video edges (subtle) ──────────────────── */
+.av-cinema-overlay {
+    box-shadow: inset 0 0 180px 60px rgba(0, 0, 0, 0.18);
+}
+
+/* ── Headline letter reveal — JS will inject .av-char spans ──────── */
+.av-cinema-headline { perspective: 600px; }
+.av-cinema-headline .av-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px) rotateX(-22deg);
+    animation: av-char-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.av-cinema-headline .av-char.space { width: 0.28em; height: 1em; }
+@keyframes av-char-in {
+    0%   { opacity: 0; transform: translateY(40px) rotateX(-22deg); }
+    100% { opacity: 1; transform: translateY(0) rotateX(0); }
+}
+/* override the bulk fade-rise on the headline now that we split chars */
+.av-cinema-headline.av-fade-rise { animation: none !important; opacity: 1; transform: none; }
+
+/* ── Cursor-driven parallax — content shifts via CSS vars from JS ─── */
+.av-cinema-content {
+    transform: translate3d(var(--av-px, 0px), var(--av-py, 0px), 0);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+
+/* ── Magnetic CTA button — JS pulls it toward the cursor ─────────── */
+.av-cinema-cta {
+    transition:
+        transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.2s ease,
+        box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+
+    /* ripple sheen on hover */
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0; left: -120%;
+        width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transform: skewX(-22deg);
+        transition: left 0.65s ease;
+    }
+    &:hover {
+        box-shadow: 0 18px 36px rgba(0,0,0,0.22);
+        &::after { left: 160%; }
+    }
+}
+
+/* ── Floating diamond ornaments in corners ──────────────────────── */
+.av-cinema::after {
+    content: "◆";
+    position: absolute;
+    top: 22%; right: 8%;
+    color: rgba(0,0,0,0.18);
+    font-size: 14px;
+    z-index: 3;
+    pointer-events: none;
+    animation: av-drift 11s ease-in-out infinite;
+}
+@keyframes av-drift {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25%      { transform: translate(-12px, 18px) rotate(45deg); }
+    50%      { transform: translate(8px, 26px) rotate(0deg); }
+    75%      { transform: translate(16px, -10px) rotate(-30deg); }
+}
+
+/* ── Scrolling brand marquee under the hero ──────────────────────── */
+.av-brand-marquee {
+    background: #000000;
+    color: #ffffff;
+    overflow: hidden;
+    padding: 28px 0;
+    position: relative;
+}
+.av-brand-marquee::before,
+.av-brand-marquee::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+}
+.av-brand-marquee::before { left: 0;  background: linear-gradient(to right, #000, transparent); }
+.av-brand-marquee::after  { right: 0; background: linear-gradient(to left,  #000, transparent); }
+
+.av-brand-track {
+    display: flex;
+    gap: 4rem;
+    animation: av-marquee 32s linear infinite;
+    width: max-content;
+
+    span {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: 36px;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        color: #ffffff;
+        white-space: nowrap;
+        opacity: 0.85;
+        @media (min-width: 768px) { font-size: 44px; }
+    }
+    .av-brand-sep {
+        color: #ffffff;
+        opacity: 0.4;
+        font-size: 18px;
+        align-self: center;
+    }
+}
+@keyframes av-marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.av-brand-marquee:hover .av-brand-track { animation-play-state: paused; }
+
+/* ── Animated nav-link underline ─────────────────────────────────── */
+.ynf-header-link {
+    position: relative;
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: -2px;
+        height: 2px;
+        background: #000;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    &:hover::after, &.is-active::after { transform: scaleX(1); }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .av-cinema::before, .av-cinema::after,
+    .av-cinema-video-wrap::after,
+    .av-cinema-headline .av-char,
+    .av-brand-track,
+    .av-cinema-cta::after,
+    .ynf-header-link::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    .av-cinema-headline .av-char { opacity: 1; transform: none; }
+    .av-cinema::before { display: none; }
+}
