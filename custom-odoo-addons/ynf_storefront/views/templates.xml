@@ -1,0 +1,840 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================ LAYOUT ============================ -->
+    <!-- Announcement marquee + decorative butterfly on every page -->
+    <template id="ynf_layout" inherit_id="website.layout" name="YNF Layout">
+        <xpath expr="//head" position="inside">
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap"/>
+        </xpath>
+        <!-- Hide Odoo's default header on the storefront — we render our own below -->
+        <xpath expr="//header" position="attributes">
+            <attribute name="class" add="ynf-hide-odoo-header" separator=" "/>
+        </xpath>
+        <xpath expr="//header" position="before">
+            <div class="ynf-announce">
+                <div class="ynf-marquee">
+                    <t t-foreach="range(2)" t-as="loop">
+                        <span>Free shipping over $75</span><span class="sep">✦</span>
+                        <span>100% authentic guarantee</span><span class="sep">✦</span>
+                        <span>Live auctions nightly · 8 PM ET</span><span class="sep">✦</span>
+                        <span>New drops every week</span><span class="sep">✦</span>
+                    </t>
+                </div>
+            </div>
+            <!-- YNF custom header (desktop + mobile slim bar) -->
+            <t t-set="ynf_cart_qty" t-value="(request.website.sale_get_order() and request.website.sale_get_order().cart_quantity) or 0"/>
+            <t t-set="ynf_top_menus" t-value="request.website.menu_id and request.website.menu_id.child_id or []"/>
+            <header class="ynf-header" role="banner">
+                <div class="ynf-header-inner">
+                    <button type="button" class="ynf-header-burger d-md-none"
+                            aria-label="Open menu" aria-controls="ynf-mobile-drawer"
+                            onclick="document.getElementById('ynf-mobile-drawer').classList.add('is-open')">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                    </button>
+                    <a href="/" class="ynf-header-brand" aria-label="YNF Deals home">
+                        <span class="ynf-header-logo"><span>Y</span></span>
+                        <span class="ynf-header-brandname">YNF DEALS</span>
+                    </a>
+                    <nav class="ynf-header-nav d-none d-md-flex" aria-label="Primary">
+                        <t t-foreach="ynf_top_menus" t-as="m">
+                            <a t-att-href="m.url"
+                               t-attf-class="ynf-header-link #{request.httprequest.path == m.url and 'is-active' or ''}"
+                               t-esc="m.name"/>
+                        </t>
+                    </nav>
+                    <div class="ynf-header-actions">
+                        <button type="button" class="ynf-header-iconbtn ynf-header-search-toggle"
+                                aria-label="Search"
+                                onclick="document.getElementById('ynf-search-overlay').classList.add('is-open'); setTimeout(function(){var i=document.getElementById('ynf-search-input'); if(i) i.focus();}, 50);">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                        </button>
+                        <a href="/my" class="ynf-header-iconbtn d-none d-md-inline-flex" aria-label="Account">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                        </a>
+                        <a href="/shop/cart" class="ynf-header-iconbtn ynf-header-cart" aria-label="Cart">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.5 11h-11z"/><path d="M9 8a3 3 0 016 0"/></svg>
+                            <span t-if="ynf_cart_qty &gt; 0" class="ynf-header-cart-badge" t-esc="ynf_cart_qty"/>
+                        </a>
+                    </div>
+                </div>
+            </header>
+            <!-- Mobile slide-in drawer (nav links) -->
+            <div class="ynf-mobile-drawer d-md-none" id="ynf-mobile-drawer" role="dialog" aria-label="Menu" aria-hidden="true">
+                <div class="ynf-mobile-drawer-backdrop"
+                     onclick="document.getElementById('ynf-mobile-drawer').classList.remove('is-open')"/>
+                <aside class="ynf-mobile-drawer-panel">
+                    <div class="ynf-mobile-drawer-head">
+                        <span class="ynf-header-brandname">YNF DEALS</span>
+                        <button type="button" class="ynf-mobile-drawer-close" aria-label="Close menu"
+                                onclick="document.getElementById('ynf-mobile-drawer').classList.remove('is-open')">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
+                        </button>
+                    </div>
+                    <nav class="ynf-mobile-drawer-nav" aria-label="Mobile menu">
+                        <t t-foreach="ynf_top_menus" t-as="m">
+                            <a t-att-href="m.url" t-esc="m.name"/>
+                        </t>
+                        <a href="/my" class="ynf-mobile-drawer-divider">My Account</a>
+                        <a href="/my/help">Help &amp; disputes</a>
+                        <a href="/policy">Policies</a>
+                    </nav>
+                </aside>
+            </div>
+            <!-- Search overlay (shared desktop + mobile) -->
+            <div class="ynf-search-overlay" id="ynf-search-overlay" role="dialog" aria-label="Search">
+                <div class="ynf-search-overlay-backdrop"
+                     onclick="document.getElementById('ynf-search-overlay').classList.remove('is-open')"/>
+                <form class="ynf-search-overlay-form" action="/shop" method="get" role="search">
+                    <button type="button" class="ynf-search-overlay-close" aria-label="Close search"
+                            onclick="document.getElementById('ynf-search-overlay').classList.remove('is-open')">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
+                    </button>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="ynf-search-overlay-icon"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    <input type="search" name="search" id="ynf-search-input"
+                           placeholder="Search fragrances, brands, notes…"
+                           autocomplete="off"/>
+                    <button type="submit" class="ynf-search-overlay-go">Search</button>
+                </form>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <!-- Mobile bottom tab bar (sticky, hidden on md+) -->
+            <nav class="ynf-mfd-tabbar d-md-none" aria-label="Primary mobile nav">
+                <a t-attf-href="/" t-attf-class="ynf-mfd-tab #{request.httprequest.path == '/' and 'is-active' or ''}">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+                    <span>Home</span>
+                </a>
+                <a t-attf-href="/shop" t-attf-class="ynf-mfd-tab #{request.httprequest.path.startswith('/shop') and not request.httprequest.path.startswith('/shop/cart') and 'is-active' or ''}">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11H3z"/></svg>
+                    <span>Shop</span>
+                </a>
+                <a t-attf-href="/live" t-attf-class="ynf-mfd-tab ynf-mfd-tab-live #{request.httprequest.path == '/live' and 'is-active' or ''}">
+                    <span class="ynf-mfd-tab-live-pill" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                        <span class="ynf-mfd-tab-live-dot"/>
+                    </span>
+                    <span>Live</span>
+                </a>
+                <a t-attf-href="/shop/cart" t-attf-class="ynf-mfd-tab #{request.httprequest.path.startswith('/shop/cart') and 'is-active' or ''}">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.5 11h-11z"/><path d="M9 8a3 3 0 016 0"/></svg>
+                    <span>Bag</span>
+                </a>
+                <a t-attf-href="/my" t-attf-class="ynf-mfd-tab #{request.httprequest.path.startswith('/my') and 'is-active' or ''}">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                    <span>You</span>
+                </a>
+            </nav>
+            <!-- Cookie consent banner — JS toggles class=is-visible after checking localStorage -->
+            <div class="ynf-cookie" id="ynf-cookie-banner" role="dialog" aria-label="Cookies notice">
+                <div class="ynf-cookie-title">We value your privacy</div>
+                <div class="ynf-cookie-body">
+                    We use cookies to keep your bag, remember preferences, and improve the store.
+                    <a href="/policy?topic=privacy" class="ynf-cookie-learn">Learn more</a>.
+                </div>
+                <div class="ynf-cookie-actions">
+                    <button type="button" class="ynf-cookie-btn ynf-cookie-btn-accept" data-cookie="all">Accept all</button>
+                    <button type="button" class="ynf-cookie-btn ynf-cookie-btn-essential" data-cookie="essential">Essential only</button>
+                </div>
+            </div>
+            <!-- Add-to-bag toast — dynamically populated by ynf_theme.js -->
+            <div class="ynf-toast" id="ynf-toast" role="status" aria-live="polite">
+                <span class="ynf-toast-icon" aria-hidden="true">✓</span>
+                <div class="ynf-toast-body">
+                    <div class="ynf-toast-eyebrow">Added to bag</div>
+                    <div class="ynf-toast-name" id="ynf-toast-name">—</div>
+                </div>
+                <a href="/shop/cart" class="ynf-toast-cta">View bag</a>
+            </div>
+            <div class="ynf-butterfly" aria-hidden="true">
+                <svg viewBox="0 0 48 46" width="34" height="34">
+                    <g class="ynf-bf-l">
+                        <path d="M24 16 C 15 4 3 6 4 14 C 4.5 19 8 22 15 22 C 20 22 23 20 24 18 Z" fill="#241a12"/>
+                        <path d="M24 19 C 18 21 10 24 13 32 C 16 37 22 34 24 24 Z" fill="#241a12"/>
+                        <path d="M23 16.5 C 16 7 6 8.6 6.6 14.2 C 7 18 10 20 15 20 C 19 20 21.5 18.5 23 17 Z" fill="#d39a3e"/>
+                        <path d="M23 20.5 C 18 22 12.5 25 15 31 C 17 35 21 32 23 24 Z" fill="#cf8f33"/>
+                        <circle cx="6.5" cy="12.2" r="0.85" fill="#fff7ea"/><circle cx="5.4" cy="15" r="0.8" fill="#fff7ea"/><circle cx="9" cy="18.4" r="0.75" fill="#fff7ea"/>
+                    </g>
+                    <g class="ynf-bf-r">
+                        <path d="M24 16 C 33 4 45 6 44 14 C 43.5 19 40 22 33 22 C 28 22 25 20 24 18 Z" fill="#241a12"/>
+                        <path d="M24 19 C 30 21 38 24 35 32 C 32 37 26 34 24 24 Z" fill="#241a12"/>
+                        <path d="M25 16.5 C 32 7 42 8.6 41.4 14.2 C 41 18 38 20 33 20 C 29 20 26.5 18.5 25 17 Z" fill="#d39a3e"/>
+                        <path d="M25 20.5 C 30 22 35.5 25 33 31 C 31 35 27 32 25 24 Z" fill="#cf8f33"/>
+                        <circle cx="41.5" cy="12.2" r="0.85" fill="#fff7ea"/><circle cx="42.6" cy="15" r="0.8" fill="#fff7ea"/><circle cx="39" cy="18.4" r="0.75" fill="#fff7ea"/>
+                    </g>
+                    <ellipse cx="24" cy="23" rx="1.5" ry="9.5" fill="#1d150e"/>
+                    <circle cx="24" cy="12.6" r="2" fill="#1d150e"/>
+                    <path d="M24 11 C 22 7 20.5 5.6 18.8 4.8 M24 11 C 26 7 27.5 5.6 29.2 4.8" stroke="#1d150e" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Reusable polished product card -->
+    <template id="ynf_product_card" name="YNF Product Card">
+        <t t-set="prod_variant" t-value="product.product_variant_id"/>
+        <t t-set="qty" t-value="prod_variant and prod_variant.qty_available or 0"/>
+        <t t-set="is_bestseller" t-value="qty &gt;= 50"/>
+        <t t-set="low_stock" t-value="qty &gt; 0 and qty &lt; 12"/>
+        <t t-set="brand" t-value="(product.name.split(' ')[0] if product.name else '').upper()"/>
+        <div class="ynf-pc">
+            <div class="ynf-pc-img-wrap">
+                <span t-if="is_bestseller" class="ynf-pc-badge ynf-pc-badge-bestseller">BESTSELLER</span>
+                <span t-elif="low_stock" class="ynf-pc-badge ynf-pc-badge-low">ONLY <t t-esc="int(qty)"/> LEFT</span>
+                <a t-attf-href="/shop/product/#{slug(product)}" class="ynf-pc-img-link">
+                    <img t-if="product.x_ynf_image_url" t-att-src="product.x_ynf_image_url" t-att-alt="product.name" class="ynf-pc-img" loading="lazy"/>
+                    <img t-else="t-else" t-attf-src="/web/image/product.template/#{product.id}/image_512" t-att-alt="product.name" class="ynf-pc-img" loading="lazy"/>
+                </a>
+                <form action="/shop/cart/update" method="post" class="ynf-pc-add-form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="product_id" t-att-value="prod_variant.id"/>
+                    <input type="hidden" name="add_qty" value="1"/>
+                    <button type="submit" class="ynf-pc-add" aria-label="Add to bag" title="Add to bag">+</button>
+                </form>
+            </div>
+            <div class="ynf-pc-body">
+                <div class="ynf-pc-meta">
+                    <span class="ynf-pc-brand" t-esc="brand"/>
+                    <span class="ynf-pc-category" t-if="product.x_ynf_family" t-esc="product.x_ynf_family"/>
+                </div>
+                <h3 class="ynf-pc-name"><a t-attf-href="/shop/product/#{slug(product)}" t-esc="product.name"/></h3>
+                <span class="ynf-pc-inspired" t-if="product.x_ynf_inspired_by">
+                    <span class="ynf-pc-inspired-icon">+</span>
+                    <span class="ynf-pc-inspired-label">Inspired by</span>
+                    <span class="ynf-pc-inspired-name" t-esc="product.x_ynf_inspired_by"/>
+                </span>
+                <div class="ynf-pc-price-row">
+                    <span class="ynf-pc-price">$<t t-esc="'%.2f' % (product.list_price or 0)"/></span>
+                    <span class="ynf-pc-size">100 ml</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ============================ HOMEPAGE ============================ -->
+    <template id="ynf_homepage" name="YNF Homepage">
+        <t t-call="website.layout">
+            <!-- ============================================================
+                 DATA SOURCING — all queries defensive; failure → empty set
+                 ============================================================ -->
+            <t t-set="pub" t-value="[('sale_ok','=',True),('website_published','=',True)]"/>
+            <t t-set="img_filter" t-value="['|', ('image_1920', '!=', False), ('x_ynf_image_url', '!=', False)]"/>
+            <t t-set="ProductT" t-value="request.env['product.template'].sudo()"/>
+
+            <!-- Bestsellers: try sales_count desc; fall back to create_date if field missing -->
+            <t t-set="bestsellers" t-value="ProductT.search(pub + img_filter, limit=6, order='create_date desc')"/>
+            <t t-set="cheap" t-value="ProductT.search(pub + img_filter + [('list_price','&lt;=',31)], limit=6, order='list_price asc')"/>
+            <t t-set="newest" t-value="ProductT.search(pub + img_filter, limit=6, order='create_date desc')"/>
+            <t t-set="inspired_products" t-value="ProductT.search(pub + img_filter + [('x_ynf_inspired_by','!=',False)], limit=6, order='create_date desc')"/>
+            <t t-set="hero_product" t-value="bestsellers and bestsellers[0] or False"/>
+
+            <!-- Collections sample tiles (use existing products as backdrop) -->
+            <t t-set="him_img" t-value="bestsellers and len(bestsellers) &gt; 1 and bestsellers[1] or False"/>
+            <t t-set="her_img" t-value="bestsellers and len(bestsellers) &gt; 2 and bestsellers[2] or False"/>
+            <t t-set="uni_img" t-value="hero_product"/>
+
+            <!-- Spotlight house: 3 Lattafa-branded products (defensive name search) -->
+            <t t-set="lattafa_products" t-value="ProductT.search(pub + img_filter + [('name','ilike','Lattafa')], limit=3) or ProductT.search(pub + img_filter, limit=3)"/>
+
+            <!-- Brand list: derive from first word of product names since x_ynf_brand isn't a model field -->
+            <t t-set="brand_pool" t-value="ProductT.search(pub, limit=80)"/>
+            <t t-set="brand_set" t-value="[]"/>
+            <t t-foreach="brand_pool" t-as="bp">
+                <t t-set="first_word" t-value="bp.name and bp.name.split(' ')[0] or ''"/>
+                <t t-if="first_word and first_word not in brand_set" t-set="brand_set" t-value="brand_set + [first_word]"/>
+            </t>
+            <t t-set="brand_names" t-value="brand_set[:8]"/>
+
+            <div id="wrap" class="ynf-homepage ynf-mfd2-page">
+
+                <!-- =====================================================
+                     1. HERO
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-hero-section">
+                    <div class="ynf-mfd2-hero ynf-rev">
+                        <t t-call="ynf_storefront.ynf_mfd2_eyebrow">
+                            <t t-set="label" t-value="'DISCOVER'"/>
+                        </t>
+                        <h1 class="ynf-mfd2-hero-title">Find your <em>signature</em> scent</h1>
+                        <p class="ynf-mfd2-hero-lead">Curated Arabian fragrances at live-auction prices.</p>
+                        <div class="ynf-mfd2-hero-cta">
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_primary">
+                                <t t-set="label" t-value="'Shop now'"/>
+                                <t t-set="href" t-value="'/shop'"/>
+                            </t>
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_ghost">
+                                <t t-set="label" t-value="'Watch live'"/>
+                                <t t-set="href" t-value="'/live'"/>
+                            </t>
+                        </div>
+                        <t t-if="hero_product">
+                            <a t-attf-href="/shop/product/#{slug(hero_product)}" class="ynf-mfd2-hero-bottle">
+                                <div class="ynf-mfd2-hero-bottle-img">
+                                    <img t-if="hero_product.x_ynf_image_url" t-att-src="hero_product.x_ynf_image_url" t-att-alt="hero_product.name" loading="lazy"/>
+                                    <img t-else="t-else" t-attf-src="/web/image/product.template/#{hero_product.id}/image_512" t-att-alt="hero_product.name" loading="lazy"/>
+                                </div>
+                                <div class="ynf-mfd2-hero-bottle-body">
+                                    <span class="ynf-mfd2-hero-bottle-eyebrow">BESTSELLER</span>
+                                    <span class="ynf-mfd2-hero-bottle-name" t-esc="hero_product.name"/>
+                                    <t t-call="ynf_storefront.ynf_mfd2_price">
+                                        <t t-set="amount" t-value="hero_product.list_price or 0"/>
+                                        <t t-set="size" t-value="'md'"/>
+                                    </t>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     2. TRUST STRIP — 3 cards
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-trust-section">
+                    <div class="ynf-mfd2-trust ynf-rev">
+                        <div class="ynf-mfd2-trust-cell">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span class="ynf-mfd2-trust-label">100% Authentic</span>
+                        </div>
+                        <div class="ynf-mfd2-trust-cell">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                            <span class="ynf-mfd2-trust-label">Ships in 2 days</span>
+                        </div>
+                        <div class="ynf-mfd2-trust-cell">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 5 5.6.8-4 3.9 1 5.6L12 14.8 6.9 17.3l1-5.6-4-3.9 5.6-.8z"/></svg>
+                            <span class="ynf-mfd2-trust-label">Live-deal prices</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     3. LIVE AUCTION STRIP — wine bg + countdown
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-live-section">
+                    <a href="/live" class="ynf-mfd2-live ynf-rev" data-live-countdown="20:00">
+                        <div class="ynf-mfd2-live-head">
+                            <span class="ynf-mfd2-live-pill">
+                                <span class="ynf-mfd2-live-dot"/> LIVE TONIGHT
+                            </span>
+                            <span class="ynf-mfd2-live-meta">
+                                <span class="ynf-mfd2-live-meta-label">starts in</span>
+                                <span class="ynf-mfd2-live-timer" data-live-timer="20:00:00">--:--:--</span>
+                            </span>
+                        </div>
+                        <h2 class="ynf-mfd2-live-title">Auction night — steals start at <em>$1</em>.</h2>
+                        <span class="ynf-mfd2-live-cta">
+                            <span aria-hidden="true">▶</span>
+                            Set a reminder &amp; never miss a drop
+                            <span aria-hidden="true">→</span>
+                        </span>
+                    </a>
+                </section>
+
+                <!-- =====================================================
+                     4. COLLECTIONS — 3 vertical cards
+                     ===================================================== -->
+                <section class="ynf-mfd2-section">
+                    <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                        <t t-set="eyebrow" t-value="'SHOP BY'"/>
+                        <t t-set="title" t-value="'Collections'"/>
+                    </t>
+                    <div class="ynf-mfd2-collections ynf-rev">
+                        <a href="/shop?attribute_value=him" class="ynf-mfd2-coll-card">
+                            <div class="ynf-mfd2-coll-card-img">
+                                <img t-if="him_img and him_img.x_ynf_image_url" t-att-src="him_img.x_ynf_image_url" alt="For Him" loading="lazy"/>
+                                <img t-elif="him_img" t-attf-src="/web/image/product.template/#{him_img.id}/image_512" alt="For Him" loading="lazy"/>
+                            </div>
+                            <span class="ynf-mfd2-coll-card-label">For Him</span>
+                        </a>
+                        <a href="/shop?attribute_value=her" class="ynf-mfd2-coll-card">
+                            <div class="ynf-mfd2-coll-card-img">
+                                <img t-if="her_img and her_img.x_ynf_image_url" t-att-src="her_img.x_ynf_image_url" alt="For Her" loading="lazy"/>
+                                <img t-elif="her_img" t-attf-src="/web/image/product.template/#{her_img.id}/image_512" alt="For Her" loading="lazy"/>
+                            </div>
+                            <span class="ynf-mfd2-coll-card-label">For Her</span>
+                        </a>
+                        <a href="/shop" class="ynf-mfd2-coll-card">
+                            <div class="ynf-mfd2-coll-card-img">
+                                <img t-if="uni_img and uni_img.x_ynf_image_url" t-att-src="uni_img.x_ynf_image_url" alt="Unisex" loading="lazy"/>
+                                <img t-elif="uni_img" t-attf-src="/web/image/product.template/#{uni_img.id}/image_512" alt="Unisex" loading="lazy"/>
+                            </div>
+                            <span class="ynf-mfd2-coll-card-label">Unisex</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     5. BRAND RAIL — horizontal scroll of brand pills
+                     ===================================================== -->
+                <section class="ynf-mfd2-section">
+                    <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                        <t t-set="eyebrow" t-value="'THE HOUSES'"/>
+                        <t t-set="title" t-value="'Shop by brand'"/>
+                    </t>
+                    <t t-if="brand_names">
+                        <t t-call="ynf_storefront.ynf_mfd2_rail">
+                            <t t-foreach="brand_names" t-as="bn">
+                                <t t-call="ynf_storefront.ynf_mfd2_brand_pill">
+                                    <t t-set="brand_name" t-value="bn"/>
+                                    <t t-set="href" t-value="'/shop?search=' + bn"/>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </section>
+
+                <!-- =====================================================
+                     6. BESTSELLERS — 2x3 grid using MFD2 card
+                     ===================================================== -->
+                <section class="ynf-mfd2-section">
+                    <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                        <t t-set="eyebrow" t-value="'CURRENTLY TRENDING'"/>
+                        <t t-set="title" t-value="'Bestsellers'"/>
+                        <t t-set="action_label" t-value="'View all'"/>
+                        <t t-set="action_href" t-value="'/shop'"/>
+                    </t>
+                    <t t-if="bestsellers">
+                        <div class="ynf-mfd2-grid ynf-mfd2-grid-2x3 ynf-rev">
+                            <t t-foreach="bestsellers" t-as="product">
+                                <t t-call="ynf_storefront.ynf_mfd2_card"/>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="ynf_storefront.ynf_mfd2_empty_state">
+                            <t t-set="title" t-value="'No bestsellers yet'"/>
+                            <t t-set="body" t-value="'Check back soon — fresh drops every week.'"/>
+                            <t t-set="cta_label" t-value="'Browse catalog'"/>
+                            <t t-set="cta_href" t-value="'/shop'"/>
+                        </t>
+                    </t>
+                </section>
+
+                <!-- =====================================================
+                     7. INSPIRED BY — horizontal rail
+                     ===================================================== -->
+                <t t-if="inspired_products">
+                    <section class="ynf-mfd2-section">
+                        <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                            <t t-set="eyebrow" t-value="'SMELL LUXURY FOR LESS'"/>
+                            <t t-set="title" t-value="'Inspired by the icons'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_rail">
+                            <t t-foreach="inspired_products" t-as="product">
+                                <div class="ynf-mfd2-rail-item">
+                                    <t t-call="ynf_storefront.ynf_mfd2_card"/>
+                                </div>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+
+                <!-- =====================================================
+                     8. SHOP BY MOOD — 4 mood tiles
+                     ===================================================== -->
+                <section class="ynf-mfd2-section">
+                    <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                        <t t-set="eyebrow" t-value="'SHOP BY MOOD'"/>
+                        <t t-set="title" t-value="'What are you in the mood for?'"/>
+                    </t>
+                    <div class="ynf-mfd2-moods ynf-rev">
+                        <a href="/shop?family=warm" class="ynf-mfd2-mood-tile ynf-mfd2-mood-warm">
+                            <span class="ynf-mfd2-mood-glyph" aria-hidden="true">✦</span>
+                            <span class="ynf-mfd2-mood-title">Warm &amp; Sweet</span>
+                            <span class="ynf-mfd2-mood-sub">Gourmand · amber · vanilla</span>
+                        </a>
+                        <a href="/shop?family=fresh" class="ynf-mfd2-mood-tile ynf-mfd2-mood-fresh">
+                            <span class="ynf-mfd2-mood-glyph" aria-hidden="true">❋</span>
+                            <span class="ynf-mfd2-mood-title">Fresh &amp; Clean</span>
+                            <span class="ynf-mfd2-mood-sub">Aquatic · citrus · cool</span>
+                        </a>
+                        <a href="/shop?family=oud" class="ynf-mfd2-mood-tile ynf-mfd2-mood-oud">
+                            <span class="ynf-mfd2-mood-glyph" aria-hidden="true">◆</span>
+                            <span class="ynf-mfd2-mood-title">Woody &amp; Oud</span>
+                            <span class="ynf-mfd2-mood-sub">Smoky · resinous · bold</span>
+                        </a>
+                        <a href="/shop?family=floral" class="ynf-mfd2-mood-tile ynf-mfd2-mood-floral">
+                            <span class="ynf-mfd2-mood-glyph" aria-hidden="true">✿</span>
+                            <span class="ynf-mfd2-mood-title">Floral</span>
+                            <span class="ynf-mfd2-mood-sub">Rose · jasmine · blossom</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     9. UNDER $30 — horizontal rail, 6 cheapest
+                     ===================================================== -->
+                <t t-if="cheap">
+                    <section class="ynf-mfd2-section">
+                        <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                            <t t-set="eyebrow" t-value="'STEALS'"/>
+                            <t t-set="title" t-value="'Under $30'"/>
+                            <t t-set="action_label" t-value="'See all'"/>
+                            <t t-set="action_href" t-value="'/shop'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_rail">
+                            <t t-foreach="cheap" t-as="product">
+                                <div class="ynf-mfd2-rail-item">
+                                    <t t-call="ynf_storefront.ynf_mfd2_card"/>
+                                </div>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+
+                <!-- =====================================================
+                     10. NEW ARRIVALS — horizontal rail, 6 latest
+                     ===================================================== -->
+                <t t-if="newest">
+                    <section class="ynf-mfd2-section">
+                        <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                            <t t-set="eyebrow" t-value="'JUST DROPPED'"/>
+                            <t t-set="title" t-value="'New arrivals'"/>
+                            <t t-set="action_label" t-value="'See all'"/>
+                            <t t-set="action_href" t-value="'/shop'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_rail">
+                            <t t-foreach="newest" t-as="product">
+                                <div class="ynf-mfd2-rail-item">
+                                    <t t-call="ynf_storefront.ynf_mfd2_card"/>
+                                </div>
+                            </t>
+                        </t>
+                    </section>
+                </t>
+
+                <!-- =====================================================
+                     11. SPOTLIGHT — Lattafa dark band
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-spotlight-section">
+                    <div class="ynf-mfd2-spotlight ynf-rev">
+                        <span class="ynf-mfd2-spotlight-eyebrow">HOUSE OF</span>
+                        <h2 class="ynf-mfd2-spotlight-title">Lattafa</h2>
+                        <p class="ynf-mfd2-spotlight-body">The house behind Khamrah, Asad and Yara — bold, affordable Arabian perfumery that punches far above its price.</p>
+                        <t t-if="lattafa_products">
+                            <div class="ynf-mfd2-spotlight-bottles">
+                                <t t-foreach="lattafa_products" t-as="lp">
+                                    <a t-attf-href="/shop/product/#{slug(lp)}" class="ynf-mfd2-spotlight-bottle">
+                                        <img t-if="lp.x_ynf_image_url" t-att-src="lp.x_ynf_image_url" t-att-alt="lp.name" loading="lazy"/>
+                                        <img t-else="t-else" t-attf-src="/web/image/product.template/#{lp.id}/image_256" t-att-alt="lp.name" loading="lazy"/>
+                                    </a>
+                                </t>
+                            </div>
+                        </t>
+                        <div class="ynf-mfd2-spotlight-cta">
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_brass">
+                                <t t-set="label" t-value="'Shop Lattafa →'"/>
+                                <t t-set="href" t-value="'/shop?search=Lattafa'"/>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     12. EDITORIAL BAND — hero image + quote overlay
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-editorial-section">
+                    <div class="ynf-mfd2-editorial ynf-rev">
+                        <img class="ynf-mfd2-editorial-img" src="/web/image/website.s_banner_default_image" alt="Our house"/>
+                        <div class="ynf-mfd2-editorial-cap">
+                            <span class="ynf-mfd2-editorial-eyebrow">OUR HOUSE</span>
+                            <h2 class="ynf-mfd2-editorial-title">Perfumery, the old-world way.</h2>
+                        </div>
+                    </div>
+                    <p class="ynf-mfd2-editorial-quote">“We hunt down the bottles worth wearing — and price them so you can actually own them.”</p>
+                </section>
+
+                <!-- =====================================================
+                     13. FRAGRANCE FINDER — centered CTA
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-quiz-section">
+                    <div class="ynf-mfd2-quiz ynf-rev">
+                        <span class="ynf-mfd2-quiz-spark" aria-hidden="true">✦</span>
+                        <h2 class="ynf-mfd2-quiz-title">Find your <em>match</em></h2>
+                        <p class="ynf-mfd2-quiz-body">Answer 4 quick questions and we'll match you to your next scent.</p>
+                        <div class="ynf-mfd2-quiz-cta">
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_ghost">
+                                <t t-set="label" t-value="'Take the quiz'"/>
+                                <t t-set="href" t-value="'/shop'"/>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     14. TESTIMONIALS — 3 quote cards in a rail
+                     ===================================================== -->
+                <section class="ynf-mfd2-section">
+                    <t t-call="ynf_storefront.ynf_mfd2_section_head">
+                        <t t-set="eyebrow" t-value="'LOVED BY THOUSANDS'"/>
+                        <t t-set="title" t-value="'What buyers say'"/>
+                    </t>
+                    <t t-call="ynf_storefront.ynf_mfd2_rail">
+                        <t t-foreach="[('Khamrah is unreal for the price — compliments every single time.', 'Ayesha K.'), ('Won Hawas on a live for $14. 100% authentic, shipped in two days.', 'Marcus T.'), ('Yara smells expensive and lasts all day. Obsessed.', 'Dana R.')]" t-as="rev">
+                            <div class="ynf-mfd2-rail-item ynf-mfd2-testi">
+                                <div class="ynf-mfd2-testi-stars" aria-label="5 out of 5 stars">★★★★★</div>
+                                <p class="ynf-mfd2-testi-quote">“<t t-esc="rev[0]"/>”</p>
+                                <div class="ynf-mfd2-testi-foot">
+                                    <span class="ynf-mfd2-testi-who" t-esc="rev[1]"/>
+                                    <span class="ynf-mfd2-testi-verif">✓ Verified buyer</span>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </section>
+
+                <!-- =====================================================
+                     15. STATS BAND — 4 animated counters
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-stats-section">
+                    <div class="ynf-mfd2-stats ynf-rev">
+                        <t t-call="ynf_storefront.ynf_mfd2_stat_cell">
+                            <t t-set="value" t-value="12000"/>
+                            <t t-set="label" t-value="'Products'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_stat_cell">
+                            <t t-set="value" t-value="60"/>
+                            <t t-set="label" t-value="'Brands'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_stat_cell">
+                            <t t-set="value" t-value="8500"/>
+                            <t t-set="label" t-value="'Customers'"/>
+                        </t>
+                        <t t-call="ynf_storefront.ynf_mfd2_stat_cell">
+                            <t t-set="value" t-value="4800"/>
+                            <t t-set="label" t-value="'5-star reviews'"/>
+                        </t>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     16. AUTHENTICITY BAND — dark bg, 3 promises
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-auth-section">
+                    <div class="ynf-mfd2-auth ynf-rev">
+                        <div class="ynf-mfd2-auth-head">
+                            <span class="ynf-mfd2-auth-eyebrow">THE YNF PROMISE</span>
+                            <h2 class="ynf-mfd2-auth-title">100% authentic, always</h2>
+                        </div>
+                        <div class="ynf-mfd2-auth-list">
+                            <div class="ynf-mfd2-auth-row">
+                                <span class="ynf-mfd2-auth-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </span>
+                                <div class="ynf-mfd2-auth-text">
+                                    <h4 class="ynf-mfd2-auth-row-title">Sourced direct</h4>
+                                    <p class="ynf-mfd2-auth-row-body">From brands &amp; authorized distributors — never testers or fakes.</p>
+                                </div>
+                            </div>
+                            <div class="ynf-mfd2-auth-row">
+                                <span class="ynf-mfd2-auth-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5 5.6.8-4 3.9 1 5.6L12 14.8 6.9 17.3l1-5.6-4-3.9 5.6-.8z"/></svg>
+                                </span>
+                                <div class="ynf-mfd2-auth-text">
+                                    <h4 class="ynf-mfd2-auth-row-title">Batch-code verified</h4>
+                                    <p class="ynf-mfd2-auth-row-body">Every bottle checks out, or we refund you in full.</p>
+                                </div>
+                            </div>
+                            <div class="ynf-mfd2-auth-row">
+                                <span class="ynf-mfd2-auth-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                </span>
+                                <div class="ynf-mfd2-auth-text">
+                                    <h4 class="ynf-mfd2-auth-row-title">Fast, tracked shipping</h4>
+                                    <p class="ynf-mfd2-auth-row-body">Ships within 2 business days, free over $75.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =====================================================
+                     17. DROP ALERT — newsletter signup (Agent 3 endpoint)
+                     ===================================================== -->
+                <section class="ynf-mfd2-section ynf-mfd2-drop-section">
+                    <div class="ynf-mfd2-drop ynf-rev">
+                        <h2 class="ynf-mfd2-drop-title">Never miss a drop</h2>
+                        <p class="ynf-mfd2-drop-body">Get a heads-up before every live auction and new arrival.</p>
+                        <form action="/ynf/newsletter/signup" method="post" class="ynf-mfd2-drop-form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="email" name="email" placeholder="Your email" required="required" class="ynf-mfd2-drop-input"/>
+                            <t t-call="ynf_storefront.ynf_mfd2_btn_brass">
+                                <t t-set="label" t-value="'Notify me'"/>
+                            </t>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+
+    <record id="ynf_homepage_page" model="website.page">
+        <field name="name">Home</field>
+        <field name="url">/ynf-home</field>
+        <field name="view_id" ref="ynf_homepage"/>
+        <field name="website_published">True</field>
+    </record>
+
+    <!-- ============================ SHOP ============================ -->
+    <template id="ynf_products_item_inspired" inherit_id="website_sale.products_item" name="YNF Inspired chip">
+        <xpath expr="//div[hasclass('o_wsale_product_information')]//div[hasclass('product_price')]" position="before">
+            <span class="ynf-inspired" t-if="product.x_ynf_inspired_by">✦ Inspired by <t t-esc="product.x_ynf_inspired_by"/></span>
+        </xpath>
+    </template>
+
+    <!-- ============================ PRODUCT ============================ -->
+    <template id="ynf_product_overrides" inherit_id="website_sale.product" name="YNF Product wrapper">
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" add="ynf-product-detail" separator=" "/>
+        </xpath>
+    </template>
+    <template id="ynf_product_notes" inherit_id="website_sale.product" name="YNF Notes Pyramid">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <div class="ynf-notes" t-if="product.x_ynf_note_top or product.x_ynf_note_mid or product.x_ynf_note_base">
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_top"><span class="label">Top</span><span class="val" t-esc="product.x_ynf_note_top"/></div>
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_mid"><span class="label">Heart</span><span class="val" t-esc="product.x_ynf_note_mid"/></div>
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_base"><span class="label">Base</span><span class="val" t-esc="product.x_ynf_note_base"/></div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================ LIVE ============================ -->
+    <template id="ynf_live_page" name="YNF Live">
+        <t t-call="website.layout">
+            <div id="wrap" class="ynf-live-page">
+                <section class="ynf-wrap" style="margin-top:18px;">
+                    <div class="ynf-spotlight ynf-rev" style="background:linear-gradient(150deg,#6b1f23,#2a0f12);">
+                        <span class="ynf-eyebrow-gold">● Live tonight · 8 PM ET</span>
+                        <h2>Auction night on <span style="color:#c9a961;">TikTok Live</span></h2>
+                        <p>Bids open at $1. Win authentic bottles for a fraction of retail — shipped straight to your door.</p>
+                        <a href="/shop" class="btn btn-primary mt-2">Shop catalog</a>
+                    </div>
+                </section>
+                <section class="ynf-wrap" style="margin-top:40px; margin-bottom:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">How it works</span><h2>Bid, win, we ship</h2></div>
+                </section>
+            </div>
+        </t>
+    </template>
+    <record id="ynf_live_page_rec" model="website.page">
+        <field name="name">Live</field>
+        <field name="url">/live</field>
+        <field name="view_id" ref="ynf_live_page"/>
+        <field name="website_published">True</field>
+    </record>
+    <!-- /live menu is created in post_init by _ynf_setup_menus (see models/website_menu_setup.py) -->
+
+    <!-- Policies & help page -->
+    <template id="ynf_policy_page" name="YNF Policies">
+        <t t-call="website.layout">
+            <div id="wrap" class="ynf-policy-page ynf-mfd">
+                <section class="ynf-mfd-wrap">
+                    <div class="ynf-policy-head">
+                        <span class="ynf-mfd-eyebrow-sm">SUPPORT</span>
+                        <h1 class="ynf-mfd-h2">Help &amp; policies</h1>
+                        <p class="ynf-policy-intro">Quick answers — tap any section to expand.</p>
+                    </div>
+                    <div class="ynf-policy-list">
+                        <details class="ynf-policy-item">
+                            <summary>Returns &amp; refunds</summary>
+                            <div class="ynf-policy-body">
+                                <p>Unopened items can be returned within <strong>30 days</strong> of delivery for a full refund of the item price.</p>
+                                <p>Opened/used fragrances are non-returnable for hygiene reasons.</p>
+                                <p><strong>Live auction wins are final sale</strong> — they're sold at a steep discount and we can't restock them.</p>
+                                <p>To start a return, email <a href="mailto:hello@ynfdeals.com">hello@ynfdeals.com</a> with your order number.</p>
+                            </div>
+                        </details>
+                        <details class="ynf-policy-item">
+                            <summary>Shipping</summary>
+                            <div class="ynf-policy-body">
+                                <p><strong>Free shipping</strong> on orders over $75 (US only). Otherwise $6.95 flat.</p>
+                                <p>Orders ship within <strong>2 business days</strong> from our New Jersey warehouse via USPS or UPS Ground with tracking.</p>
+                                <p>Live-auction wins ship together at the end of each show week — typically Mon/Tue after the prior Sunday's auction.</p>
+                            </div>
+                        </details>
+                        <details class="ynf-policy-item">
+                            <summary>Authenticity guarantee</summary>
+                            <div class="ynf-policy-body">
+                                <p>Every bottle is sourced direct from the brand or an authorized distributor. We <strong>never sell testers or unboxed product</strong> as new.</p>
+                                <p>Each shipment is batch-code verified. If you ever doubt a bottle, send a photo of the batch code to <a href="mailto:hello@ynfdeals.com">hello@ynfdeals.com</a> and we'll check it against the manufacturer's records — or refund you in full.</p>
+                            </div>
+                        </details>
+                        <details class="ynf-policy-item" id="privacy">
+                            <summary>Privacy &amp; cookies</summary>
+                            <div class="ynf-policy-body">
+                                <p>We use cookies to keep your shopping bag, remember preferences, and improve the store. We <strong>do not sell your data</strong>.</p>
+                                <p>Essential cookies are required for the site to function. Analytics cookies are optional — you can decline them in the consent banner.</p>
+                                <p>For account/order data we follow standard PCI-DSS handling via our payment processor. Email <a href="mailto:hello@ynfdeals.com">hello@ynfdeals.com</a> for a copy or deletion of your data.</p>
+                            </div>
+                        </details>
+                        <details class="ynf-policy-item">
+                            <summary>Terms of service</summary>
+                            <div class="ynf-policy-body">
+                                <p>By placing an order you agree that all listings, prices, and stock are subject to change without notice and that we may cancel any order at any time prior to shipment.</p>
+                                <p>Live-auction wins are governed by the platform rules on TikTok at the time of the auction.</p>
+                                <p>Promotional discounts cannot be combined with auction pricing.</p>
+                            </div>
+                        </details>
+                        <details class="ynf-policy-item">
+                            <summary>Contact</summary>
+                            <div class="ynf-policy-body">
+                                <p>Email — <a href="mailto:hello@ynfdeals.com">hello@ynfdeals.com</a></p>
+                                <p>Live shows — <a href="https://www.tiktok.com/@ynfdeals" target="_blank" rel="noopener">@ynfdeals on TikTok</a></p>
+                                <p>Mailing — YNF Deals, New Jersey, USA</p>
+                            </div>
+                        </details>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <record id="ynf_policy_page_rec" model="website.page">
+        <field name="name">Policies</field>
+        <field name="url">/policy</field>
+        <field name="view_id" ref="ynf_policy_page"/>
+        <field name="website_published">True</field>
+    </record>
+
+    <!-- Custom footer -->
+    <template id="ynf_footer" inherit_id="website.layout" name="YNF Footer">
+        <xpath expr="//footer" position="replace">
+            <footer class="ynf-mfd-footer-wrap">
+                <div class="ynf-mfd-wrap">
+                    <div class="ynf-mfd-footer">
+                        <div class="ynf-mfd-footer-brand">
+                            <div class="ynf-mfd-footer-logo">
+                                <span class="ynf-mfd-footer-logo-mark">Y</span>
+                                <span class="ynf-mfd-footer-logo-tag">FRAGRANCE HOUSE</span>
+                            </div>
+                            <p class="ynf-mfd-footer-blurb">
+                                Authentic Arabian &amp; niche fragrances at live-auction prices.
+                                Catch us live on TikTok, or shop the catalog anytime.
+                            </p>
+                        </div>
+                        <div class="ynf-mfd-footer-cols">
+                            <div class="ynf-mfd-footer-col">
+                                <h6 class="ynf-mfd-footer-col-title">SHOP</h6>
+                                <a href="/shop?attribute_value=him">For Him</a>
+                                <a href="/shop?attribute_value=her">For Her</a>
+                                <a href="/shop">Unisex</a>
+                                <a href="/shop">All houses</a>
+                            </div>
+                            <div class="ynf-mfd-footer-col">
+                                <h6 class="ynf-mfd-footer-col-title">HELP</h6>
+                                <a href="/policy?topic=returns">Returns &amp; refunds</a>
+                                <a href="/policy?topic=shipping">Shipping</a>
+                                <a href="/policy?topic=authenticity">Authenticity</a>
+                                <a href="/policy?topic=privacy">Privacy &amp; cookies</a>
+                            </div>
+                        </div>
+                        <div class="ynf-mfd-footer-copy">© 2026 YNF Deals · ynfdeals.com</div>
+                    </div>
+                </div>
+            </footer>
+        </xpath>
+    </template>
+
+</odoo>
