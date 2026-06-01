@@ -1,0 +1,255 @@
+/* YNF Deals — live-search overlay v2 styles.
+ *
+ * Augments the existing .ynf-search-overlay markup (templates.xml) with
+ * the suggestions dropdown, popular-brand chips, and recent-search row
+ * rendered by static/src/js/ynf_search.js.
+ *
+ * Tokens — fall back to inline values so this file compiles standalone
+ * even if the main theme variables aren't in scope at build time:
+ *   $ynf-gold        (saffron accent)
+ *   $ynf-text        (ink body)
+ *   $ynf-bg          (ivory background)
+ *   $ynf-border-soft (hairline)
+ */
+
+$ynf-search-gold:        #a07f3a !default;
+$ynf-search-gold-dark:   #7c6128 !default;
+$ynf-search-gold-soft:   rgba(160, 127, 58, 0.10) !default;
+$ynf-search-ink:         #2a2118 !default;
+$ynf-search-ink-muted:   #6e6151 !default;
+$ynf-search-ink-dim:     #a8997f !default;
+$ynf-search-ivory:       #ffffff !default;
+$ynf-search-ivory-soft:  #faf7f1 !default;
+$ynf-search-line:        rgba(20, 14, 6, 0.08) !default;
+$ynf-search-line-strong: rgba(168, 134, 58, 0.30) !default;
+
+/* ── Panel wrapper that JS injects after the existing form ── */
+.ynf-mfd2-search-panel {
+    position: relative;
+    margin: 8px auto 0;
+    max-width: 680px;
+    background: $ynf-search-ivory;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+
+    .ynf-search-overlay.is-open & {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    /* Hide the wrapper entirely when nothing inside is visible — keeps
+     * the closed-overlay state clean. */
+    &:has(> [hidden]:only-child),
+    &:empty {
+        display: none;
+    }
+
+    @media (max-width: 767.98px) {
+        margin: 8px 16px 0;
+        max-height: 65vh;
+        padding: 12px 12px 14px;
+        border-radius: 14px;
+    }
+}
+
+/* ── Recent searches row ── */
+.ynf-mfd2-search-recent {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &[hidden] { display: none; }
+}
+
+.ynf-mfd2-search-recent-label,
+.ynf-mfd2-search-chips-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $ynf-search-ink-muted;
+}
+
+.ynf-mfd2-search-recent-row,
+.ynf-mfd2-search-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.ynf-mfd2-search-recent-clear {
+    margin-left: auto;
+    background: transparent;
+    border: 0;
+    color: $ynf-search-ink-dim;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 999px;
+
+    &:hover { color: $ynf-search-gold; background: $ynf-search-gold-soft; }
+}
+
+/* ── Pill chips (popular brands + recent searches share most styles) ── */
+.ynf-mfd2-search-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: $ynf-search-ivory-soft;
+    color: $ynf-search-ink;
+    border: 1px solid $ynf-search-line;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover,
+    &:focus-visible {
+        background: $ynf-search-gold-soft;
+        border-color: $ynf-search-line-strong;
+        color: $ynf-search-gold-dark;
+        text-decoration: none;
+        outline: none;
+    }
+
+    &:active { transform: scale(0.97); }
+
+    &.is-recent {
+        background: $ynf-search-ivory;
+        border-style: dashed;
+    }
+}
+
+/* ── Popular brand chip row ── */
+.ynf-mfd2-search-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &[hidden] { display: none; }
+}
+
+/* ── Suggestions results list ── */
+.ynf-mfd2-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &[hidden] { display: none; }
+}
+
+.ynf-mfd2-search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    text-decoration: none;
+    color: $ynf-search-ink;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.12s ease, border-color 0.12s ease;
+
+    &:hover,
+    &:focus-visible,
+    &.is-active {
+        background: $ynf-search-gold-soft;
+        border-color: $ynf-search-line-strong;
+        text-decoration: none;
+        color: $ynf-search-ink;
+        outline: none;
+    }
+
+    & + .ynf-mfd2-search-row {
+        position: relative;
+    }
+}
+
+.ynf-mfd2-search-row-thumb {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    background: $ynf-search-ivory-soft;
+    border: 1px solid $ynf-search-line;
+}
+
+.ynf-mfd2-search-row-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+}
+
+.ynf-mfd2-search-row-brand {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $ynf-search-gold;
+    line-height: 1.2;
+}
+
+.ynf-mfd2-search-row-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: $ynf-search-ink;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ynf-mfd2-search-row-family {
+    font-size: 11px;
+    color: $ynf-search-ink-muted;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ynf-mfd2-search-row-price {
+    flex-shrink: 0;
+    margin-left: 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: $ynf-search-gold-dark;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Empty / no-match state ── */
+.ynf-mfd2-search-empty {
+    text-align: center;
+    padding: 28px 8px;
+    color: $ynf-search-ink-muted;
+    font-size: 14px;
+    font-style: italic;
+
+    &[hidden] { display: none; }
+}
