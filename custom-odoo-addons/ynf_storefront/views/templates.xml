@@ -216,7 +216,7 @@
                     or request.env['product.template'].sudo().search([('active','=',True),'|',('image_1920','!=',False),('x_ynf_image_url','!=',False)], limit=1)
                 "/>
                 <t t-if="featured">
-                <section class="ynf-st-hero">
+                <section class="ynf-st-hero ynf-rev">
                     <!-- LEFT — brand statement column -->
                     <div class="ynf-st-hero-text">
                         <div class="ynf-st-eyebrow">NEW DROP · LATTAFA</div>
@@ -258,7 +258,7 @@
                     </a>
                 </section>
                 <!-- PROMO STRIP -->
-                <section class="ynf-st-promo">
+                <section class="ynf-st-promo ynf-rev">
                     <div class="ynf-st-promo-item">
                         <span class="material-symbols-outlined">verified</span>
                         <span>100% AUTHENTIC</span>
@@ -279,7 +279,7 @@
                 </t>
 
                 <!-- LIVE STRIP -->
-                <section class="ynf-wrap" style="margin-top:30px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:30px;">
                     <a href="/live" class="ynf-live-strip ynf-rev d-block text-decoration-none">
                         <span class="ynf-eyebrow-gold">● Live tonight · 8 PM ET · TikTok</span>
                         <h2 class="mt-2">Auction night — steals start at <span style="color:#c9a961;">$1</span>.</h2>
@@ -287,7 +287,7 @@
                 </section>
 
                 <!-- COLLECTIONS -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Shop by</span><h2>Collections</h2></div>
                     <div class="ynf-coll-grid ynf-rev">
                         <a href="/shop?attribute_value=him" class="ynf-coll-card"><span class="ynf-coll-overlay"><h3>For Him</h3></span></a>
@@ -297,7 +297,7 @@
                 </section>
 
                 <!-- BESTSELLERS -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Currently trending</span><h2>Bestsellers</h2></div>
                     <div class="row g-3" id="products_grid">
                         <t t-foreach="newest" t-as="product">
@@ -308,7 +308,7 @@
                 </section>
 
                 <!-- SHOP BY MOOD -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Shop by mood</span><h2>What are you in the mood for?</h2></div>
                     <div class="ynf-moods ynf-rev">
                         <a href="/shop?family=warm" class="ynf-mood-card"><span class="ynf-mood-ic">✦</span><h3>Warm &amp; Sweet</h3><p>Gourmand · amber · vanilla</p></a>
@@ -319,7 +319,7 @@
                 </section>
 
                 <!-- UNDER $30 -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Smell luxury for less</span><h2>Under $30</h2></div>
                     <div class="ynf-rail">
                         <t t-foreach="cheap" t-as="product"><t t-call="ynf_storefront.ynf_product_card"/></t>
@@ -327,7 +327,7 @@
                 </section>
 
                 <!-- NEW ARRIVALS -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Just dropped</span><h2>New arrivals</h2></div>
                     <div class="ynf-rail">
                         <t t-foreach="newest" t-as="product"><t t-call="ynf_storefront.ynf_product_card"/></t>
@@ -335,7 +335,7 @@
                 </section>
 
                 <!-- CURATED BUNDLES -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Discovery sets</span><h2>Curated bundles</h2></div>
                     <div class="ynf-rail">
                         <t t-foreach="[('Crowd-Pleasers Trio', 0), ('Dupe Starter Set', 3), ('For Her Edit', 6)]" t-as="b">
@@ -356,7 +356,7 @@
                 </section>
 
                 <!-- HOUSE SPOTLIGHT -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-spotlight ynf-rev">
                         <span class="ynf-eyebrow-gold">House spotlight</span>
                         <h2>Lattafa</h2>
@@ -366,7 +366,7 @@
                 </section>
 
                 <!-- EDITORIAL IMAGE BAND (images editable in Website editor) -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-editorial ynf-rev">
                         <img class="ynf-edslot" src="/web/image/website.s_banner_default_image" alt="Our house"/>
                         <div class="ynf-ed-cap"><span class="ynf-eyebrow-gold">Our house</span><h2>Perfumery, the old-world way.</h2></div>
@@ -379,7 +379,7 @@
                 </section>
 
                 <!-- FRAGRANCE FINDER -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <a href="/shop" class="ynf-quizcard ynf-rev d-block text-decoration-none">
                         <h2>Find your <em>signature</em></h2>
                         <p class="text-muted">Answer 4 quick questions and we'll match you to your next scent.</p>
@@ -388,7 +388,7 @@
                 </section>
 
                 <!-- TESTIMONIALS -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-section-title ynf-rev"><span class="eyebrow">Loved by thousands</span><h2>What buyers say</h2></div>
                     <div class="ynf-rail">
                         <t t-foreach="[('Khamrah is unreal for the price — compliments every single time.', 'Ayesha K.'), ('Won Hawas on a live for $14. 100% authentic, shipped in two days.', 'Marcus T.'), ('Yara smells expensive and lasts all day. Obsessed.', 'Dana R.')]" t-as="rev">
@@ -403,7 +403,7 @@
                 </section>
 
                 <!-- STATS -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-stats ynf-rev">
                         <div><div class="n ynf-count" data-to="12000" data-suffix="+">0</div><div class="l">Bottles shipped</div></div>
                         <div><div class="n ynf-count" data-to="60" data-suffix="+">0</div><div class="l">Fragrances</div></div>
@@ -413,7 +413,7 @@
                 </section>
 
                 <!-- AUTHENTICITY -->
-                <section class="ynf-wrap" style="margin-top:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px;">
                     <div class="ynf-auth ynf-rev">
                         <div class="text-center mb-3"><span class="ynf-eyebrow-gold">The YNF promise</span><h2 style="font-family:var(--ynf-font-serif,'Cormorant Garamond',serif);color:#fff;">100% authentic, always</h2></div>
                         <div class="row"><i>✦</i><div><h4>Sourced direct</h4><p>From brands &amp; authorized distributors — never testers or fakes.</p></div></div>
@@ -423,7 +423,7 @@
                 </section>
 
                 <!-- DROP ALERT -->
-                <section class="ynf-wrap" style="margin-top:48px; margin-bottom:48px;">
+                <section class="ynf-wrap ynf-rev" style="margin-top:48px; margin-bottom:48px;">
                     <div class="ynf-dropalert ynf-rev">
                         <h2>Never miss a drop</h2>
                         <p style="opacity:.85;">Get a heads-up before every live auction and new arrival.</p>
