@@ -7,7 +7,8 @@
         <xpath expr="//head" position="inside">
             <link rel="preconnect" href="https://fonts.googleapis.com"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;family=Instrument+Serif:ital@0;1&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&amp;display=swap"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap"/>
         </xpath>
         <!-- Hide Odoo's default header on the storefront — we render our own below -->
         <xpath expr="//header" position="attributes">
@@ -207,64 +208,73 @@
             <t t-set="bundle_src" t-value="request.env['product.template'].sudo().search(pub, limit=9)"/>
             <div id="wrap" class="ynf-homepage">
 
-                <!-- EDITORIAL 2-COLUMN HERO — premium fragrance-retail pattern.
-                     Left: brand statement, CTAs, price-from hook, brand pills.
-                     Right: featured product bottle on softer brass backdrop.
-                     Mobile collapses to stacked (bottle first, then copy). -->
+                <!-- STITCH-DESIGNED HERO — generated with Google Stitch, ported from
+                     /design/stitch_desktop.html. Editorial 2-col on desktop, stacked
+                     on mobile. EB Garamond display, brass-on-cream Material palette. -->
                 <t t-set="featured" t-value="
                     request.env['product.template'].sudo().search([('active','=',True),('name','ilike','khamrah 100ml')], limit=1)
                     or request.env['product.template'].sudo().search([('active','=',True),'|',('image_1920','!=',False),('x_ynf_image_url','!=',False)], limit=1)
                 "/>
-                <t t-set="from_price" t-value="14.99"/>
                 <t t-if="featured">
-                <section class="ynf-ed-hero">
+                <section class="ynf-st-hero">
                     <!-- LEFT — brand statement column -->
-                    <div class="ynf-ed-text">
-                        <span class="ynf-ed-eyebrow">
-                            <i aria-hidden="true">◆</i>
-                            <span>New drop · Lattafa</span>
-                        </span>
-                        <h1 class="ynf-ed-headline">
-                            Discover <em>the night</em><br/>
-                            <em>cabinet.</em>
+                    <div class="ynf-st-hero-text">
+                        <div class="ynf-st-eyebrow">NEW DROP · LATTAFA</div>
+                        <h1 class="ynf-st-headline">
+                            Discover the <br/>
+                            <span class="ynf-st-headline-italic">night cabinet.</span>
                         </h1>
-                        <p class="ynf-ed-lead">
-                            Hand-picked Arabian &amp; niche fragrances at live-auction prices.
-                            Smoke, dried rose, oud — composed by the houses that shape the genre.
+                        <p class="ynf-st-lead">
+                            Immerse yourself in the opulent world of Arabian perfumery.
+                            The newest arrivals from the House of Lattafa bring warm spices,
+                            rich woods, and sweet decadence to your evening ritual.
                         </p>
-                        <div class="ynf-ed-price">
-                            <span class="ynf-ed-price-label">From</span>
-                            <span class="ynf-ed-price-value">$<t t-esc="'%.2f' % from_price"/></span>
-                            <span class="ynf-ed-price-sub">100% authentic · free shipping over $75</span>
+                        <div class="ynf-st-ctas">
+                            <a href="/shop?brand=lattafa" class="ynf-st-btn-primary">Shop the collection</a>
+                            <a href="/live" class="ynf-st-btn-outline">
+                                Watch live tonight
+                                <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                            </a>
                         </div>
-                        <div class="ynf-ed-ctas">
-                            <a href="/shop?brand=lattafa" class="ynf-ed-cta-primary">Shop the collection</a>
-                            <a href="/live" class="ynf-ed-cta-secondary">Watch live tonight →</a>
-                        </div>
-                        <div class="ynf-ed-brands">
-                            <span>Lattafa</span><span>Armaf</span><span>Rasasi</span><span>Afnan</span>
+                        <div class="ynf-st-houses">
+                            <p class="ynf-st-houses-label">FEATURING HOUSES</p>
+                            <div class="ynf-st-houses-row">
+                                <span>LATTAFA</span><span>ARMAF</span><span>RASASI</span><span>AFNAN</span>
+                            </div>
                         </div>
                     </div>
-                    <!-- RIGHT — featured bottle column -->
-                    <a t-attf-href="/shop/product/#{slug(featured)}" class="ynf-ed-product" t-att-aria-label="featured.name">
-                        <div class="ynf-ed-product-tag">★ Featured · <t t-esc="featured.name"/></div>
-                        <div class="ynf-ed-product-stage" aria-hidden="true"/>
-                        <div class="ynf-ed-product-bottle">
-                            <img t-if="featured.x_ynf_image_url" t-att-src="featured.x_ynf_image_url" t-att-alt="featured.name" loading="eager"/>
-                            <img t-else="t-else" t-attf-src="/web/image/product.template/#{featured.id}/image_1024" t-att-alt="featured.name" loading="eager"/>
-                        </div>
-                        <div class="ynf-ed-product-info">
-                            <div class="ynf-ed-product-name" t-esc="featured.name"/>
-                            <div class="ynf-ed-product-price">$<t t-esc="'%.0f' % (featured.list_price or 0)"/></div>
+                    <!-- RIGHT — featured product visual -->
+                    <a t-attf-href="/shop/product/#{slug(featured)}" class="ynf-st-hero-visual" t-att-aria-label="featured.name">
+                        <div class="ynf-st-girih" aria-hidden="true"/>
+                        <img t-if="featured.x_ynf_image_url" t-att-src="featured.x_ynf_image_url" t-att-alt="featured.name" loading="eager" class="ynf-st-bottle"/>
+                        <img t-else="t-else" t-attf-src="/web/image/product.template/#{featured.id}/image_1024" t-att-alt="featured.name" loading="eager" class="ynf-st-bottle"/>
+                        <div class="ynf-st-info-bar">
+                            <div>
+                                <p class="ynf-st-info-brand">LATTAFA</p>
+                                <p class="ynf-st-info-name" t-esc="featured.name"/>
+                            </div>
+                            <div class="ynf-st-info-price">$<t t-esc="'%.2f' % (featured.list_price or 0)"/></div>
                         </div>
                     </a>
                 </section>
-                <!-- thin promo strip right under the hero -->
-                <section class="ynf-ed-promo">
-                    <span><i aria-hidden="true">◆</i> 100% authentic guarantee</span>
-                    <span><i aria-hidden="true">◆</i> Free shipping over $75</span>
-                    <span><i aria-hidden="true">◆</i> Ships in 2 business days</span>
-                    <span><i aria-hidden="true">◆</i> Live auctions nightly · 8 PM ET</span>
+                <!-- PROMO STRIP -->
+                <section class="ynf-st-promo">
+                    <div class="ynf-st-promo-item">
+                        <span class="material-symbols-outlined">verified</span>
+                        <span>100% AUTHENTIC</span>
+                    </div>
+                    <div class="ynf-st-promo-item">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                        <span>FREE SHIPPING OVER $75</span>
+                    </div>
+                    <div class="ynf-st-promo-item">
+                        <span class="material-symbols-outlined">bolt</span>
+                        <span>SHIPS IN 2 DAYS</span>
+                    </div>
+                    <div class="ynf-st-promo-item ynf-st-promo-accent">
+                        <span class="material-symbols-outlined">stream</span>
+                        <span>LIVE AUCTIONS NIGHTLY</span>
+                    </div>
                 </section>
                 </t>
 

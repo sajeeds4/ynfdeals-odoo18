@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YNF Deals - Mobile Homepage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#e8c175",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#fcf9f3",
+                        "primary-fixed": "#ffdea2",
+                        "tertiary-fixed": "#ffdad8",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-dim": "#dcdad4",
+                        "on-secondary-fixed": "#221a11",
+                        "tertiary-fixed-dim": "#ffb3b2",
+                        "secondary-fixed": "#f1dfd1",
+                        "outline": "#7f7667",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#4d4639",
+                        "primary-fixed-dim": "#e8c175",
+                        "primary": "#745715",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary-container": "#6f6257",
+                        "primary-container": "#8f702c",
+                        "on-primary-fixed-variant": "#5c4200",
+                        "inverse-surface": "#31312d",
+                        "surface": "#fcf9f3",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary-container": "#fffbff",
+                        "secondary": "#685c51",
+                        "on-tertiary-fixed": "#400008",
+                        "surface-container": "#f0eee8",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#d4c4b6",
+                        "background": "#fcf9f3",
+                        "surface-container-high": "#ebe8e2",
+                        "tertiary": "#974042",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#d1c5b4",
+                        "on-secondary-fixed-variant": "#50453a",
+                        "surface-tint": "#775a18",
+                        "surface-variant": "#e5e2dc",
+                        "secondary-container": "#f1dfd1",
+                        "on-surface": "#1c1c18",
+                        "on-tertiary-fixed-variant": "#7c2c2f",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#b65859",
+                        "on-background": "#1c1c18",
+                        "on-primary-fixed": "#261900",
+                        "surface-container-low": "#f6f3ed"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "40px",
+                        "stack-unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Cormorant Garamond"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Cormorant Garamond"],
+                        "headline-lg": ["Cormorant Garamond"],
+                        "display-lg": ["Instrument Serif"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .girih-pattern {
+            background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L40 20L20 40L0 20Z" fill="none" stroke="rgba(160, 127, 58, 0.1)" stroke-width="1"/></svg>');
+        }
+        .brass-gradient {
+            background: linear-gradient(135deg, #a07f3a 0%, #c9a961 50%, #8f702c 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-sm pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md dark:bg-surface-dim/90 border-b border-outline-variant/30 flex justify-between items-center h-16 px-margin-mobile transition-all duration-300">
+<button aria-label="Menu" class="text-on-surface-variant dark:text-outline hover:text-primary-container dark:hover:text-primary-fixed-dim transition-colors active:opacity-70 active:scale-95 duration-150 p-2 -ml-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile uppercase tracking-widest text-primary dark:text-primary-fixed font-bold tracking-[0.2em]">YNF DEALS</h1>
+<button aria-label="Shopping Bag" class="text-on-surface-variant dark:text-outline hover:text-primary-container dark:hover:text-primary-fixed-dim transition-colors active:opacity-70 active:scale-95 duration-150 p-2 -mr-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+</button>
+</header>
+<main class="pt-16">
+<!-- HERO (Stacked) -->
+<section class="flex flex-col h-[751px] min-h-[600px]">
+<!-- Top Half: Brass Gradient -->
+<div class="relative flex-1 brass-gradient girih-pattern flex flex-col items-center justify-center p-6 overflow-hidden">
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="relative z-10 text-center flex flex-col items-center">
+<span class="px-3 py-1 border border-primary-fixed-dim/30 rounded-full font-label-caps text-label-caps text-primary-fixed bg-surface/10 backdrop-blur-sm mb-4">FEATURED · LATTAFA</span>
+<div class="relative w-48 h-64 mb-4 drop-shadow-[0_20px_20px_rgba(0,0,0,0.3)]">
+<img alt="Lattafa Khamrah Bottle" class="w-full h-full object-contain" data-alt="A luxurious glass perfume bottle filled with amber liquid, sitting on a subtly reflective surface. The bottle has a heavy, architectural design with gold accents. The lighting is dramatic, casting a soft shadow, highlighting the premium, oriental aesthetic of the Arabian fragrance against a warm, metallic brass background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1Sw4f-R_NJS7E5PQ3wpuISKzV0Q17_xYpM3mA8pGztGegV8f77eDIsnZL0b0xWwQAHwmMj8qcozvaupmdGezT6-xFlu-Xyvm_iJhXoRMvhvPB7i6uz2ETImCXxjR2ZNc2gmiGecCZFDPxrtBiFDkiHfbE2k298vesfW6vSotE5sUI7Cfd9O8d0W2yMoIsiZZ4fPmu4SPY0mucUeEPPhd3Yl53aOtTmbqD-atkHekctWzItyrrhNQZ8un6rGJKmv76R9J8x1OylFzq"/>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary-fixed mb-1 drop-shadow-md">Khamrah</h2>
+<p class="font-title-md text-title-md text-primary-fixed-dim">$50.00</p>
+</div>
+</div>
+<!-- Bottom Half: Parchment Cream -->
+<div class="flex-1 bg-surface flex flex-col items-center justify-center p-8 text-center border-t border-outline-variant/30">
+<span class="font-label-caps text-label-caps text-secondary mb-3 tracking-widest">NEW DROP · LATTAFA</span>
+<h2 class="font-display-lg text-display-lg text-on-surface italic mb-4">Discover the night cabinet.</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-8 uppercase tracking-wider">FROM $14.99</p>
+<div class="flex flex-col w-full max-w-xs space-y-4 items-center">
+<button class="w-full bg-on-surface text-surface py-4 rounded-full font-label-caps text-label-caps hover:bg-on-surface/90 transition-colors">Shop the collection</button>
+<a class="font-body-sm text-body-sm text-primary underline decoration-primary/50 underline-offset-4 hover:text-primary-container transition-colors flex items-center gap-1" href="#">
+                        Watch live tonight <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- PROMO ROW -->
+<section class="py-4 border-b border-outline-variant/20 bg-surface-container-low overflow-hidden">
+<div class="flex overflow-x-auto hide-scrollbar px-margin-mobile space-x-4 snap-x">
+<div class="snap-center shrink-0 px-4 py-2 rounded-full border border-outline-variant/50 flex items-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">100% authentic</span>
+</div>
+<div class="snap-center shrink-0 px-4 py-2 rounded-full border border-outline-variant/50 flex items-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">local_shipping</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">free shipping over $75</span>
+</div>
+<div class="snap-center shrink-0 px-4 py-2 rounded-full border border-outline-variant/50 flex items-center gap-2 bg-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">live_tv</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant whitespace-nowrap">live tonight</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe z-50 rounded-t-lg bg-surface/95 backdrop-blur-lg dark:bg-surface-container-lowest/95 border-t border-outline-variant/20 shadow-[0_-4px_12px_rgba(116,87,21,0.08)]">
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed before:content-['◆'] before:text-[8px] before:mb-1 hover:text-primary-container transition-all active:scale-110 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">storefront</span>
+<span class="font-label-caps text-label-caps mt-1">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">live_tv</span>
+<span class="font-label-caps text-label-caps mt-1">Live</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+<span class="font-label-caps text-label-caps mt-1">Bag</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim hover:text-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-caps text-label-caps mt-1">You</span>
+</a>
+</nav>
+</body></html>

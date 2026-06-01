@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YNF DEALS - The Art of Fragrance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fcf9f3",
+                      "surface": "#fcf9f3",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#5c4200",
+                      "inverse-surface": "#31312d",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#f1dfd1",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed": "#261900",
+                      "surface-bright": "#fcf9f3",
+                      "error-container": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "surface-container": "#f0eee8",
+                      "on-surface-variant": "#4d4639",
+                      "on-secondary-container": "#6f6257",
+                      "secondary-container": "#f1dfd1",
+                      "on-background": "#1c1c18",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#f3f0ea",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed-variant": "#50453a",
+                      "tertiary-container": "#b65859",
+                      "surface-container-low": "#f6f3ed",
+                      "tertiary": "#974042",
+                      "on-tertiary-fixed-variant": "#7c2c2f",
+                      "on-primary-container": "#fffbff",
+                      "surface-container-highest": "#e5e2dc",
+                      "primary-fixed-dim": "#e8c175",
+                      "tertiary-fixed-dim": "#ffb3b2",
+                      "on-error-container": "#93000a",
+                      "secondary": "#685c51",
+                      "surface-container-high": "#ebe8e2",
+                      "surface-dim": "#dcdad4",
+                      "on-surface": "#1c1c18",
+                      "secondary-fixed-dim": "#d4c4b6",
+                      "surface-variant": "#e5e2dc",
+                      "outline-variant": "#d1c5b4",
+                      "outline": "#7f7667",
+                      "primary-fixed": "#ffdea2",
+                      "tertiary-fixed": "#ffdad8",
+                      "primary-container": "#8f702c",
+                      "on-tertiary-container": "#fffbff",
+                      "primary": "#745715",
+                      "on-secondary-fixed": "#221a11",
+                      "surface-tint": "#775a18",
+                      "on-tertiary-fixed": "#400008",
+                      "inverse-primary": "#e8c175"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-mobile": "20px",
+                      "margin-desktop": "80px",
+                      "container-max": "1440px",
+                      "unit": "8px",
+                      "section-gap": "120px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "EB Garamond"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "EB Garamond"
+                      ],
+                      "display-lg": [
+                              "EB Garamond"
+                      ],
+                      "title-lg": [
+                              "Inter"
+                      ],
+                      "italic-accent": [
+                              "EB Garamond"
+                      ],
+                      "headline-md": [
+                              "EB Garamond"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "italic-accent": [
+                              "inherit",
+                              {
+                                      "fontWeight": "400",
+                                      "fontStyle": "italic"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.7",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .girih-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.83-29.86 29.86-.83-.83L54.627 0zm-15 0l20.373 20.373-.83.83L38.797 0h.83zm-15 0L60 35.373V34.2L25.457 0h-.83zm-15 0L60 50.373V49.2L10.457 0h-.83zm-15 0L60 65.373V64.2L-4.543 0h-.83z' fill='%23c9a961' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+      </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col pt-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-background border-b border-outline-variant/20">
+<div class="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<a class="font-display-lg text-display-lg tracking-tighter text-primary dark:text-primary-fixed-dim shrink-0" href="#">YNF DEALS</a>
+<nav class="hidden md:flex space-x-8">
+<a class="font-label-md text-label-md uppercase tracking-widest text-primary font-bold border-b border-primary pb-1 cursor-pointer transition-transform duration-200 active:scale-95" href="#">Collections</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors hover:text-primary-container transition-all duration-300 cursor-pointer transition-transform duration-200 active:scale-95" href="#">Oud Series</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors hover:text-primary-container transition-all duration-300 cursor-pointer transition-transform duration-200 active:scale-95" href="#">House Spotlight</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors hover:text-primary-container transition-all duration-300 cursor-pointer transition-transform duration-200 active:scale-95" href="#">The Vault</a>
+</nav>
+<div class="flex space-x-6 shrink-0">
+<button class="text-primary dark:text-primary-fixed-dim hover:text-primary-container transition-all duration-300 cursor-pointer transition-transform duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="text-primary dark:text-primary-fixed-dim hover:text-primary-container transition-all duration-300 cursor-pointer transition-transform duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- HERO SECTION -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop min-h-[870px] flex flex-col md:flex-row gap-gutter py-12 md:py-0 items-center">
+<!-- Left Content -->
+<div class="w-full md:w-5/12 flex flex-col justify-center space-y-8 relative z-10">
+<div class="font-label-md text-label-md text-primary tracking-[0.2em] uppercase">NEW DROP · LATTAFA</div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">
+                    Discover the <br/><span class="font-italic-accent text-primary">night cabinet.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                    Immerse yourself in the opulent world of Arabian perfumery. The newest arrivals from the House of Lattafa bring warm spices, rich woods, and sweet decadence to your evening ritual.
+                </p>
+<div class="flex items-center gap-6 pt-4">
+<button class="bg-[#2a2118] text-on-primary font-label-md text-label-md px-8 py-4 rounded-full uppercase tracking-widest hover:bg-[#a07f3a] transition-colors duration-300">
+                        Shop the collection
+                    </button>
+<button class="bg-transparent border border-primary text-primary font-label-md text-label-md px-8 py-4 rounded-full uppercase tracking-widest hover:bg-primary/5 transition-colors duration-300 flex items-center gap-2">
+                        Watch live tonight <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="pt-12">
+<p class="font-label-md text-label-md text-outline mb-4">FEATURING HOUSES</p>
+<div class="flex flex-wrap gap-3">
+<span class="px-4 py-2 border border-outline-variant/30 rounded-full font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest">LATTAFA</span>
+<span class="px-4 py-2 border border-outline-variant/30 rounded-full font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest">ARMAF</span>
+<span class="px-4 py-2 border border-outline-variant/30 rounded-full font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest">RASASI</span>
+<span class="px-4 py-2 border border-outline-variant/30 rounded-full font-label-md text-label-md text-on-surface-variant bg-surface-container-lowest">AFNAN</span>
+</div>
+</div>
+</div>
+<!-- Right Visual -->
+<div class="w-full md:w-7/12 h-[614px] md:h-[870px] relative mt-12 md:mt-0">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-fixed to-inverse-primary rounded-lg overflow-hidden girih-pattern flex items-center justify-center">
+<img alt="A luxurious, heavy glass perfume bottle containing golden liquid, floating gracefully against a warm brass and gold gradient background. The lighting is soft and directional, highlighting the facets of the glass and the rich amber color of the fragrance, evoking a high-end editorial, opulent Arabian perfumery aesthetic." class="w-3/4 max-w-md object-contain mix-blend-multiply drop-shadow-2xl" data-alt="A luxurious, heavy glass perfume bottle containing golden liquid, floating gracefully against a warm brass and gold gradient background. The lighting is soft and directional, highlighting the facets of the glass and the rich amber color of the fragrance, evoking a high-end editorial, opulent Arabian perfumery aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYB4J0ThHNyy-lkbCD6WgutMNN29u3k9HGx0Nh5CjbtFiPCTJvxqh8a-tT5-M4ccvtoagldCl8z9lPYvIUnRH71dlko4vBB_6FG_g1_PMY64yuenrFSmVEIzlmF0BF7yhFNzmnkOsHzDGKVkxxRF1uNAr76O0cSEUC75fC4-YVIJpcGDHKVvdsSw77ztvbtHonsSNI0s_fb9acOGSck3lIE1-C4PYXIT0NGZRjyoxoGZkPcNNCVp-PwWMXO2EOLhgmSgppT_gqEutC"/>
+<!-- Info Bar -->
+<div class="absolute bottom-8 left-8 right-8 bg-surface/90 backdrop-blur-md border border-primary/20 p-6 flex justify-between items-center shadow-lg">
+<div>
+<p class="font-label-md text-label-md text-primary uppercase mb-1">LATTAFA</p>
+<p class="font-title-lg text-title-lg text-on-surface">Khamrah Eau De Parfum</p>
+</div>
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">$39.99</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PROMO STRIP -->
+<section class="border-y border-outline-variant/20 bg-surface-container-lowest py-8 my-section-gap">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="flex items-center gap-4 justify-center md:justify-start">
+<span class="material-symbols-outlined text-primary text-3xl">verified</span>
+<span class="font-label-md text-label-md text-on-surface-variant">100% AUTHENTIC</span>
+</div>
+<div class="flex items-center gap-4 justify-center md:justify-start">
+<span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+<span class="font-label-md text-label-md text-on-surface-variant">FREE SHIPPING OVER $75</span>
+</div>
+<div class="flex items-center gap-4 justify-center md:justify-start">
+<span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+<span class="font-label-md text-label-md text-on-surface-variant">SHIPS IN 2 DAYS</span>
+</div>
+<div class="flex items-center gap-4 justify-center md:justify-start">
+<span class="material-symbols-outlined text-tertiary text-3xl">stream</span>
+<span class="font-label-md text-label-md text-tertiary">LIVE AUCTIONS NIGHTLY</span>
+</div>
+</div>
+</section>
+<!-- SHOP BY COLLECTIONS -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop my-section-gap">
+<div class="text-center mb-16">
+<div class="text-primary text-xl mb-4">◆</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Curated Collections</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="group relative h-[500px] bg-surface-container overflow-hidden flex items-end p-8 border border-outline-variant/20 hover:border-primary/40 transition-colors duration-500 cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center p-12">
+<img alt="A dark, masculine silhouette of an angled geometric perfume bottle set against a textured parchment background. Soft, moody lighting casts dramatic shadows, highlighting sharp masculine lines and exuding a rich, woody, high-end editorial vibe characteristic of premium men's niche fragrances." class="w-full h-full object-contain mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="A dark, masculine silhouette of an angled geometric perfume bottle set against a textured parchment background. Soft, moody lighting casts dramatic shadows, highlighting sharp masculine lines and exuding a rich, woody, high-end editorial vibe characteristic of premium men's niche fragrances." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmP41XRhqMJios9DVKG41M678A0tHuNj2gz9hi2HJQ1YewAG6DoHnN2F6-zlRe5Ozn_2_Y-vsobQAxkNeL5HfyP44L31D-vw6zwQn9ei3sFO9QkUakLeAOeUeRkvIqOVs8wx53KsPsr-M7SxbV9qDQ0sQgSm8U8102A_YcQEHfEFm50-9XfUBAaO6x9m6QDMtX94zsbFQEwmPKFvax_vP_sJS3FE_y4Z1TWz1m4BM5qUD8sbvtiayJBFfnV14uJoQE7NoW_jNRKwi9"/>
+</div>
+<div class="relative z-10 w-full text-center bg-surface-container-lowest/80 backdrop-blur-sm p-6">
+<h3 class="font-headline-md text-headline-md text-[#2a2118]">For Him</h3>
+<p class="font-label-md text-label-md text-primary mt-2 flex items-center justify-center gap-2">EXPLORE <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative h-[500px] bg-surface-container overflow-hidden flex items-end p-8 border border-outline-variant/20 hover:border-primary/40 transition-colors duration-500 cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center p-12">
+<img alt="An elegant, curved silhouette of a feminine perfume bottle resting on a creamy parchment surface. The lighting is ethereal and bright, emphasizing smooth, sensual contours and evoking a floral, sweet, and luxurious editorial aesthetic suited for premium women's fragrances." class="w-full h-full object-contain mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="An elegant, curved silhouette of a feminine perfume bottle resting on a creamy parchment surface. The lighting is ethereal and bright, emphasizing smooth, sensual contours and evoking a floral, sweet, and luxurious editorial aesthetic suited for premium women's fragrances." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSA0iMcVhyoTqw74aqp1t7W93F-fdDcRGT8IXBONH-bltciF_PZDnWYPFXJjqIvelUlRGdkfasQ2DcFXWkmIUt5X7F0h4ruJaAZ7u8Gt3OSn9wRo3pAEFzyHe6Yxn3l590FQVEdGlN4sNfUTLcvWM0TWyjgSeTaEK-Ic1oaJqGlZwWjthwPuq0bgOOCLFlnR6PB9fGtx_8evVwZPQt2cDTcmbjlJGlslqAHyf41OAKdECM3LxzvZVRi22g91KuYSKy6TMylSEfPTav"/>
+</div>
+<div class="relative z-10 w-full text-center bg-surface-container-lowest/80 backdrop-blur-sm p-6">
+<h3 class="font-headline-md text-headline-md text-[#2a2118]">For Her</h3>
+<p class="font-label-md text-label-md text-primary mt-2 flex items-center justify-center gap-2">EXPLORE <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative h-[500px] bg-surface-container overflow-hidden flex items-end p-8 border border-outline-variant/20 hover:border-primary/40 transition-colors duration-500 cursor-pointer">
+<div class="absolute inset-0 flex items-center justify-center p-12">
+<img alt="A minimalist, cylindrical unisex perfume bottle silhouette sitting squarely on a fine parchment-textured background. Balanced, neutral lighting highlights the clean, modern design, conveying a sophisticated, versatile, and high-fidelity editorial mood." class="w-full h-full object-contain mix-blend-multiply opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="A minimalist, cylindrical unisex perfume bottle silhouette sitting squarely on a fine parchment-textured background. Balanced, neutral lighting highlights the clean, modern design, conveying a sophisticated, versatile, and high-fidelity editorial mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw7uugAc4g0OMqsrGFtLaTVI23QoOVUJUXzn3_KH0_B7q0Gc5mvWjnufXI3KGMO2aJLrI_HSI5jLnj35gIIdwPLS4Er4gf40VFfMIR58Tto8x06PTopYNXWQtILPf3cq1SWlKrg8q2nkZMmnfeo_B1FMGhy7UB7muwnZx78XL9FxgDoDeA8SbBwO_SLxdb8xyjG6haJAzbyFdzIFav604skd7vxY3qBtdOI8PVQ10I3P9dk3iss1MySjbGrxErFTdoF87z0Bno2PiT"/>
+</div>
+<div class="relative z-10 w-full text-center bg-surface-container-lowest/80 backdrop-blur-sm p-6">
+<h3 class="font-headline-md text-headline-md text-[#2a2118]">Unisex</h3>
+<p class="font-label-md text-label-md text-primary mt-2 flex items-center justify-center gap-2">EXPLORE <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-inverse-surface dark:bg-surface-container-lowest w-full mt-section-gap border-t border-primary/30 flex flex-col items-center py-20 px-margin-mobile md:px-margin-desktop space-y-8">
+<a class="font-display-lg text-display-lg text-primary-fixed shrink-0 none" href="#">YNF DEALS</a>
+<div class="text-primary-fixed opacity-50">◆</div>
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<a class="font-body-md text-body-md text-surface-variant/80 hover:text-primary-fixed hover:opacity-80 transition-opacity none" href="#">Authenticity Guarantee</a>
+<a class="font-body-md text-body-md text-surface-variant/80 hover:text-primary-fixed hover:opacity-80 transition-opacity none" href="#">Shipping &amp; Returns</a>
+<a class="font-body-md text-body-md text-surface-variant/80 hover:text-primary-fixed hover:opacity-80 transition-opacity none" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-surface-variant/80 hover:text-primary-fixed hover:opacity-80 transition-opacity none" href="#">Contact Boutique</a>
+</div>
+<p class="font-body-md text-body-md text-primary-fixed dark:text-primary pt-8">© 2024 YNF DEALS. THE ART OF FRAGRANCE.</p>
+</footer>
+</body></html>
