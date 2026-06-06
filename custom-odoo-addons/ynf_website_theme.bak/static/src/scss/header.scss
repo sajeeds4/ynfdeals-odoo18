@@ -1,0 +1,541 @@
+
+/* ============================================================
+   HEADER POLISH — beat Odoo's green nav default with high specificity
+   ============================================================ */
+header#top .navbar .nav-item .nav-link,
+header#top .navbar-nav .nav-link,
+header#top #top_menu .nav-link,
+header#top .nav-link span,
+header#top #top_menu .nav-link span {
+    color: #2a2118 !important;
+    font-family: "Poppins", "Inter", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.86rem !important;
+    letter-spacing: 0.07em !important;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.18s ease;
+}
+header#top .navbar .nav-item .nav-link { padding: 10px 16px !important; }
+
+header#top .nav-link:hover,
+header#top .nav-link:hover span,
+header#top .nav-link:focus span { color: #a07f3a !important; }
+
+/* Active nav item → gold (not green), with gold underline */
+header#top .navbar .nav-item .nav-link.active,
+header#top .navbar-nav .nav-link.active,
+header#top #top_menu .nav-link.active,
+header#top .nav-item.active > .nav-link,
+header#top .nav-link.active span,
+header#top .nav-item.active > .nav-link span {
+    color: #a07f3a !important;
+}
+header#top .nav-link.active,
+header#top .nav-item.active > .nav-link {
+    border-bottom: 0 !important;   /* kill Odoo's green 5px active border */
+    box-shadow: none !important;
+
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 16px;
+        right: 16px;
+        height: 2px;
+        background: linear-gradient(90deg, #c9a961, #a07f3a);
+        border-radius: 2px;
+    }
+}
+
+/* === Lattafa-style: minimal OUTLINE icons on the right (no circle bg) === */
+header#top li.o_wsale_my_cart,
+header#top .o_wsale_my_cart,
+header#top a[href*="/shop/cart"],
+header#top a[href*="/web/login"],
+header#top .o_navlink_background,
+header#top .o_searchbar_form button,
+header#top button[aria-label*="earch"],
+header#top .js_search_results_button,
+header#top [data-bs-target*="search"],
+header#top .btn.rounded-circle,
+header#top a.rounded-circle,
+header#top .o_navbar_buttons > *,
+header#top ul.navbar-nav.align-items-center > li {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: #2a2118 !important;
+    box-shadow: none !important;
+    transition: color 0.18s ease;
+
+    &:hover { color: #a07f3a !important; background: transparent !important; }
+}
+
+/* icon glyph sizing */
+header#top ul.navbar-nav.align-items-center .fa,
+header#top a[href*="/shop/cart"] i,
+header#top [data-bs-target*="search"] i {
+    font-size: 1.15rem !important;
+    color: #2a2118 !important;
+}
+header#top ul.navbar-nav.align-items-center a:hover .fa { color: #a07f3a !important; }
+
+/* Account link "Sign in" text → just the person icon look (hide long text on desktop) */
+header#top a[href*="/web/login"] {
+    font-size: 0 !important;   /* hide any text */
+    &::before {
+        content: "\f007";  /* fa-user */
+        font-family: "FontAwesome";
+        font-size: 1.05rem;
+        color: #2a2118;
+    }
+    &:hover::before { color: #a07f3a; }
+}
+
+/* Cart quantity badge → burgundy dot */
+header#top .my_cart_quantity,
+header#top .badge {
+    background: #6b1f23 !important;
+    color: #f6dc93 !important;
+    font-size: 0.62rem !important;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 999px;
+    padding: 0 4px !important;
+}
+
+/* === Center the nav (Lattafa centers the menu between logo and icons) === */
+@media (min-width: 992px) {
+    header#top #o_main_nav,
+    header#top .o_main_nav {
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 12px;
+    }
+    header#top .navbar-brand { grid-column: 1; justify-self: start; }
+    header#top #top_menu {
+        grid-column: 2;
+        justify-self: center;
+        display: flex;
+        gap: 4px;
+    }
+    header#top .navbar-nav.align-items-center,
+    header#top ul.navbar-nav:last-of-type {
+        grid-column: 3;
+        justify-self: end;
+    }
+}
+
+/* Dropdown carets on nav items that have children */
+header#top .nav-item.dropdown > .nav-link::after,
+header#top .nav-link.dropdown-toggle::after,
+header#top .o_mega_menu_toggle::after {
+    display: inline-block !important;
+    margin-left: 6px;
+    border-top: 4px solid currentColor;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 0;
+    vertical-align: middle;
+    opacity: 0.6;
+}
+
+/* Ensure mega-menu nav items stay visible (Odoo leaves the mega-menu <li>
+   display:none until its JS widget hydrates; force it shown so SHOP always
+   appears even before/without JS). High specificity to beat Odoo's rule. */
+body:not(.editor_enable) header#top #top_menu > li.nav-item.dropdown,
+body:not(.editor_enable) #top #top_menu > li.nav-item.dropdown,
+body header#top #top_menu li.o_mega_menu_item,
+header#top #top_menu > li.nav-item.dropdown.position-static {
+    display: block !important;
+}
+
+/* Account icon link */
+header#top .ynf-account-link {
+    color: #2a2118 !important;
+    font-size: 1.1rem;
+    padding: 6px 8px !important;
+    &:hover { color: #a07f3a !important; }
+    i { color: inherit; }
+}
+
+/* === Mega-menu panel === */
+header#top .o_mega_menu,
+header#top .dropdown-menu.o_mega_menu {
+    border: 0 !important;
+    border-top: 1px solid rgba(20,14,6,0.06);
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 24px 50px rgba(42,33,24,0.14) !important;
+    background: #fff !important;
+    padding: 0 !important;
+}
+
+.ynf-mega {
+    padding: 32px 0 36px;
+    background: #fff;
+
+    .ynf-mega-title {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: #6b1f23;
+        margin-bottom: 14px;
+    }
+    .ynf-mega-link {
+        display: block;
+        color: #2a2118;
+        font-size: 0.95rem;
+        padding: 7px 0;
+        transition: color 0.15s ease, padding-left 0.15s ease;
+
+        &:hover { color: #a07f3a; padding-left: 5px; }
+    }
+
+    .ynf-mega-feature { display: flex; align-items: stretch; }
+    .ynf-mega-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: 100%;
+        min-height: 160px;
+        border-radius: 14px;
+        padding: 20px;
+        background: linear-gradient(135deg, #6b1f23, #4d1518);
+        color: #fff9ed;
+
+        .ynf-mega-card-eyebrow {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #f6dc93;
+            font-weight: 700;
+        }
+        .ynf-mega-card-title {
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 6px 0 12px;
+            line-height: 1.2;
+        }
+        .ynf-mega-card-cta { color: #f6dc93; font-weight: 600; font-size: 0.85rem; }
+        &:hover .ynf-mega-card-cta { text-decoration: underline; }
+    }
+
+    @media (max-width: 991px) {
+        padding: 16px;
+        .col-6 { margin-bottom: 18px; }
+        .ynf-mega-feature { display: none; }
+    }
+}
+
+/* === Top header (mobile-first) — clean white like Lattafa === */
+header#top,
+header#top.o_header_standard,
+header#top .navbar,
+header#top .navbar.o_cc,
+header#top .navbar.o_colored_level {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+header#top, header#top.o_header_standard {
+    border-bottom: 1px solid rgba(20, 14, 6, 0.07);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    background: #ffffff !important;
+    box-shadow: 0 1px 0 rgba(20, 14, 6, 0.06);
+
+    .navbar, .navbar-light {
+        background: transparent !important;
+        padding: 16px 28px;
+    }
+
+    .navbar-brand, .o_navbar_brand {
+        font-family: $font-display;
+        font-weight: 600;
+        color: $ynf-gold !important;
+        letter-spacing: 0.04em;
+        font-size: 1.4rem;
+        text-transform: uppercase;
+
+        img { max-height: 46px; }
+    }
+
+    .nav-link {
+        color: $ynf-text !important;
+        font-weight: 500;
+        font-size: 0.92rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 8px 14px !important;
+        position: relative;
+        transition: color 0.18s ease;
+
+        &:hover, &:focus { color: $ynf-gold !important; }
+
+        &.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 14px;
+            right: 14px;
+            height: 1px;
+            background: $ynf-gold;
+        }
+    }
+
+    /* Cart icon area */
+    #my_cart_sum, .my_cart_quantity, #top_menu_collapse + ul .show_collapse {
+        color: $ynf-gold !important;
+        font-weight: 700;
+    }
+
+    a[href*="/shop/cart"], a[href*="/web/login"], a[href*="/my"] {
+        color: $ynf-text !important;
+        &:hover { color: $ynf-gold !important; }
+    }
+
+    /* Mobile burger */
+    .navbar-toggler {
+        border: 0 !important;
+        color: $ynf-gold !important;
+        padding: 4px 8px;
+
+        &:focus { box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.25); }
+    }
+
+    .navbar-toggler-icon {
+        background-image: none !important;
+        width: 24px;
+        height: 18px;
+        position: relative;
+
+        &::before, &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: $ynf-gold;
+        }
+        &::before { top: 0; }
+        &::after { bottom: 0; }
+    }
+}
+
+/* Mobile drawer (collapses) */
+@media (max-width: 991px) {
+    header#top {
+        .navbar-collapse {
+            background: $ynf-bg;
+            border-top: 1px solid $ynf-border-soft;
+            margin: 0 -18px;
+            padding: 12px 18px;
+            box-shadow: 0 18px 30px rgba(42, 33, 24, 0.14);
+        }
+        .nav-link {
+            padding: 14px 0 !important;
+            border-bottom: 1px solid $ynf-border-soft;
+            font-size: 1rem;
+
+            &:last-child { border-bottom: 0; }
+        }
+    }
+}
+
+/* === Footer === */
+footer, .o_footer {
+    background: $ynf-bg-soft !important;
+    color: $ynf-text-muted !important;
+    border-top: 1px solid $ynf-border-soft;
+    padding: $sp-7 0 $sp-5 0;
+
+    h5, h6 {
+        font-family: $font-display;
+        color: $ynf-gold;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: $sp-4;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    a {
+        color: $ynf-text-muted !important;
+        font-size: 0.92rem;
+
+        &:hover { color: $ynf-gold !important; }
+    }
+
+    .o_footer_copyright {
+        border-top: 1px solid $ynf-border-soft;
+        padding-top: $sp-4;
+        margin-top: $sp-5;
+        font-size: 0.8rem;
+        color: $ynf-text-dim;
+    }
+}
+
+
+/* ============================================================
+   MOBILE — style Odoo's native o_header_mobile (no custom burger)
+   ============================================================ */
+
+/* Native mobile header bar */
+header#top .o_header_mobile {
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(20,14,6,0.07);
+    padding: 6px 14px;
+
+    .navbar-brand img { max-height: 40px; }
+
+    /* burger toggler → clean ink lines */
+    .navbar-toggler {
+        border: 0 !important;
+        padding: 6px 8px !important;
+        box-shadow: none !important;
+        color: #2a2118 !important;
+
+        .navbar-toggler-icon, .fa {
+            color: #2a2118 !important;
+        }
+    }
+
+    /* right-side icons (cart/search/account) → outline ink */
+    .o_navlink_background, a, button {
+        color: #2a2118 !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        &:hover { color: #a07f3a !important; }
+    }
+    .my_cart_quantity, .badge {
+        background: #6b1f23 !important;
+        color: #f6dc93 !important;
+    }
+}
+
+/* Mobile dropdown menu (Odoo's collapse) */
+header#top .o_header_mobile .offcanvas,
+header#top .o_header_mobile .navbar-collapse,
+header#top #top_menu_collapse {
+    background: #fff !important;
+
+    .nav-link, .nav-link span {
+        color: #2a2118 !important;
+        font-family: "Poppins", "Inter", sans-serif !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 14px 18px !important;
+        border-bottom: 1px solid rgba(20,14,6,0.05);
+
+        &:hover, &:hover span { color: #a07f3a !important; }
+    }
+}
+
+/* Hide the desktop nav on mobile, show only Odoo's mobile header */
+@media (max-width: 991.98px) {
+    header#top .o_header_mobile { display: flex !important; }
+    header#top nav.navbar.d-none { display: none !important; }
+}
+@media (min-width: 992px) {
+    header#top .o_header_mobile { display: none !important; }
+}
+
+/* ============ Portal additions: tracking link + Help/Dispute ============ */
+
+.ynf-tracking-link {
+    color: #1e40af;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    text-decoration: none;
+    &:hover { color: #1e3a8a; text-decoration: underline; }
+}
+
+.ynf-help-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 12px 0 60px;
+
+    .ynf-help-head { margin-bottom: 18px;
+        h2 { margin: 0 0 6px 0; font-weight: 800; }
+    }
+
+    .ynf-help-sessions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .ynf-help-session-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        text-decoration: none;
+        color: #0f172a;
+        transition: all .15s ease;
+        display: block;
+        &:hover {
+            border-color: #0f172a;
+            box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+            transform: translateY(-1px);
+        }
+        .ynf-help-session-no {
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+    }
+
+    .ynf-help-items {
+        display: grid;
+        gap: 8px;
+        margin: 14px 0 24px;
+    }
+    .ynf-help-item-card {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #ffffff;
+        margin: 0;
+        input[type="radio"] { margin-top: 4px; }
+        &:has(input:checked) {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+    }
+
+    .ynf-help-form-row {
+        margin-bottom: 14px;
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #475569;
+        }
+        select, textarea, input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    }
+    .ynf-help-form-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+    }
+}

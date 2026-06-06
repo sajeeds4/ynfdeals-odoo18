@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Default the gate to ON; turn off via ir.config_parameter when ready to launch. -->
+  <record id="ynf_dev_mode_param" model="ir.config_parameter">
+    <field name="key">ynf.dev_mode</field>
+    <field name="value">True</field>
+  </record>
+</odoo>

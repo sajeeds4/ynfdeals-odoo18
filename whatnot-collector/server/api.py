@@ -19,6 +19,7 @@ import time
 import unicodedata
 import zipfile
 from datetime import datetime, timezone
+from decimal import Decimal
 from html import escape
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
@@ -116,7 +117,7 @@ from .company_db import (
     list_in_house_buyer_profiles, merge_in_house_orders, update_employee_account_settings,
     get_mega_dashboard_summary, list_reviews_feed, TIKTOK_PRODUCT_FIELDS,
     list_purchase_orders, get_purchase_order_detail, create_purchase_order, update_purchase_order, delete_purchase_order,
-    receive_purchase_order,
+    receive_purchase_order, create_bargain_session, get_bargain_sessions_for_order, accept_bargain, reject_bargain,
 )
 from .ingest_cutover import ensure_ingest_stream
 from .analytics import get_analytics_overview, get_company_livestream_intelligence, get_spectator_market_pulse
@@ -186,6 +187,7 @@ def _append_api_perf_event(event):
 _TIKTOK_GO_LIVE_SHEET_SYNC_PREFIX = "tiktok_go_live_sheet_sync:"
 _TIKTOK_GO_LIVE_SYNC_STATE: dict[int, dict] = {}
 _TIKTOK_GO_LIVE_SYNC_LOCK = threading.Lock()
+_TIKTOK_GO_LIVE_LIVE_ORDER_LOOKBACK_SECONDS = 3600
 
 
 def _tiktok_go_live_sheet_sync_key(session_id):
@@ -2196,6 +2198,17 @@ def _tiktok_live_order_epoch(value):
         return 0
 
 
+def _tiktok_live_match_start_epoch(session, lookback_seconds=0):
+    start_epoch = _tiktok_live_order_epoch((session or {}).get("started_at"))
+    if not start_epoch:
+        return 0
+    try:
+        lookback = max(0, int(lookback_seconds or 0))
+    except Exception:
+        lookback = 0
+    return max(0, start_epoch - lookback)
+
+
 def _normalize_tiktok_live_listing_title(value):
     return re.sub(r"[^a-z0-9]+", "", str(value or "").strip().lower())
 
@@ -2258,6 +2271,18 @@ def _tiktok_live_batch_number_from_title(title):
     return None
 
 
+def _tiktok_live_lot_number_from_seller_sku(seller_sku):
+    raw = str(seller_sku or "").strip()
+    if not raw:
+        return ""
+    if raw.isdigit():
+        return str(int(raw))
+    match = re.search(r"(\d+)\s*$", raw)
+    if match:
+        return str(int(match.group(1)))
+    return ""
+
+
 def _tiktok_live_generic_batch_map(lines):
     generic_titles = []
     for line in lines or []:
@@ -2268,6 +2293,9 @@ def _tiktok_live_generic_batch_map(lines):
             continue
         explicit_batch = _tiktok_live_batch_number_from_title(line.get("product_name"))
         created_epoch = _tiktok_live_order_epoch(line.get("created_at") or line.get("paid_at") or line.get("updated_at"))
+        raw_lot = _tiktok_live_lot_number_from_seller_sku(line.get("seller_sku"))
+        if not raw_lot:
+            continue
         generic_titles.append((title_key, explicit_batch, created_epoch, str(line.get("product_name") or "")))
     generic_titles.sort(key=lambda item: (item[2] or 0, item[1] or 9999, item[3]))
     batch_by_title = {}
@@ -2316,8 +2344,8 @@ def _tiktok_live_apply_batch_override(batch_number, batch_overrides=None):
 def _tiktok_live_final_lot_number_for_line(line, batch_by_title, batch_overrides=None):
     if not _is_tiktok_live_generic_listing(line):
         return ""
-    raw_lot = str((line or {}).get("seller_sku") or "").strip()
-    if not raw_lot.isdigit():
+    raw_lot = _tiktok_live_lot_number_from_seller_sku((line or {}).get("seller_sku"))
+    if not raw_lot:
         return ""
     title_key = _normalize_tiktok_live_listing_title((line or {}).get("product_name")) or "__generic_live__"
     batch_number = int((batch_by_title or {}).get(title_key) or 1)
@@ -2365,8 +2393,8 @@ def _tiktok_live_batch_guard_from_lines(lines, max_lot_no, session_started_epoch
             continue
         if not _is_tiktok_live_generic_listing(line):
             continue
-        raw_lot = str(line.get("seller_sku") or "").strip()
-        if not raw_lot.isdigit():
+        raw_lot = _tiktok_live_lot_number_from_seller_sku(line.get("seller_sku"))
+        if not raw_lot:
             continue
         generic_lines.append({**line, "_created_epoch": created_epoch})
 
@@ -2439,8 +2467,8 @@ def _build_tiktok_go_live_pending_matches(lines, session_started_epoch=0, batch_
             continue
         if not _is_tiktok_live_generic_listing(line):
             continue
-        raw_lot = str(line.get("seller_sku") or "").strip()
-        if not raw_lot.isdigit():
+        raw_lot = _tiktok_live_lot_number_from_seller_sku(line.get("seller_sku"))
+        if not raw_lot:
             continue
         generic_lines.append({**line, "_created_epoch": created_epoch, "_raw_lot": int(raw_lot)})
 
@@ -2472,6 +2500,11 @@ def _enrich_tiktok_go_live_rows_with_pending_orders(session, rows):
     if not rows:
         return rows
     session_started_epoch = _tiktok_live_order_epoch((session or {}).get("started_at"))
+    session_status = str((session or {}).get("status") or "").strip().lower()
+    match_start_epoch = _tiktok_live_match_start_epoch(
+        session,
+        _TIKTOK_GO_LIVE_LIVE_ORDER_LOOKBACK_SECONDS if session_status == "live" else 0,
+    )
     max_lot_no = 0
     for row in rows:
         lot_no = str(row.get("lotNo") or "").strip()
@@ -2480,7 +2513,6 @@ def _enrich_tiktok_go_live_rows_with_pending_orders(session, rows):
     # TikTok returns newest order search results first. During a live show the
     # operator needs the newest buyer rows quickly, so keep the hot poll small
     # and frequent. Ended/session review views can still fetch deeper history.
-    session_status = str((session or {}).get("status") or "").strip().lower()
     if session_status == "live":
         expected_batch = _tiktok_live_expected_batch_for_lot(max_lot_no)
         max_pages = max(4, min(8, expected_batch + 3))
@@ -2489,14 +2521,14 @@ def _enrich_tiktok_go_live_rows_with_pending_orders(session, rows):
         max_pages = max(6, min(20, (max_lot_no // 100) + 4))
         cache_ttl_seconds = 10
     payload = {"page_size": 100, "max_pages": max_pages}
-    if session_started_epoch:
-        payload["create_time_ge"] = session_started_epoch
+    if match_start_epoch:
+        payload["create_time_ge"] = match_start_epoch
     batch_overrides = _tiktok_live_batch_override_for_session(session)
     try:
         pending_result = get_recent_tiktok_order_line_matches(payload, ttl_seconds=cache_ttl_seconds)
         pending_lines = pending_result.get("lines") or []
-        matches = _build_tiktok_go_live_pending_matches(pending_lines, session_started_epoch=session_started_epoch, batch_overrides=batch_overrides)
-        batch_guard = _tiktok_live_batch_guard_from_lines(pending_lines, max_lot_no, session_started_epoch=session_started_epoch, batch_overrides=batch_overrides)
+        matches = _build_tiktok_go_live_pending_matches(pending_lines, session_started_epoch=match_start_epoch, batch_overrides=batch_overrides)
+        batch_guard = _tiktok_live_batch_guard_from_lines(pending_lines, max_lot_no, session_started_epoch=match_start_epoch, batch_overrides=batch_overrides)
     except Exception:
         return rows
     enriched = []
@@ -2733,7 +2765,7 @@ def _materialize_tiktok_go_live_sale_orders_from_api(session, rows=None):
                             update_sale_order(
                                 int(existing_order["id"]),
                                 state="sale",
-                                fulfillment_status="delivered" if status_family == "confirmed" else "pending",
+                                fulfillment_status="pending",
                                 payment_status="paid",
                             )
                             _set_existing_tiktok_live_order_financials(int(existing_order["id"]), sale_price, sale_price)
@@ -2769,10 +2801,14 @@ def _materialize_tiktok_go_live_sale_orders_from_api(session, rows=None):
                 subtotal=0,
                 total_amount=0,
                 ordered_at=ordered_at,
-                notes=f"TikTok LIVE API recovery | Lot {lot_no} | Status: {match.get('status') or match.get('statusFamily') or ''}",
+                notes=(
+                    f"TikTok LIVE RAW live match | Lot {lot_no} | "
+                    f"Seller SKU: {match.get('sellerSku') or match.get('seller_sku') or ''} | "
+                    f"Status: {match.get('status') or match.get('statusFamily') or ''}"
+                ),
                 order_source="tiktok_live",
                 external_order_ref=external_ref,
-                fulfillment_status="pending" if is_cancelled else ("delivered" if is_confirmed else "pending"),
+                fulfillment_status="cancelled" if is_cancelled else "pending",
                 payment_status="paid" if is_confirmed else "unpaid",
             )
             line_count = max(1, len(items))
@@ -2808,6 +2844,31 @@ def _materialize_tiktok_go_live_sale_orders_from_api(session, rows=None):
     return {"ok": not errors, "imported": imported, "updated": updated, "skipped": skipped, "errors": errors}
 
 
+def _materialize_tiktok_go_live_live_rows(session, rows):
+    """Persist matched live rows as provisional TikTok LIVE sale orders.
+
+    During the live show the lot sheet is still the operator's working surface,
+    but downstream Sales, customer history, and inventory need the order as soon
+    as TikTok exposes it. The existing materializer is idempotent by
+    external_order_ref, so this thin wrapper keeps the hot path scoped to rows
+    that actually have TikTok order metadata.
+    """
+    if not session or str((session or {}).get("status") or "").strip().lower() != "live":
+        return {"ok": True, "imported": 0, "updated": 0, "skipped": 0}
+    matched_rows = [
+        row for row in (rows or [])
+        if isinstance(row, dict)
+        and isinstance(row.get("tiktokOrder"), dict)
+        and str((row.get("tiktokOrder") or {}).get("orderId") or "").strip()
+        and str(row.get("lotNo") or "").strip()
+        and str(row.get("statusFamily") or (row.get("tiktokOrder") or {}).get("statusFamily") or "").strip().lower()
+        not in {"", "unlinked", "review_later", "batch_mismatch"}
+    ]
+    if not matched_rows:
+        return {"ok": True, "imported": 0, "updated": 0, "skipped": 0}
+    return _materialize_tiktok_go_live_sale_orders_from_api(session, rows=matched_rows)
+
+
 def _tiktok_live_manual_status(order):
     state = str(order.get("state") or "").strip().lower()
     fulfillment = str(order.get("fulfillment_status") or "").strip().lower()
@@ -2823,7 +2884,7 @@ def _tiktok_live_manual_status(order):
     if fulfillment == "packed":
         return "pending", "Packed"
     if payment == "paid":
-        return "confirmed", "Delivered"
+        return "confirmed", "To ship"
     return "pending", "Imported"
 
 
@@ -3242,6 +3303,7 @@ def _fetch_tiktok_live_session_lot_products(session_ids):
 
 _TIKTOK_GO_LIVE_SHOW_PREFIX = "tiktok:ynfdeals:go-live:"
 _TIKTOK_GO_LIVE_LEGACY_PREFIX = "tiktok:ynfdeals"
+_TIKTOK_GO_LIVE_MIN_AUTO_SEQUENCE = 23
 _TIKTOK_LABEL_ARTIFACT_LOCK = threading.Lock()
 _TIKTOK_LABEL_ARTIFACT_TABLE = "tiktok_live_label_artifacts"
 _TIKTOK_GO_LIVE_BACKUP_DIRNAME = "tiktok_go_live_backups"
@@ -4200,6 +4262,12 @@ def _serialize_tiktok_go_live_session(session, include_rows=True, live_api_enric
         # Historical open/draft sessions must stay pinned to saved sale orders so
         # recent Shop API rows cannot collide with reused lot numbers.
         rows = _enrich_tiktok_go_live_rows_with_pending_orders(session, rows)
+        try:
+            live_materialize_result = _materialize_tiktok_go_live_live_rows(session, rows)
+            if live_materialize_result.get("imported") or live_materialize_result.get("updated"):
+                has_saved_orders = _tiktok_go_live_session_has_sale_orders(session)
+        except Exception:
+            pass
         # Saved sale orders can exist for earlier rows while the show is still
         # running. Do not let that make the live view ignore fresh TikTok API
         # rows for later lots that have not been materialized yet.
@@ -4281,7 +4349,7 @@ def _next_tiktok_go_live_sequence():
     max_sequence = 0
     for session in _list_tiktok_go_live_sessions_uncached(limit=300, include_rows=False):
         max_sequence = max(max_sequence, int(session.get("sequence") or 0))
-    return max_sequence + 1
+    return max(max_sequence + 1, _TIKTOK_GO_LIVE_MIN_AUTO_SEQUENCE)
 
 
 def _get_active_tiktok_go_live_session(live_api_enrich=True, auto_sheet_sync=False):
@@ -4423,7 +4491,7 @@ def _recent_tiktok_live_virtual_orders_for_username(username, existing_refs=None
                 "order_source": "tiktok_live",
                 "external_order_ref": external_ref,
                 "state": "cancel" if status_family == "cancelled" else "sale",
-                "fulfillment_status": "delivered" if status_family == "confirmed" else "pending",
+                "fulfillment_status": "cancelled" if status_family == "cancelled" else "pending",
                 "payment_status": "paid" if status_family != "cancelled" else "unpaid",
                 "subtotal": sale_price,
                 "total_amount": sale_price,
@@ -4665,8 +4733,8 @@ def _tiktok_label_batch_final_lot(listing_name, seller_sku, batch_overrides=None
     # Seller SKU 1-300 for every batch, while our operational lot numbers are
     # global: batch 1 => 1-300, batch 2 => 301-600, batch 3 => 601-900.
     batch_number = _tiktok_live_batch_number_from_title(listing_name)
-    raw_lot = str(seller_sku or "").strip()
-    if not raw_lot.isdigit():
+    raw_lot = _tiktok_live_lot_number_from_seller_sku(seller_sku)
+    if not raw_lot:
         return ""
     effective_batch = _tiktok_live_apply_batch_override(batch_number or 1, batch_overrides)
     return str(((int(effective_batch) - 1) * 300) + int(raw_lot))
@@ -6511,9 +6579,19 @@ def _handler_is_trustworthy_origin(handler):
 class Handler(BaseHTTPRequestHandler):
     _NON_API_AUTH_PATHS = {"/latest_id", "/events", "/recent", "/obs/demo"}
 
+    @staticmethod
+    def _json_default(value):
+        if isinstance(value, Decimal):
+            return float(value)
+        if isinstance(value, datetime):
+            return value.isoformat()
+        if isinstance(value, (set, tuple)):
+            return list(value)
+        return str(value)
+
     def _json(self, obj, status=200, extra_headers=None):
         started_at = getattr(self, "_req_started_at", None)
-        data = json.dumps(obj).encode("utf-8")
+        data = json.dumps(obj, default=self._json_default).encode("utf-8")
         payload_bytes = len(data)
         elapsed_ms = None
         if isinstance(started_at, (int, float)):
@@ -8351,6 +8429,13 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"ok": False, "error": str(exc)}, status=500)
             return
 
+        if path == "/api/tiktok_live_sessions/next_sequence":
+            try:
+                self._json({"ok": True, "sequence": _next_tiktok_go_live_sequence()})
+            except Exception as exc:
+                self._json({"ok": False, "error": str(exc)}, status=500)
+            return
+
         if path in {"/api/tiktok_live_sessions/export_all.csv", "/api/export/tiktok_go_live_sessions.csv"}:
             try:
                 limit = int(qs.get("limit", [1000])[0] or 1000)
@@ -9022,6 +9107,18 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(payload)
             except Exception as exc:
                 self._json({"ok": False, "error": str(exc)}, status=500)
+            return
+
+        bargain_match = re.fullmatch(r"/api/v2/purchases/orders/(\d+)/bargain", path)
+        if bargain_match:
+            try:
+                sessions = get_bargain_sessions_for_order(int(bargain_match.group(1)))
+                self._json({"ok": True, "sessions": sessions})
+            except ValueError as exc:
+                self._json({"ok": False, "error": str(exc)}, status=400)
+            except Exception as exc:
+                msg = str(exc)
+                self._json({"ok": False, "error": msg}, status=503 if "company_db_postgres_runtime_required" in msg else 500)
             return
 
         if path == "/api/inventory/movements":
@@ -9862,7 +9959,9 @@ class Handler(BaseHTTPRequestHandler):
                     self._json({"ok": True, "session": active_session, "already_active": True})
                     return
                 lot_count = max(1, min(1000, int(payload.get("lot_count") or 1)))
-                sequence = int(payload.get("sequence") or 0) or _next_tiktok_go_live_sequence()
+                next_sequence = _next_tiktok_go_live_sequence()
+                requested_sequence = int(payload.get("sequence") or 0)
+                sequence = requested_sequence if requested_sequence >= next_sequence else next_sequence
                 note = str(payload.get("live_name") or "").strip()
                 date_label = datetime.now().strftime("%A - %b %d")
                 name = f"Go Live Session - {sequence} (date : {date_label})"
@@ -9956,6 +10055,18 @@ class Handler(BaseHTTPRequestHandler):
                 _write_tiktok_go_live_snapshot(session)
                 enqueue_tiktok_live_sheet_backup(session.get("id"), "lot_scanned")
                 _clear_tiktok_go_live_session_cache()
+                # Eagerly enrich the row with TikTok order data so the buyer
+                # fills in the scan response itself — no need to wait for the
+                # next active-session poll.
+                if not review_later:
+                    try:
+                        enriched_rows = _enrich_tiktok_go_live_rows_with_pending_orders(session, [row])
+                        if enriched_rows:
+                            row = enriched_rows[0]
+                            _materialize_tiktok_go_live_live_rows(session, [row])
+                            row = (_enrich_tiktok_go_live_rows_with_sale_orders(session, [row]) or [row])[0]
+                    except Exception:
+                        pass
                 serialized = _serialize_tiktok_go_live_session(session)
                 export_path = _write_tiktok_go_live_operator_csv(serialized)
                 self._json({"ok": True, "row": row, "session": serialized, "exportPath": export_path})
@@ -10395,6 +10506,36 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/system/clear_demo_scan":
             _clear_demo_scan_state()
             self._json({"ok": True})
+            return
+
+        bargain_create_match = re.fullmatch(r"/api/v2/purchases/orders/(\d+)/bargain", path)
+        if bargain_create_match:
+            payload = self._read_json()
+            try:
+                result = create_bargain_session(
+                    int(bargain_create_match.group(1)),
+                    ttl_hours=int(payload.get("ttl_hours") or 48),
+                )
+                self._json({"ok": True, **(result or {})})
+            except ValueError as exc:
+                self._json({"ok": False, "error": str(exc)}, status=400)
+            except Exception as exc:
+                msg = str(exc)
+                self._json({"ok": False, "error": msg}, status=503 if "company_db_postgres_runtime_required" in msg else 500)
+            return
+
+        bargain_action_match = re.fullmatch(r"/api/v2/purchases/orders/(\d+)/bargain/(\d+)/(accept|reject)", path)
+        if bargain_action_match:
+            session_id = int(bargain_action_match.group(2))
+            action = bargain_action_match.group(3)
+            try:
+                result = accept_bargain(session_id) if action == "accept" else reject_bargain(session_id)
+                self._json({"ok": True, **(result or {})})
+            except ValueError as exc:
+                self._json({"ok": False, "error": str(exc)}, status=400)
+            except Exception as exc:
+                msg = str(exc)
+                self._json({"ok": False, "error": msg}, status=503 if "company_db_postgres_runtime_required" in msg else 500)
             return
 
         if path == "/api/purchases/orders/create":

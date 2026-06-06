@@ -1,0 +1,149 @@
+/* Global frontend baseline — applies to every page */
+
+/* Poppins for headings (Lattafa-style contemporary sans). v1 Fonts API only —
+   no semicolons in the URL (Odoo's libsass truncates @import at the first ';'). */
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800&display=swap");
+
+html, body {
+    background: $ynf-bg !important;
+    color: $ynf-text;
+    font-family: $font-body;
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, .ynf-display {
+    font-family: $font-display;
+    font-weight: 500;
+    color: $ynf-text;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); }
+
+a {
+    color: $ynf-gold;
+    text-decoration: none;
+    transition: color 0.18s ease;
+    &:hover { color: $ynf-gold-light; }
+}
+
+/* Buttons */
+.btn-primary, .btn.btn-primary {
+    background: $ynf-gold !important;
+    border-color: $ynf-gold !important;
+    color: $ynf-bg !important;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 12px 28px;
+    border-radius: $radius-pill;
+    box-shadow: $shadow-gold;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+    &:hover, &:focus {
+        background: $ynf-gold-light !important;
+        border-color: $ynf-gold-light !important;
+        color: $ynf-bg !important;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 24px rgba(201, 169, 97, 0.32);
+    }
+}
+
+.btn-outline-primary {
+    background: transparent !important;
+    color: $ynf-gold !important;
+    border: 1px solid $ynf-gold !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 11px 26px;
+    border-radius: $radius-pill;
+    letter-spacing: 0.03em;
+
+    &:hover {
+        background: $ynf-gold !important;
+        color: $ynf-bg !important;
+    }
+}
+
+.btn-secondary {
+    background: $ynf-bg-card !important;
+    border-color: $ynf-border !important;
+    color: $ynf-text !important;
+    border-radius: $radius-pill;
+}
+
+/* Forms */
+input, select, textarea, .form-control {
+    background: $ynf-bg-soft !important;
+    border: 1px solid $ynf-border-soft !important;
+    color: $ynf-text !important;
+    border-radius: $radius-md;
+
+    &::placeholder { color: $ynf-text-dim; }
+    &:focus {
+        border-color: $ynf-gold !important;
+        box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.15) !important;
+        background: $ynf-bg-soft !important;
+        color: $ynf-text !important;
+    }
+}
+
+/* Card baseline */
+.card, .o_wsale_product_card {
+    background: $ynf-bg-card;
+    border: 1px solid $ynf-border-soft;
+    color: $ynf-text;
+}
+
+/* Containers */
+.container, .container-fluid {
+    @media (min-width: $bp-desktop) {
+        max-width: 1280px;
+    }
+}
+
+/* Section spacing */
+.ynf-section {
+    padding: $sp-8 0;
+    @media (min-width: $bp-tablet) {
+        padding: $sp-9 0;
+    }
+}
+
+.ynf-section-title {
+    text-align: center;
+    margin-bottom: $sp-6;
+
+    .eyebrow {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: $ynf-gold;
+        font-weight: 600;
+        margin-bottom: $sp-3;
+        display: block;
+    }
+    h2 {
+        margin: 0;
+    }
+}
+
+/* Selection */
+::selection {
+    background: rgba(201, 169, 97, 0.35);
+    color: $ynf-text;
+}
+
+/* Scrollbar (Webkit) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: $ynf-bg; }
+::-webkit-scrollbar-thumb { background: $ynf-bg-card; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: $ynf-gold-dark; }

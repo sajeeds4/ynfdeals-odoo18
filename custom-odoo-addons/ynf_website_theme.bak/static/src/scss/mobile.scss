@@ -1,0 +1,96 @@
+
+/* === Mobile-specific overrides === */
+@media (max-width: 767px) {
+    body {
+        font-size: 15px;
+    }
+
+    /* Bigger tap targets everywhere */
+    .btn, button, a.nav-link {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Shop grid: 2 columns on mobile, not 1 */
+    #products_grid > [class*="col-"] {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 4px;
+    }
+
+    .oe_product, .o_wsale_product_card {
+        font-size: 13px;
+
+        h6, .product_name {
+            font-size: 13px !important;
+            margin: 0 0 4px 0 !important;
+        }
+        .product_price {
+            font-size: 14px !important;
+        }
+        .o_wsale_product_information {
+            padding: $sp-2 $sp-3 !important;
+        }
+    }
+
+    /* Hide non-essential filters on mobile by default */
+    #o_wsale_offcanvas, #wsale_products_attributes_collapse {
+        font-size: 14px;
+    }
+
+    /* Tighter section spacing */
+    .ynf-section, .o_wsale_apply_layout {
+        padding: $sp-6 0 !important;
+    }
+
+    .ynf-section-title {
+        margin-bottom: $sp-5 !important;
+    }
+
+    /* Container padding */
+    .container, .container-fluid {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    /* Hero adjusts on mobile */
+    .ynf-hero {
+        min-height: 65vh;
+        padding: $sp-6 $sp-4;
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 3rem);
+        }
+    }
+
+    /* Hide breadcrumb on mobile (saves vertical space) */
+    .breadcrumb {
+        display: none !important;
+    }
+
+    /* Cart line images smaller on mobile */
+    .o_wsale_cart_line_image img {
+        max-width: 60px;
+    }
+
+    /* Footer columns stack */
+    footer .row > [class*="col-"] {
+        margin-bottom: $sp-5;
+    }
+}
+
+/* === iPhone safe-area insets (for notched devices) === */
+/* unquote() prevents Sass from trying to evaluate max() as its built-in math fn */
+.ynf-mobile-cta-bar {
+    padding-bottom: unquote("max(12px, env(safe-area-inset-bottom))");
+}
+footer {
+    padding-bottom: unquote("max(24px, env(safe-area-inset-bottom))");
+}
+
+/* === Prevent body scroll when mobile menu open === */
+body.ynf-mobile-nav-open {
+    overflow: hidden;
+}

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Help / Dispute templates                                      -->
+    <!-- ============================================================ -->
+    <template id="portal_help_pick_session" name="Help: Pick a Go Live Session">
+        <t t-call="portal.portal_layout">
+            <div class="ynf-help-wrap">
+                <div class="ynf-help-head">
+                    <h2>Need help? Report an issue.</h2>
+                    <p class="text-muted">
+                        Step 1 of 3 — pick the <strong>Go Live Session</strong>
+                        where the item was bought.
+                    </p>
+                </div>
+                <div t-if="not sessions" class="alert alert-info">
+                    We can't find any orders to dispute on your account.
+                </div>
+                <div class="ynf-help-sessions">
+                    <a t-foreach="sessions" t-as="s"
+                       t-att-href="'/my/help/session/%s' % s['session_no']"
+                       class="ynf-help-session-card">
+                        <div class="ynf-help-session-no">
+                            <i class="fa fa-video-camera me-2 text-danger"/>
+                            Session #<t t-out="s['session_no']"/>
+                        </div>
+                        <div class="ynf-help-session-meta small text-muted">
+                            <t t-out="s['orders']"/> order(s) •
+                            <t t-out="s['lots']"/> item(s)
+                            <span t-if="s.get('date')">
+                                — <span t-esc="s['date']"
+                                        t-options="{'widget': 'date'}"/>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_help_pick_product" name="Help: Pick a Product">
+        <t t-call="portal.portal_layout">
+            <div class="ynf-help-wrap">
+                <div class="ynf-help-head">
+                    <h2>Session #<t t-out="session_no"/> — pick the item</h2>
+                    <p class="text-muted">
+                        Step 2 of 3 — choose the product you want help with.
+                    </p>
+                    <a href="/my/help" class="small">← Pick a different session</a>
+                </div>
+                <div t-if="not items" class="alert alert-info">
+                    No items found for that session.
+                </div>
+                <form action="/my/help/submit" method="POST"
+                      class="ynf-help-form" t-if="items">
+                    <input type="hidden" name="csrf_token"
+                           t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="session_no"
+                           t-att-value="session_no"/>
+                    <div class="ynf-help-items">
+                        <label t-foreach="items" t-as="it" class="ynf-help-item-card"
+                               t-att-data-line-id="it['line_id']">
+                            <input type="radio" name="ynf_item"
+                                   t-attf-value="{{ it['order_id'] }}|{{ it['line_id'] }}"
+                                   required="required"/>
+                            <div class="ynf-help-item-body">
+                                <strong t-out="it['product_name']"/>
+                                <div class="small text-muted">
+                                    Qty <t t-out="it['qty']"/>
+                                    <t t-if="it['lot']">
+                                        • Lot <t t-out="it['lot']"/>
+                                    </t>
+                                    <t t-if="it['tracking']">
+                                        • Tracking <t t-out="it['tracking']"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <input type="hidden" name="order_id" value=""/>
+                    <input type="hidden" name="line_id" value=""/>
+                    <div class="ynf-help-form-row">
+                        <label for="issue_type">Issue type</label>
+                        <select id="issue_type" name="issue_type" required="required">
+                            <option value="">— select —</option>
+                            <option value="Item not received">Item not received</option>
+                            <option value="Wrong item shipped">Wrong item shipped</option>
+                            <option value="Damaged item">Damaged item</option>
+                            <option value="Missing item from parcel">Missing item from parcel</option>
+                            <option value="Quality issue / fake">Quality issue / fake</option>
+                            <option value="Refund request">Refund request</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="ynf-help-form-row">
+                        <label for="description">Describe the problem</label>
+                        <textarea id="description" name="description" rows="5"
+                                  required="required"
+                                  placeholder="Tell us what happened…"/>
+                    </div>
+                    <div class="ynf-help-form-actions">
+                        <button type="submit" class="btn btn-danger">
+                            Submit dispute
+                        </button>
+                        <a href="/my/help" class="btn btn-link">Cancel</a>
+                    </div>
+                </form>
+            </div>
+            <script type="text/javascript">
+                // Map the chosen radio (orderId|lineId) into the hidden inputs
+                document.addEventListener("change", function (ev) {
+                    if (ev.target &amp;&amp; ev.target.name === "ynf_item") {
+                        var parts = String(ev.target.value || "").split("|");
+                        var form = ev.target.form;
+                        if (form) {
+                            form.order_id.value = parts[0] || "";
+                            form.line_id.value = parts[1] || "";
+                        }
+                    }
+                });
+            </script>
+        </t>
+    </template>
+
+    <template id="portal_help_thanks" name="Help: Submitted">
+        <t t-call="portal.portal_layout">
+            <div class="ynf-help-wrap">
+                <div class="alert alert-success">
+                    <h3>Thanks — we've received your report.</h3>
+                    <p>
+                        Order <strong t-out="order.name"/> has been flagged
+                        and our team will respond shortly. You'll see replies in your
+                        <a href="/my/orders">order page communication history</a>.
+                    </p>
+                    <a href="/my/help" class="btn btn-outline-primary">Report another issue</a>
+                    <a href="/my/orders" class="btn btn-link">Back to my orders</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Hide "Powered by Odoo" branding in portal sidebar             -->
+    <!-- ============================================================ -->
+    <template id="portal_record_sidebar_no_brand"
+              inherit_id="portal.portal_record_sidebar"
+              name="YNF: Hide Powered by Odoo">
+        <xpath expr="//div[contains(@class,'small text-center text-muted')]" position="replace"/>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Hide "Your contact" block on sale order portal page           -->
+    <!-- ============================================================ -->
+    <template id="sale_portal_hide_contact"
+              inherit_id="sale.sale_order_portal_template"
+              name="YNF: Hide salesperson contact on portal">
+        <xpath expr="//div[h6/small[contains(text(),'Your contact')]]" position="replace"/>
+    </template>
+
+    <!-- Replace the standard "My Orders" table with a session-grouped view -->
+    <template id="portal_my_orders_by_session"
+              inherit_id="sale.portal_my_orders"
+              name="YNF Portal Orders Grouped by Live Session">
+        <xpath expr="//t[@t-call='portal.portal_table']" position="replace">
+            <t t-if="orders">
+                <t t-set="ynf_grouped" t-value="{}"/>
+                <t t-foreach="orders" t-as="o">
+                    <t t-set="sess" t-value="o.x_ynf_gls_session_no or 0"/>
+                    <t t-set="_" t-value="ynf_grouped.setdefault(sess, []).append(o)"/>
+                </t>
+                <t t-set="ynf_sessions" t-value="sorted(ynf_grouped.keys(), reverse=True)"/>
+
+                <div class="ynf-portal-sessions">
+                    <t t-foreach="ynf_sessions" t-as="sess_no">
+                        <t t-set="bucket" t-value="ynf_grouped[sess_no]"/>
+                        <t t-set="bucket_total" t-value="sum(x.amount_total for x in bucket)"/>
+                        <t t-set="bucket_count" t-value="len(bucket)"/>
+
+                        <div class="card mb-3 shadow-sm ynf-session-card">
+                            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                                <div>
+                                    <h5 class="mb-0">
+                                        <i class="fa fa-video-camera me-2 text-danger"/>
+                                        <t t-if="sess_no">Go Live Session #<t t-out="sess_no"/></t>
+                                        <t t-else="">Other Orders</t>
+                                    </h5>
+                                    <small class="text-muted">
+                                        <t t-out="bucket_count"/> order<t t-if="bucket_count != 1">s</t>
+                                    </small>
+                                </div>
+                            </div>
+                            <t t-set="parcels" t-value="{}"/>
+                            <t t-foreach="bucket" t-as="o">
+                                <t t-set="tk" t-value="(o.x_ynf_tiktok_tracking_number or '').strip() or ('NO-TRACK-' + str(o.id))"/>
+                                <t t-set="_" t-value="parcels.setdefault(tk, []).append(o)"/>
+                            </t>
+                            <t t-set="parcel_keys" t-value="sorted(parcels.keys(), key=lambda k: (k.startswith('NO-TRACK-'), k))"/>
+                            <div class="ynf-session-parcels p-3">
+                                <t t-foreach="parcel_keys" t-as="tk">
+                                    <t t-set="orders_in_parcel" t-value="parcels[tk]"/>
+                                    <t t-set="first" t-value="orders_in_parcel[0]"/>
+                                    <t t-set="fs" t-value="first.x_ynf_fulfillment_status or 'pending'"/>
+                                    <div class="card border mb-2 ynf-parcel-card">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex flex-wrap justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <div class="small text-muted">Tracking #</div>
+                                                    <t t-if="not tk.startswith('NO-TRACK-')">
+                                                        <a t-att-href="'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + tk"
+                                                           target="_blank" rel="noopener"
+                                                           class="ynf-tracking-link">
+                                                            <strong t-out="tk"/>
+                                                            <i class="fa fa-external-link ms-1 small"/>
+                                                        </a>
+                                                    </t>
+                                                    <span t-else="" class="text-muted">Not yet shipped</span>
+                                                    <div class="small text-muted mt-1">
+                                                        Ordered:
+                                                        <span t-field="first.date_order"
+                                                              t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span t-if="fs == 'delivered'" class="badge text-bg-success">Delivered</span>
+                                                    <span t-elif="fs == 'shipped'" class="badge text-bg-info">Shipped</span>
+                                                    <span t-elif="fs == 'returned'" class="badge text-bg-danger">Returned</span>
+                                                    <span t-else="" class="badge text-bg-warning">Pending</span>
+                                                </div>
+                                            </div>
+                                            <table class="table table-sm mb-0 ynf-parcel-items">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th class="text-center">Qty</th>
+                                                        <th>Lot</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="orders_in_parcel" t-as="orderp">
+                                                        <t t-foreach="orderp.order_line" t-as="line">
+                                                            <t t-if="line.product_id">
+                                                                <tr>
+                                                                    <td t-out="line.product_id.display_name"/>
+                                                                    <td class="text-center">
+                                                                        <t t-out="int(line.product_uom_qty)"/>
+                                                                    </td>
+                                                                    <td>
+                                                                        <small t-out="orderp.x_ynf_tiktok_lot_number or orderp.x_ynf_gls_lot_numbers or '-'"/>
+                                                                    </td>
+                                                                </tr>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center my-3">
+                    <t t-call="portal.pager"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,119 @@
+// ==========================================================================
+// YNF Perfume — Shop page (Phase 6)
+// We restyle Odoo website_sale's /shop in place: the grid, products,
+// filters and pager keep their native behaviour, we only re-skin them.
+// ==========================================================================
+.ynf-shop {
+    // Page wrapper added on /shop via QWeb inheritance.
+    background: var(--y-bg);
+    color: var(--y-text);
+
+    // Page header
+    .ynf-shop__head {
+        padding: 28px 0 14px;
+        .y-eyebrow { color: var(--y-gold); }
+        h1 {
+            font-family: var(--y-display);
+            font-weight: 600;
+            font-size: 30px;
+            margin-top: 8px;
+            @media (min-width: 992px) { font-size: 46px; }
+        }
+    }
+
+    // ── Re-skin Odoo's product grid items into luxury cards ──
+    // website_sale renders each product inside .oe_product_cart / td.oe_product.
+    .oe_product, .o_wsale_products_grid_table_wrapper .oe_product {
+        .oe_product_cart {
+            background: var(--y-card);
+            border: 1px solid var(--y-line) !important;
+            border-radius: var(--y-r-lg);
+            overflow: hidden;
+            box-shadow: var(--y-shadow-card);
+            transition: transform .25s var(--y-ease), box-shadow .25s var(--y-ease), border-color .25s var(--y-ease);
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--y-shadow-lift);
+                border-color: var(--y-border);
+            }
+        }
+
+        .oe_product_image {
+            background: var(--y-soft);
+            position: relative;
+            overflow: hidden;
+            img { mix-blend-mode: multiply; transition: transform .4s var(--y-ease); }
+            &:hover img { transform: scale(1.06); }
+        }
+
+        .o_wsale_product_information,
+        .product_price {
+            font-family: var(--y-body);
+        }
+        .o_wsale_products_item_title,
+        h6.o_wsale_products_item_title {
+            font-family: var(--y-display) !important;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--y-text);
+        }
+        .product_price .oe_currency_value,
+        .product_price b {
+            font-family: var(--y-body);
+            font-weight: 800;
+            font-size: 17px;
+            color: var(--y-sale);
+        }
+    }
+
+    // Denser retail grid on /shop
+    #products_grid .o_wsale_products_grid_table_wrapper,
+    .o_wsale_products_grid_table_wrapper { gap: 12px; }
+
+    // ── Filter chips / sidebar ──
+    .products_categories a,
+    #o_shop_collapse_classifier a {
+        font-family: var(--y-body);
+        color: var(--y-muted);
+        &:hover, &.active { color: var(--y-gold-d); }
+    }
+
+    // ── Sort dropdown / toolbar ──
+    .o_wsale_products_header, .form-select {
+        font-family: var(--y-body);
+    }
+
+    // ── Pager ──
+    .o_wsale_products_pager .page-link {
+        color: var(--y-gold-d);
+        &:hover { background: var(--y-gold-soft); }
+    }
+    .page-item.active .page-link {
+        background: var(--y-gold);
+        border-color: var(--y-gold);
+        color: #fff;
+    }
+}
+
+// Branded flacon overlay covering Odoo's gray placeholder on imageless grid items
+.ynf-grid-flacon {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--y-soft);
+    pointer-events: none;
+    .y-flacon { width: 50%; }
+}
+
+// Our own gender/brand quick-filter chip bar injected above the grid.
+.ynf-shop-chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+}

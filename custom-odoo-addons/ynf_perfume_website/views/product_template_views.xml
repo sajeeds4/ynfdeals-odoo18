@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add a "Fragrance" notebook page to the product template form -->
+    <record id="ynf_product_template_form_fragrance" model="ir.ui.view">
+        <field name="name">product.template.form.ynf.fragrance</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Fragrance" name="ynf_fragrance">
+                    <group>
+                        <group string="Identity">
+                            <field name="ynf_brand"/>
+                            <field name="ynf_gender"/>
+                            <field name="ynf_concentration"/>
+                            <field name="ynf_volume"/>
+                            <field name="ynf_family"/>
+                            <field name="ynf_country"/>
+                            <field name="ynf_inspired_by"/>
+                        </group>
+                        <group string="Merchandising">
+                            <field name="ynf_is_bestseller"/>
+                            <field name="ynf_is_trending"/>
+                            <field name="ynf_is_new"/>
+                            <field name="ynf_luxury_score"/>
+                        </group>
+                    </group>
+                    <group string="Notes Pyramid">
+                        <field name="ynf_notes_top" placeholder="Bergamot, Cinnamon, Nutmeg"/>
+                        <field name="ynf_notes_heart" placeholder="Dates, Praline, Tuberose"/>
+                        <field name="ynf_notes_base" placeholder="Vanilla, Tonka, Amberwood"/>
+                    </group>
+                    <group>
+                        <group string="Performance">
+                            <field name="ynf_longevity"/>
+                            <field name="ynf_projection"/>
+                            <field name="ynf_season"/>
+                            <field name="ynf_occasion"/>
+                        </group>
+                    </group>
+                    <group string="Editorial">
+                        <field name="ynf_blurb" placeholder="A rich oriental gourmand — warm cinnamon, sweet dates…"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

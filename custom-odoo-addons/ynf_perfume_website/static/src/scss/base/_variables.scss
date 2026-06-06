@@ -1,0 +1,71 @@
+// ==========================================================================
+// YNF Deals — Design tokens (MARKETPLACE / discount-fragrance style)
+// Clean white + navy + red retail look, sans-serif, high-contrast, deal-focused
+// (à la GiftExpress / FragranceX). We keep the --y-* variable NAMES so the whole
+// codebase re-skins from here; values are remapped to the retail palette.
+// ==========================================================================
+:root {
+    // Surfaces
+    --y-bg: #ffffff;
+    --y-soft: #f4f6f9;            // cool light gray
+    --y-card: #ffffff;
+    --y-line: #e4e7ec;
+
+    // Ink
+    --y-text: #16203a;           // navy-black
+    --y-muted: #5b6472;
+    --y-dim: #98a1b0;
+
+    // Primary brand / CTA  (was "gold" — now retail navy)
+    --y-gold: #16263f;           // navy — primary buttons, accents, links
+    --y-gold-l: #34507f;
+    --y-gold-d: #0d182b;
+    --y-gold-soft: rgba(22, 38, 63, 0.07);
+    --y-border: #d7dbe2;
+
+    // Sale / price / urgency (the marketplace red)
+    --y-wine: #c01825;           // deep sale red (repurposed)
+    --y-wine-l: #e23b48;
+    --y-red: #d6202e;            // price + % off
+    --y-sale: #d6202e;
+    --y-success: #1f9d57;        // in-stock green
+    --y-navy: #16263f;           // header / nav bar
+    --y-navy-d: #0d182b;
+    --y-amber: #f59e0b;          // star ratings / hot-deal accent
+
+    // Type families — sans-serif retail (no luxury serif)
+    --y-display: "Inter", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+    --y-body: "Inter", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+
+    // Radii — tighter / retail
+    --y-r-sm: 3px;
+    --y-r-md: 6px;
+    --y-r-lg: 8px;
+    --y-pill: 999px;
+
+    // Elevation — crisper, lighter shadows
+    --y-shadow-card: 0 1px 3px rgba(16, 24, 40, 0.08);
+    --y-shadow-lift: 0 8px 24px rgba(16, 24, 40, 0.14);
+    --y-shadow-gold: 0 2px 8px rgba(22, 38, 63, 0.22);
+
+    // Motion
+    --y-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    // Layout
+    --y-maxw: 1320px;
+    --y-gutter: 16px;
+}
+
+// SCSS aliases
+$y-gold: #16263f;
+$y-wine: #c01825;
+$y-text: #16203a;
+$y-soft: #f4f6f9;
+$y-line: #e4e7ec;
+$y-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+// Responsive breakpoints
+$y-bp-sm: 576px;
+$y-bp-md: 768px;
+$y-bp-lg: 992px;
+$y-bp-xl: 1200px;

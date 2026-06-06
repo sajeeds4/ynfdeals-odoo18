@@ -1,0 +1,177 @@
+/* ============================================================
+   MOBILE REDESIGN — systematic, research-driven (≤ 991px)
+   Goals: consistent 16px gutters, tight type scale, compact sections,
+   2-up grids, shorter page, bigger tap targets.
+   ============================================================ */
+
+@media (max-width: 991.98px) {
+
+  /* ---- 1. Consistent horizontal gutter everywhere (16px) ---- */
+  .ynf-site .ynf-shell,
+  .ynf-site .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin: 0 auto !important;
+  }
+
+  /* ---- 2. Tighter vertical rhythm (sections were 700-2500px) ---- */
+  .ynf-site .ynf-section { padding: 40px 0 !important; }
+  .ynf-site .ynf-section.tight { padding: 28px 0 !important; }
+
+  /* ---- 3. Type scale (was h3 bigger than h1) ---- */
+  .ynf-site .ynf-h1 {
+    font-size: clamp(2rem, 9vw, 2.6rem) !important;
+    line-height: 1.08 !important;
+    letter-spacing: -0.02em;
+  }
+  .ynf-site .ynf-title {
+    font-size: 1.6rem !important;
+    line-height: 1.15 !important;
+  }
+  .ynf-site .ynf-lead,
+  .ynf-site .ynf-copy {
+    font-size: 0.98rem !important;
+    line-height: 1.55 !important;
+  }
+  .ynf-site .ynf-eyebrow,
+  .ynf-site .ynf-kicker {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  /* ---- 4. Hero — shorter, no giant empty space ---- */
+  .ynf-site .ynf-hero {
+    min-height: auto !important;
+    padding: 48px 0 56px !important;
+  }
+  .ynf-site .ynf-hero-grid {
+    display: flex !important;
+    flex-direction: column;
+    gap: 24px;
+  }
+  /* hero side product card: contained, not full-bleed */
+  .ynf-site .ynf-vitrine {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .ynf-site .ynf-actions { gap: 10px; }
+  .ynf-site .ynf-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 50px !important;
+    font-size: 0.9rem;
+  }
+  .ynf-site .ynf-proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+    justify-content: center;
+  }
+  .ynf-site .ynf-proof span { font-size: 0.72rem !important; padding: 6px 12px !important; }
+
+  /* ---- 5. Collection cards → 2-up grid (was 5 stacked = 2070px) ---- */
+  .ynf-site .ynf-collections {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+  .ynf-site .ynf-card {
+    min-height: 200px !important;
+    border-radius: 14px !important;
+  }
+  .ynf-site .ynf-card.large {
+    grid-column: 1 / -1;   /* hero card spans full width */
+    min-height: 240px !important;
+  }
+  .ynf-site .ynf-card-body { inset: auto 14px 14px 14px !important; }
+  .ynf-site .ynf-card-body h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.1 !important;
+    margin-bottom: 4px !important;
+  }
+  .ynf-site .ynf-card.large .ynf-card-body h3 { font-size: 1.7rem !important; }
+  .ynf-site .ynf-card-body p {
+    font-size: 0.8rem !important;
+    margin-bottom: 8px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ynf-site .ynf-chip { font-size: 0.72rem !important; padding: 5px 12px !important; }
+
+  /* ---- 6. Mood grid (Oud/Vanilla/etc.) → 2-up, compact ---- */
+  .ynf-site .ynf-mood-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+  .ynf-site .ynf-mood {
+    padding: 18px 16px !important;
+    min-height: auto !important;
+  }
+
+  /* ---- 7. Comparison table → horizontal scroll, not squished ---- */
+  .ynf-site table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- 8. TRUST badges → 2x2 compact ---- */
+  .ynf-trust { padding: 32px 0 !important; }
+  .ynf-trust .ynf-trust-grid { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+  .ynf-trust .ynf-trust-item i { font-size: 1.4rem !important; }
+  .ynf-trust .ynf-trust-item h6 { font-size: 0.88rem !important; }
+  .ynf-trust .ynf-trust-item p { font-size: 0.74rem !important; }
+
+  /* ---- 9. TESTIMONIALS → horizontal scroll-snap carousel (was 6 stacked = 1466px) ---- */
+  .ynf-testimonials { padding: 44px 0 !important; }
+  .ynf-testimonials .ynf-t-head { margin-bottom: 24px !important; }
+  .ynf-testimonials .ynf-t-head h2 { font-size: 1.5rem !important; }
+  .ynf-testimonials .ynf-t-grid {
+    display: flex !important;
+    grid-template-columns: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px !important;
+    padding: 4px 16px 12px !important;
+    margin: 0 -16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+  .ynf-testimonials .ynf-t-card {
+    flex: 0 0 80%;
+    scroll-snap-align: center;
+    padding: 18px !important;
+  }
+  .ynf-testimonials .ynf-t-card p { font-size: 0.9rem !important; line-height: 1.5 !important; }
+
+  /* ---- 10. NEWSLETTER → tighter ---- */
+  .ynf-newsletter { padding: 48px 0 !important; }
+  .ynf-newsletter h2 { font-size: 1.45rem !important; }
+  .ynf-newsletter .ynf-nl-form { flex-direction: column; gap: 10px; }
+  .ynf-newsletter .ynf-nl-form input,
+  .ynf-newsletter .ynf-nl-form .ynf-btn { width: 100%; min-height: 50px; }
+
+  /* ---- 11. Editorial / drop panels → single column, padded ---- */
+  .ynf-site .ynf-editorial,
+  .ynf-site .ynf-drop,
+  .ynf-site .ynf-feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .ynf-site .ynf-editorial-copy { padding: 28px 22px !important; }
+}
+
+/* Small phones (≤ 380px) — one more notch tighter */
+@media (max-width: 380px) {
+  .ynf-site .ynf-h1 { font-size: 1.85rem !important; }
+  .ynf-site .ynf-card-body h3 { font-size: 1.1rem !important; }
+}

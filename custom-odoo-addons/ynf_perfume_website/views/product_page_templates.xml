@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         PRODUCT PAGE (PDP) — luxury layering on website_sale.product.
+         Adds: brand eyebrow, meta line, inspired-by chip, editorial blurb,
+         fragrance-notes pyramid, performance meters and a trust/perks panel.
+         All native add-to-cart / variants / pricing untouched.
+         =================================================================== -->
+    <template id="product_pdp" inherit_id="website_sale.product" name="YNF Luxury PDP">
+
+        <!-- Scope class on the product_detail section -->
+        <xpath expr="//section[@id='product_detail']" position="attributes">
+            <attribute name="class" add="ynf ynf-pdp" separator=" "/>
+        </xpath>
+
+        <!-- Brand eyebrow + meta line above the product title -->
+        <xpath expr="//div[@id='product_details']/h1[@itemprop='name']" position="before">
+            <div t-if="product.ynf_display_brand" class="ynf-pdp__brand" t-esc="product.ynf_display_brand"/>
+        </xpath>
+
+        <xpath expr="//div[@id='product_details']/h1[@itemprop='name']" position="after">
+            <div class="ynf-pdp__metaline">
+                <span t-if="product.ynf_family" t-esc="product.ynf_family"/>
+                <span t-if="product.ynf_gender">· <t t-esc="dict(men='For Him', women='For Her', unisex='Unisex').get(product.ynf_gender, '')"/></span>
+                <span t-if="product.ynf_volume">· <t t-esc="product.ynf_volume"/></span>
+                <span t-if="product.ynf_concentration">· <t t-esc="dict(edc='Eau de Cologne', edt='Eau de Toilette', edp='Eau de Parfum', parfum='Parfum / Extrait').get(product.ynf_concentration, '')"/></span>
+            </div>
+            <div t-if="product.ynf_inspired_by" style="margin-top:8px">
+                <span class="y-inspired">
+                    <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'spark'"/><t t-set="size" t-value="11"/><t t-set="color" t-value="'var(--y-gold)'"/></t>
+                    Inspired by <t t-esc="product.ynf_inspired_by"/>
+                </span>
+            </div>
+        </xpath>
+
+        <!-- Editorial blurb + notes pyramid + meters, after the description block -->
+        <xpath expr="//div[@id='product_details']//div[@t-field='product.description_ecommerce']" position="after">
+            <!-- Real low-stock urgency (Phase 14) -->
+            <t t-set="ynf_low" t-value="product.ynf_low_stock()"/>
+            <div t-if="ynf_low" class="ynf-pdp__stock">
+                <span class="ynf-pdp__stock-dot"/>
+                Only <strong t-esc="ynf_low"/> left in stock — order soon.
+            </div>
+            <p t-if="product.ynf_blurb" class="ynf-pdp__blurb" t-esc="product.ynf_blurb"/>
+
+            <!-- Olfactive spec chips (#13) -->
+            <t t-set="ynf_long_lbl" t-value="dict(product._fields['ynf_longevity'].selection).get(product.ynf_longevity) if product.ynf_longevity else None"/>
+            <t t-set="ynf_proj_lbl" t-value="dict(product._fields['ynf_projection'].selection).get(product.ynf_projection) if product.ynf_projection else None"/>
+            <div class="ynf-specs" t-if="product.ynf_display_family or ynf_long_lbl or ynf_proj_lbl or product.ynf_concentration or product.ynf_display_gender">
+                <span class="ynf-spec" t-if="product.ynf_display_family" t-attf-data-fam="#{product.ynf_display_family.lower()}">
+                    <span class="ynf-spec__orb"/><span class="ynf-spec__k">Family</span><span class="ynf-spec__v" t-esc="product.ynf_display_family"/>
+                </span>
+                <span class="ynf-spec" t-if="product.ynf_concentration">
+                    <span class="ynf-spec__k">Concentration</span><span class="ynf-spec__v" t-esc="dict(edc='Cologne', edt='EDT', edp='EDP', parfum='Extrait').get(product.ynf_concentration, '')"/>
+                </span>
+                <span class="ynf-spec" t-if="ynf_long_lbl">
+                    <span class="ynf-spec__k">Longevity</span><span class="ynf-spec__v" t-esc="ynf_long_lbl"/>
+                </span>
+                <span class="ynf-spec" t-if="ynf_proj_lbl">
+                    <span class="ynf-spec__k">Sillage</span><span class="ynf-spec__v" t-esc="ynf_proj_lbl"/>
+                </span>
+                <span class="ynf-spec" t-if="product.ynf_display_gender">
+                    <span class="ynf-spec__k">For</span><span class="ynf-spec__v" t-esc="dict(men='Him', women='Her', unisex='Everyone').get(product.ynf_display_gender, '')"/>
+                </span>
+            </div>
+
+            <!-- Fragrance notes pyramid -->
+            <t t-if="product.ynf_has_notes()">
+                <div class="ynf-notes ynf-notes--rich">
+                    <div class="ynf-notes__head">The olfactive pyramid</div>
+                    <t t-foreach="[('Top', 'top'), ('Heart', 'heart'), ('Base', 'base')]" t-as="tier">
+                        <t t-set="notes" t-value="product.notes_as_list(tier[1])"/>
+                        <div t-if="notes" t-attf-class="ynf-notes__row ynf-notes__row--#{tier[1]}">
+                            <div class="ynf-notes__label">
+                                <span class="ynf-notes__tier" t-esc="tier[0]"/>
+                                <span class="ynf-notes__hint" t-esc="product.ynf_tier_copy(tier[1])"/>
+                            </div>
+                            <span class="ynf-notes__notes">
+                                <t t-foreach="notes" t-as="note">
+                                    <span class="y-note" t-attf-style="--note-color:#{product.ynf_note_color(note)}"><span class="y-note__dot"/><t t-esc="note"/></span>
+                                </t>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <!-- Performance meters -->
+            <t t-if="product.ynf_longevity or product.ynf_projection">
+                <div class="ynf-meters">
+                    <div t-if="product.ynf_longevity" class="ynf-meters__item">
+                        <div class="ynf-meters__label">Longevity</div>
+                        <div class="ynf-meters__bar"><div class="ynf-meters__fill" t-attf-style="width:#{int(product.ynf_longevity) * 25}%"/></div>
+                        <div class="ynf-meters__val" t-esc="dict(product._fields['ynf_longevity'].selection).get(product.ynf_longevity, '')"/>
+                    </div>
+                    <div t-if="product.ynf_projection" class="ynf-meters__item">
+                        <div class="ynf-meters__label">Projection</div>
+                        <div class="ynf-meters__bar"><div class="ynf-meters__fill" t-attf-style="width:#{int(product.ynf_projection) * 25}%"/></div>
+                        <div class="ynf-meters__val" t-esc="dict(product._fields['ynf_projection'].selection).get(product.ynf_projection, '')"/>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Season / occasion line -->
+            <div t-if="product.ynf_season or product.ynf_occasion" class="ynf-pdp__metaline" style="margin-top:12px">
+                <span t-if="product.ynf_season"><strong>Season:</strong> <t t-esc="product.ynf_season"/></span>
+                <span t-if="product.ynf_occasion">· <strong>Occasion:</strong> <t t-esc="product.ynf_occasion"/></span>
+            </div>
+
+            <!-- Detail accordions (#12): how-to-apply / authenticity / shipping -->
+            <div class="ynf-accordion">
+                <details class="ynf-acc">
+                    <summary>How to apply
+                        <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'arrowR'"/><t t-set="size" t-value="15"/><t t-set="color" t-value="'var(--y-dim)'"/></t>
+                    </summary>
+                    <div class="ynf-acc__body">Spray onto pulse points — wrists, neck and inner elbows — from roughly 15&#160;cm. Don't rub; let it dry down naturally. Layer over an unscented moisturiser to make the scent last longer.</div>
+                </details>
+                <details class="ynf-acc">
+                    <summary>Authenticity &amp; ingredients
+                        <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'arrowR'"/><t t-set="size" t-value="15"/><t t-set="color" t-value="'var(--y-dim)'"/></t>
+                    </summary>
+                    <div class="ynf-acc__body">
+                        100% authentic, sourced direct from the house or an authorised distributor — never a tester, decant or counterfeit. Batch codes verifiable on request.
+                        <span t-if="product.ynf_country"><br/>Country of origin: <t t-esc="product.ynf_country"/>.</span>
+                    </div>
+                </details>
+                <details class="ynf-acc">
+                    <summary>Shipping &amp; returns
+                        <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'arrowR'"/><t t-set="size" t-value="15"/><t t-set="color" t-value="'var(--y-dim)'"/></t>
+                    </summary>
+                    <div class="ynf-acc__body">Ships within 2 business days, tracked. Free over $75. Unopened items returnable within 30 days; opened fragrances only if faulty.</div>
+                </details>
+            </div>
+        </xpath>
+
+        <!-- SEO · Product + Brand JSON-LD (schema.org), built server-side -->
+        <xpath expr="//div[@id='product_details']/h1[@itemprop='name']" position="before">
+            <script type="application/ld+json" t-out="product.ynf_product_jsonld()"/>
+            <!-- Recently-viewed data (read by recent.js) -->
+            <div id="ynf-pdp-data" style="display:none"
+                 t-att-data-id="product.id"
+                 t-att-data-name="product.name"
+                 t-att-data-brand="product.ynf_display_brand or ''"
+                 t-att-data-url="product.website_url"
+                 t-att-data-img="'/web/image/product.template/%s/image_512' % product.id"
+                 t-att-data-price="'$%.2f' % product.list_price"/>
+        </xpath>
+
+        <!-- Trust / perks panel after the add-to-cart wrapper -->
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+            <div class="ynf-perks">
+                <div class="ynf-perks__item">
+                    <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'shield'"/><t t-set="size" t-value="21"/></t>
+                    <div><div class="ynf-perks__t">100% authentic guarantee</div><div class="ynf-perks__d">Sourced direct — never a tester or fake.</div></div>
+                </div>
+                <div class="ynf-perks__item">
+                    <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'truck'"/><t t-set="size" t-value="21"/></t>
+                    <div><div class="ynf-perks__t">Fast, tracked shipping</div><div class="ynf-perks__d">Ships within 2 business days from the US.</div></div>
+                </div>
+                <div class="ynf-perks__item">
+                    <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'spark'"/><t t-set="size" t-value="21"/></t>
+                    <div><div class="ynf-perks__t">Live-auction pricing</div><div class="ynf-perks__d">Catch it cheaper on our TikTok lives.</div></div>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- "More from this House" rail (#3-lite), full width below the detail -->
+        <xpath expr="//section[@id='product_detail']" position="inside">
+            <t t-set="ynf_house" t-value="product.ynf_display_brand"/>
+            <t t-if="ynf_house">
+                <t t-set="ynf_siblings" t-value="env['product.template'].sudo().search([
+                    ('website_published','=',True),('sale_ok','=',True),
+                    ('id','!=',product.id),('name','ilike',ynf_house)], limit=8)"/>
+                <section class="ynf ynf-house-rail container" t-if="ynf_siblings">
+                    <div class="y-sechead">
+                        <div>
+                            <div class="y-eyebrow">The house</div>
+                            <h2 class="y-h-section">More from <t t-esc="ynf_house"/></h2>
+                        </div>
+                        <a class="y-viewall" t-attf-href="/shop?brand=#{ynf_house}">View all →</a>
+                    </div>
+                    <div class="y-rail y-noscroll">
+                        <t t-foreach="ynf_siblings" t-as="product"><t t-call="ynf_perfume_website.product_card"/></t>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+</odoo>

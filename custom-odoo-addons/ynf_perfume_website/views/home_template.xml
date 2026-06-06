@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         HOMEPAGE — discount-fragrance MARKETPLACE layout
+         Promo banner · trust strip · category tiles · deal grids · brand grid
+         · scent families · newsletter. Real catalogue data from the controller.
+         =================================================================== -->
+    <template id="home_page" name="YNF Home">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'ynf_home'"/>
+            <div id="wrap" class="ynf ynf-home oe_structure">
+
+                <!-- SEO JSON-LD -->
+                <script type="application/ld+json">{
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        {"@type": "Organization", "name": "YNF Deals",
+                         "description": "Authentic designer &amp; Arabian fragrances at discount prices.",
+                         "url": "<t t-esc="request.httprequest.url_root[:-1]"/>"},
+                        {"@type": "WebSite", "name": "YNF Deals",
+                         "url": "<t t-esc="request.httprequest.url_root[:-1]"/>",
+                         "potentialAction": {"@type": "SearchAction",
+                            "target": "<t t-esc="request.httprequest.url_root[:-1]"/>/shop?search={search_term}",
+                            "query-input": "required name=search_term"}}
+                    ]
+                }</script>
+
+                <!-- ░░ CINEMATIC VIDEO HERO ░░ (royalty-free Mixkit b-roll, self-hosted) -->
+                <section class="ynf-cine">
+                    <video class="y-hero-video" autoplay="autoplay" muted="muted" loop="loop"
+                           playsinline="playsinline" preload="auto"
+                           poster="/ynf_perfume_website/static/video/hero_poster.jpg">
+                        <source src="/ynf_perfume_website/static/video/hero_bottle.mp4" type="video/mp4"/>
+                    </video>
+                    <div class="ynf-cine__veil"/>
+                    <div class="ynf-cine__in">
+                        <span class="ynf-cine__kicker">100% Authentic · Shipped fast from the US</span>
+                        <h1 class="ynf-cine__title">The scent of a <em>great deal</em>.</h1>
+                        <p class="ynf-cine__sub">Designer &amp; Arabian fragrances — up to 60% off retail.</p>
+                        <div class="ynf-cine__cta">
+                            <a class="y-btn y-btn--sale y-btn--lg" href="/shop">Shop all fragrances</a>
+                            <a class="y-btn y-btn--ghostlight y-btn--lg" href="/fragrance-finder">Find your scent</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ░░ PROMO HERO BANNER ░░ -->
+                <section class="ynf-promo">
+                    <div class="y-container ynf-promo__in">
+                        <div class="ynf-promo__copy">
+                            <span class="ynf-promo__kicker">Authentic · Fast shipping · Up to 60% off retail</span>
+                            <h1 class="ynf-promo__title">Designer &amp; Arabian fragrances at <em>deal</em> prices.</h1>
+                            <p class="ynf-promo__sub">Thousands of 100% authentic perfumes &amp; colognes — shipped fast from the US.</p>
+                            <div class="ynf-promo__cta">
+                                <a class="y-btn y-btn--sale y-btn--lg" href="/shop">Shop all deals</a>
+                                <a class="y-btn y-btn--ghostlight y-btn--lg" href="/fragrance-finder">Find your scent</a>
+                            </div>
+                            <div class="ynf-promo__code">Use code <b>YNF10</b> for an extra 10% off your first order</div>
+                        </div>
+                        <div class="ynf-promo__media" t-if="hero">
+                            <a t-att-href="hero.website_url">
+                                <t t-if="hero.ynf_has_image()">
+                                    <img t-att-src="'/web/image/product.template/%s/image_512' % hero.id" t-att-alt="hero.name" loading="eager"/>
+                                </t>
+                                <span class="ynf-promo__tag">Featured</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ░░ TRUST STRIP ░░ -->
+                <div class="ynf-trustbar">
+                    <div class="y-container ynf-trustbar__in">
+                        <div class="ynf-trustbar__c"><t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'shield'"/><t t-set="size" t-value="20"/><t t-set="color" t-value="'var(--y-navy)'"/></t><span><b>100% Authentic</b> · guaranteed</span></div>
+                        <div class="ynf-trustbar__c"><t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'truck'"/><t t-set="size" t-value="20"/><t t-set="color" t-value="'var(--y-navy)'"/></t><span><b>Free shipping</b> · over $75</span></div>
+                        <div class="ynf-trustbar__c"><t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'spark'"/><t t-set="size" t-value="20"/><t t-set="color" t-value="'var(--y-navy)'"/></t><span><b>Up to 60% off</b> · retail</span></div>
+                        <div class="ynf-trustbar__c"><t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'bag'"/><t t-set="size" t-value="20"/><t t-set="color" t-value="'var(--y-navy)'"/></t><span><b>Easy returns</b> · 30 days</span></div>
+                    </div>
+                </div>
+
+                <div class="y-container">
+
+                    <!-- ░░ SHOP BY CATEGORY ░░ -->
+                    <section class="y-section" t-if="collections">
+                        <t t-call="ynf_perfume_website.section_head"><t t-set="title" t-value="'Shop by category'"/></t>
+                        <div class="ynf-cats">
+                            <a class="ynf-cat" href="/shop?gender=women"><span class="ynf-cat__n">Women</span></a>
+                            <a class="ynf-cat" href="/shop?gender=men"><span class="ynf-cat__n">Men</span></a>
+                            <a class="ynf-cat" href="/shop?gender=unisex"><span class="ynf-cat__n">Unisex</span></a>
+                            <a class="ynf-cat ynf-cat--sale" href="/shop"><span class="ynf-cat__n">🔥 On Sale</span></a>
+                        </div>
+                    </section>
+
+                    <!-- ░░ HOT DEALS / BESTSELLERS ░░ -->
+                    <section class="y-section" t-if="bestsellers">
+                        <t t-call="ynf_perfume_website.section_head">
+                            <t t-set="title" t-value="'Hot deals'"/><t t-set="view_all_url" t-value="'/shop'"/>
+                        </t>
+                        <div class="y-grid">
+                            <t t-foreach="bestsellers[:10]" t-as="product">
+                                <t t-call="ynf_perfume_website.product_card"/>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ░░ SHOP BY BRAND ░░ -->
+                    <section class="y-section" t-if="brands">
+                        <t t-call="ynf_perfume_website.section_head"><t t-set="title" t-value="'Shop by brand'"/></t>
+                        <div class="ynf-brands">
+                            <t t-foreach="brands" t-as="b">
+                                <a class="ynf-brand" t-att-href="'/shop?brand=%s' % b"><t t-esc="b"/></a>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ░░ NEW ARRIVALS ░░ -->
+                    <section class="y-section" t-if="new_arrivals">
+                        <t t-call="ynf_perfume_website.section_head">
+                            <t t-set="title" t-value="'New arrivals'"/><t t-set="view_all_url" t-value="'/shop'"/>
+                        </t>
+                        <div class="y-grid">
+                            <t t-foreach="new_arrivals[:10]" t-as="product">
+                                <t t-call="ynf_perfume_website.product_card"/>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ░░ SHOP BY SCENT FAMILY ░░ -->
+                    <section class="y-section" t-if="families">
+                        <t t-call="ynf_perfume_website.section_head"><t t-set="title" t-value="'Shop by scent family'"/></t>
+                        <div class="ynf-fams">
+                            <t t-foreach="families" t-as="fam">
+                                <a class="ynf-fam" t-attf-href="/shop?family=#{fam}" t-attf-data-fam="#{fam.lower()}">
+                                    <span class="ynf-fam__orb"/><span t-esc="fam"/>
+                                </a>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ░░ INSPIRED BY (dupes) ░░ -->
+                    <section class="y-section" t-if="dupes">
+                        <t t-call="ynf_perfume_website.section_head">
+                            <t t-set="title" t-value="'Smell luxury for less'"/><t t-set="view_all_url" t-value="'/shop'"/>
+                        </t>
+                        <div class="y-grid">
+                            <t t-foreach="dupes[:10]" t-as="product">
+                                <t t-call="ynf_perfume_website.product_card"/>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- ░░ RECENTLY VIEWED ░░ -->
+                    <section class="y-section ynf-recent" data-ynf-recent="1" style="display:none"></section>
+
+                </div>
+
+                <!-- ░░ NEWSLETTER STRIP ░░ -->
+                <section class="ynf-newsletter">
+                    <div class="y-container ynf-newsletter__in">
+                        <div>
+                            <h2 class="ynf-newsletter__t">Get the deals first</h2>
+                            <p class="ynf-newsletter__p">New drops &amp; flash sales, straight to your inbox.</p>
+                        </div>
+                        <form class="y-news">
+                            <input type="email" name="email" placeholder="Your email" required="required"/>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+</odoo>

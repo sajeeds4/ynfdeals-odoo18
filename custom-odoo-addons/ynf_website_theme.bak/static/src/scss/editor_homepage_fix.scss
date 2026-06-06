@@ -1,0 +1,141 @@
+/* === Fixes for the editor-built homepage (view 1378) ===
+   The editor page uses fixed px widths in inline <style> blocks that overflow
+   on mobile. These rules force everything to respect the viewport and unify
+   the Lattafa look. */
+
+/* Stop horizontal overflow WITHOUT turning body into a scroll container.
+   Only clip x-overflow on the wrap layers; never touch body/html height. */
+#wrapwrap {
+    overflow-x: clip;   /* clip (not hidden) avoids creating a scroll context */
+    max-width: 100vw;
+}
+#wrap, main {
+    overflow-x: clip;
+    max-width: 100%;
+}
+
+/* Mobile: make hard-px-width content fluid, but only cap max-width — never
+   force width:auto (that collapsed flex/grid items to zero). */
+@media (max-width: 991px) {
+    #wrap [style*="width:"] {
+        max-width: 100% !important;
+    }
+
+    /* Tables (comparison block) scroll horizontally instead of pushing the page */
+    #wrap table {
+        display: block;
+        overflow-x: auto;
+        max-width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Grid/flex children stack on mobile */
+    #wrap .row > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    #wrap .o_grid_item,
+    #wrap [class*="o_colored_level"] {
+        max-width: 100% !important;
+    }
+}
+
+/* === Lattafa-style polish on the editor sections === */
+
+/* Hero headline — use display serif, gold accent on the "Live-deal" part */
+#wrap h1 {
+    font-family: $font-display !important;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+}
+
+/* Section eyebrows (small uppercase labels) */
+#wrap .s_text_block small,
+#wrap .text-uppercase {
+    letter-spacing: 0.25em !important;
+    color: $ynf-gold !important;
+}
+
+/* Primary CTA buttons → gold pill */
+#wrap .btn-primary,
+#wrap a.btn-primary {
+    background: $ynf-gold !important;
+    border-color: $ynf-gold !important;
+    color: #fff !important;
+    border-radius: $radius-pill !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    padding: 13px 30px !important;
+    box-shadow: $shadow-gold;
+
+    &:hover {
+        background: $ynf-gold-light !important;
+        border-color: $ynf-gold-light !important;
+        transform: translateY(-1px);
+    }
+}
+
+/* Secondary / outline buttons */
+#wrap .btn-outline-primary,
+#wrap .btn-secondary {
+    border-radius: $radius-pill !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+/* Pill tag chips (Authentic inventory / Fast US shipping / Live drop pricing) */
+#wrap .badge, #wrap .s_badge {
+    border-radius: $radius-pill !important;
+    padding: 7px 16px !important;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+/* Cards → rounded with soft shadow */
+#wrap .card, #wrap .o_card {
+    border-radius: $radius-lg !important;
+    border: 1px solid $ynf-border-soft !important;
+    box-shadow: $shadow-card;
+    overflow: hidden;
+}
+
+/* Comparison table — luxury styling */
+#wrap table {
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    th {
+        background: $ynf-bg-soft !important;
+        color: $ynf-text !important;
+        font-family: $font-display;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+    td { color: $ynf-text-muted; }
+}
+
+/* Footer — deep tone */
+#wrap + footer,
+footer.o_footer {
+    h5, h6, .h5, .h6 {
+        font-family: $font-display !important;
+        letter-spacing: 0.04em;
+    }
+}
+
+/* Mobile typography scale down for the big hero */
+@media (max-width: 767px) {
+    #wrap h1 {
+        font-size: clamp(2.2rem, 11vw, 3rem) !important;
+    }
+    #wrap .container, #wrap .container-fluid {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    /* Bigger tap targets */
+    #wrap .btn { min-height: 46px; }
+}

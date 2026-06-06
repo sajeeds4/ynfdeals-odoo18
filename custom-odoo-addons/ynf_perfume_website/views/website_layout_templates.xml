@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         Web fonts (Cormorant Garamond + Inter) loaded via <link> in <head>.
+         We deliberately do NOT @import these in SCSS — that would land an
+         @import/@charset mid asset-bundle and break the whole stylesheet.
+         =================================================================== -->
+    <template id="layout_fonts" inherit_id="website.layout" name="YNF Fonts">
+        <xpath expr="//head" position="inside">
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+            <link rel="stylesheet"
+                  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap"/>
+        </xpath>
+    </template>
+
+    <!-- ===================================================================
+         Global storefront chrome: a scrolling announcement bar injected at
+         the top of every page's header, and a .ynf-site class on <body> so
+         tokens/fonts apply site-wide (header, footer, cart, checkout).
+         =================================================================== -->
+    <template id="layout_announce" inherit_id="website.layout" name="YNF Announce Bar">
+        <xpath expr="//header" position="before">
+            <div class="ynf">
+                <div class="y-announce" t-if="not editable">
+                    <div class="y-marquee">
+                        <t t-foreach="range(2)" t-as="loop_i">
+                            <t t-foreach="['Free shipping over $75', '100% authentic guarantee', 'Live auctions nightly · 8 PM ET', 'New drops every week']" t-as="msg">
+                                <span class="y-announce__item"><t t-esc="msg"/><span class="y-announce__sep">✦</span></span>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Apply the design font/colour tokens to the whole site body -->
+    <template id="layout_body_class" inherit_id="website.layout" name="YNF Body Class">
+        <xpath expr="//body" position="attributes">
+            <attribute name="class" add="ynf-site ynf-has-header" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- ===================================================================
+         Marketplace header — top utility bar + prominent search + navy
+         category nav (discount-fragrance retail style). Reversible: remove
+         this template to restore the native header. Cart/checkout untouched.
+         =================================================================== -->
+    <template id="layout_header" inherit_id="website.layout" name="YNF Marketplace Header">
+        <xpath expr="//header" position="before">
+            <header class="ynf ynf-header" t-att-data-editable="0">
+                <!-- Top utility bar -->
+                <div class="ynf-topbar">
+                    <div class="y-container ynf-topbar__in">
+                        <span class="ynf-topbar__item">🚚 Free shipping over $75</span>
+                        <span class="ynf-topbar__item">✓ 100% authentic guarantee</span>
+                        <span class="ynf-topbar__spacer"/>
+                        <a href="/live" class="ynf-topbar__item ynf-topbar__live"><span class="dot y-pulse"/> Live nightly · 8 PM ET</a>
+                        <a href="/my" class="ynf-topbar__item">Sign in</a>
+                    </div>
+                </div>
+
+                <!-- Main bar: logo · search · account · cart -->
+                <div class="ynf-header__bar y-container">
+                    <button type="button" class="ynf-header__burger" aria-label="Menu"
+                            onclick="document.querySelector('.ynf-header__drawer').classList.toggle('open')">
+                        <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'menu'"/><t t-set="size" t-value="24"/><t t-set="color" t-value="'#fff'"/></t>
+                    </button>
+
+                    <a href="/" class="ynf-logo" aria-label="YNF Deals home">
+                        <span class="ynf-logo__mark">Y</span>
+                        <span class="ynf-logo__txt">
+                            <span class="ynf-logo__name">YNF DEALS</span>
+                            <span class="ynf-logo__sub">Discount Fragrance</span>
+                        </span>
+                    </a>
+
+                    <form class="ynf-search" action="/shop" method="get" role="search">
+                        <input type="text" name="search" placeholder="Search 1000+ perfumes, brands &amp; deals…" aria-label="Search"/>
+                        <button type="submit" aria-label="Search">
+                            <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'search'"/><t t-set="size" t-value="20"/><t t-set="color" t-value="'#fff'"/></t>
+                        </button>
+                    </form>
+
+                    <div class="ynf-header__icons">
+                        <a href="/my" aria-label="Account" class="ynf-header__ic d-none d-md-flex">
+                            <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'user'"/><t t-set="size" t-value="22"/><t t-set="color" t-value="'#fff'"/></t>
+                            <span class="ynf-header__ic-lbl">Account</span>
+                        </a>
+                        <a href="/shop/cart" aria-label="Cart" class="ynf-header__ic ynf-header__cart">
+                            <t t-call="ynf_perfume_website.icon"><t t-set="name" t-value="'bag'"/><t t-set="size" t-value="22"/><t t-set="color" t-value="'#fff'"/></t>
+                            <span class="ynf-header__ic-lbl">Cart</span>
+                            <t t-set="ynf_cart_qty" t-value="request.session.get('website_sale_cart_quantity', 0) if request else 0"/>
+                            <span t-attf-class="my_cart_quantity ynf-cart-badge #{'d-none' if not ynf_cart_qty else ''}" t-esc="ynf_cart_qty or ''"/>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category nav -->
+                <nav class="ynf-catnav">
+                    <div class="y-container ynf-catnav__in">
+                        <a href="/shop?gender=women">Women</a>
+                        <a href="/shop?gender=men">Men</a>
+                        <a href="/shop?gender=unisex">Unisex</a>
+                        <a href="/shop">Brands</a>
+                        <a href="/fragrance-finder">Fragrance Finder</a>
+                        <a href="/live">Live Deals</a>
+                        <a href="/shop" class="ynf-catnav__sale">🔥 SALE</a>
+                    </div>
+                </nav>
+
+                <!-- Mobile drawer -->
+                <div class="ynf-header__drawer">
+                    <a href="/shop?gender=women">Women</a>
+                    <a href="/shop?gender=men">Men</a>
+                    <a href="/shop?gender=unisex">Unisex</a>
+                    <a href="/shop">All brands</a>
+                    <a href="/fragrance-finder">Fragrance Finder</a>
+                    <a href="/live">Live deals</a>
+                    <a href="/my">My account</a>
+                </div>
+            </header>
+        </xpath>
+    </template>
+
+    <!-- ===================================================================
+         Branded footer — replaces Odoo's default placeholder footer with a
+         real YNF Deals storefront footer (brand, shop links, help, contact,
+         socials, trust + payment bar). Reversible: remove this template.
+         =================================================================== -->
+    <template id="layout_footer" inherit_id="website.layout" name="YNF Footer">
+        <xpath expr="//footer" position="replace">
+            <footer class="ynf ynf-footer" t-att-data-editable="0">
+                <div class="ynf-footer__top y-container">
+                    <div class="ynf-footer__brand">
+                        <a href="/" class="ynf-logo ynf-logo--footer" aria-label="YNF Deals home">
+                            <span class="ynf-logo__mark">Y</span>
+                            <span class="ynf-logo__txt">
+                                <span class="ynf-logo__name">YNF DEALS</span>
+                                <span class="ynf-logo__sub">Discount Fragrance</span>
+                            </span>
+                        </a>
+                        <p class="ynf-footer__pitch">Authentic designer &amp; Arabian fragrances at up to 60% off retail — shipped fast from the US, with live auctions nightly.</p>
+                        <div class="ynf-footer__trust">
+                            <span><i class="fa fa-shield"/> 100% Authentic</span>
+                            <span><i class="fa fa-truck"/> Fast US shipping</span>
+                            <span><i class="fa fa-undo"/> 30-day returns</span>
+                        </div>
+                    </div>
+
+                    <div class="ynf-footer__cols">
+                        <div class="ynf-footer__col">
+                            <h4>Shop</h4>
+                            <a href="/shop?gender=women">Women's</a>
+                            <a href="/shop?gender=men">Men's</a>
+                            <a href="/shop?gender=unisex">Unisex</a>
+                            <a href="/shop">All brands</a>
+                            <a href="/fragrance-finder">Fragrance Finder</a>
+                            <a href="/live">Live Deals</a>
+                        </div>
+                        <div class="ynf-footer__col">
+                            <h4>Help</h4>
+                            <a href="/contactus">Contact us</a>
+                            <a href="/my">Track your order</a>
+                            <a href="/my">My account</a>
+                            <a href="/shop/cart">Your cart</a>
+                            <a href="/contactus">Shipping &amp; returns</a>
+                        </div>
+                        <div class="ynf-footer__col">
+                            <h4>Company</h4>
+                            <a href="/">Home</a>
+                            <a href="/shop">Our fragrances</a>
+                            <a href="/live">How auctions work</a>
+                            <a href="/contactus">About us</a>
+                        </div>
+                        <div class="ynf-footer__col ynf-footer__contact">
+                            <h4>Get in touch</h4>
+                            <a href="mailto:info@ynfdeals.com"><i class="fa fa-envelope-o"/> info@ynfdeals.com</a>
+                            <a href="/live"><i class="fa fa-video-camera"/> Live nightly · 8 PM ET</a>
+                            <div class="ynf-footer__social">
+                                <a href="https://www.tiktok.com/@ynfdeals" aria-label="TikTok" target="_blank" rel="noopener">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 3.9 4.1 4.1v3c-1.5 0-2.9-.5-4.1-1.3v6.4a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v3.1a2.7 2.7 0 1 0 1.9 2.6V3h2.9z"/></svg>
+                                </a>
+                                <a href="https://instagram.com/ynfdeals" aria-label="Instagram" target="_blank" rel="noopener"><i class="fa fa-instagram"/></a>
+                                <a href="https://facebook.com/ynfdeals" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa fa-facebook"/></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ynf-footer__bottom">
+                    <div class="y-container ynf-footer__bottom-in">
+                        <span class="ynf-footer__copy">© <t t-out="datetime.datetime.now().year"/> YNF Deals · All rights reserved.</span>
+                        <span class="ynf-footer__pay">Visa · Mastercard · Amex · PayPal · Apple Pay</span>
+                        <span class="ynf-footer__seal"><i class="fa fa-check-circle"/> 100% Authentic Guarantee</span>
+                    </div>
+                </div>
+            </footer>
+        </xpath>
+    </template>
+</odoo>

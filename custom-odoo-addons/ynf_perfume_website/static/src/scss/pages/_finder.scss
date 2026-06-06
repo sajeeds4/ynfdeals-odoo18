@@ -1,0 +1,112 @@
+// ==========================================================================
+// YNF Perfume — Fragrance Finder quiz (Phase 9)
+// ==========================================================================
+.ynf-finder {
+    padding: 36px 0 60px;
+
+    .y-finder-head { text-align: center; margin-bottom: 32px; }
+    .y-finder-title {
+        font-family: var(--y-display);
+        font-weight: 500;
+        font-size: 40px;
+        color: var(--y-text);
+        margin-top: 8px;
+        @media (min-width: 992px) { font-size: 56px; }
+        em { color: var(--y-gold); font-style: italic; }
+    }
+    .y-finder-lede {
+        font-family: var(--y-body);
+        font-size: 15px;
+        color: var(--y-muted);
+        max-width: 460px;
+        margin: 10px auto 0;
+        line-height: 1.6;
+    }
+
+    .y-quiz { display: flex; flex-direction: column; gap: 18px; }
+    .y-quiz__step {
+        border: 1px solid var(--y-line);
+        border-radius: var(--y-r-lg);
+        background: var(--y-card);
+        box-shadow: var(--y-shadow-card);
+        padding: 22px 22px 24px;
+        margin: 0;
+        legend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--y-display);
+            font-weight: 600;
+            font-size: 19px;
+            color: var(--y-text);
+            padding: 0;
+            margin-bottom: 16px;
+        }
+    }
+    .y-quiz__n {
+        flex-shrink: 0;
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: var(--y-gold-soft);
+        border: 1px solid var(--y-border);
+        color: var(--y-gold-d);
+        font-family: var(--y-display);
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .y-quiz__opts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        &--grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            @media (min-width: 768px) { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        }
+    }
+
+    // Radio cards — hide the native dot, style the label
+    .y-quiz__opt {
+        position: relative;
+        cursor: pointer;
+        input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 12px 18px;
+        border: 1.5px solid var(--y-line);
+        border-radius: var(--y-pill);
+        font-family: var(--y-body);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--y-muted);
+        background: var(--y-bg);
+        transition: all .18s var(--y-ease);
+        user-select: none;
+        &:hover { border-color: var(--y-border); }
+        // checked state
+        &:has(input:checked) {
+            border-color: var(--y-gold);
+            background: var(--y-gold-soft);
+            color: var(--y-gold-d);
+            box-shadow: var(--y-shadow-gold);
+        }
+        &--rich {
+            border-radius: var(--y-r-lg);
+            padding: 16px;
+            align-items: flex-start;
+            text-align: left;
+        }
+        .y-quiz__opt-title { font-family: var(--y-display); font-weight: 600; font-size: 16px; color: var(--y-text); }
+        .y-quiz__opt-sub { font-size: 11.5px; color: var(--y-muted); }
+        &--rich:has(input:checked) .y-quiz__opt-title { color: var(--y-gold-d); }
+    }
+
+    .y-quiz__submit { text-align: center; margin-top: 8px; }
+
+    .y-finder-results { margin-top: 8px; }
+}

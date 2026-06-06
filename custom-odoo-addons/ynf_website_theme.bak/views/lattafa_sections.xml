@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Announcement bar removed to match Lattafa USA's clean white header. -->
+
+    <!-- Account icon dropdown injected before the cart <li> in the header cluster -->
+    <template id="header_account_link" inherit_id="website_sale.header_cart_link"
+              name="YNF Header Account Link">
+        <xpath expr="//li[1]" position="before">
+            <li class="nav-item dropdown ynf-account-item">
+                <a href="#" class="nav-link ynf-account-link dropdown-toggle"
+                   data-bs-toggle="dropdown" role="button"
+                   aria-expanded="false" aria-label="My Account" title="My Account">
+                    <i class="fa fa-user-o"/>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end ynf-account-menu">
+                    <t t-if="not user_id._is_public()">
+                        <li><span class="dropdown-item-text small text-muted"
+                                  t-esc="user_id.name"/></li>
+                        <li><hr class="dropdown-divider"/></li>
+                        <li><a class="dropdown-item" href="/my/home">My Account</a></li>
+                        <li><a class="dropdown-item" href="/my/orders">My Orders</a></li>
+                        <li><a class="dropdown-item" href="/my/invoices">My Invoices</a></li>
+                        <li><a class="dropdown-item" href="/my/help">Help &amp; Disputes</a></li>
+                        <li><hr class="dropdown-divider"/></li>
+                        <li><a class="dropdown-item" href="/web/session/logout?redirect=/">Sign Out</a></li>
+                    </t>
+                    <t t-else="">
+                        <li><a class="dropdown-item" href="/web/login">Sign In</a></li>
+                        <li><a class="dropdown-item" href="/web/signup">Create Account</a></li>
+                    </t>
+                </ul>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Mobile nav: we use Odoo's native o_header_mobile (built into
+         template_header_default) and just style it — no custom burger needed. -->
+
+    <!-- ============ AMAZON-STYLE STICKY BOTTOM TAB BAR (mobile only) ============ -->
+    <template id="mobile_bottom_bar" inherit_id="website.layout" name="YNF Mobile Bottom Bar">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <nav class="ynf-bottom-bar d-lg-none" aria-label="Mobile navigation">
+                <a href="/" class="ynf-bb-item" data-bb="home">
+                    <i class="fa fa-home"/><span>Home</span>
+                </a>
+                <a href="/shop" class="ynf-bb-item" data-bb="shop">
+                    <i class="fa fa-th-large"/><span>Shop</span>
+                </a>
+                <a href="#" class="ynf-bb-item ynf-bb-search" data-bb="search">
+                    <i class="fa fa-search"/><span>Search</span>
+                </a>
+                <a href="/shop/cart" class="ynf-bb-item ynf-bb-cart" data-bb="cart">
+                    <i class="fa fa-shopping-cart"/><span>Cart</span>
+                    <t t-set="cart_qty" t-value="website.sale_get_order().cart_quantity if website.sale_get_order() else 0"/>
+                    <span t-if="cart_qty" class="ynf-bb-badge" t-esc="cart_qty"/>
+                </a>
+                <a href="/my/home" class="ynf-bb-item" data-bb="account">
+                    <i class="fa fa-user-o"/><span>Account</span>
+                </a>
+            </nav>
+        </xpath>
+    </template>
+
+    <!-- ============ PROMINENT MOBILE SEARCH BAR (Amazon-style) ============ -->
+    <template id="mobile_search_bar" inherit_id="website.layout" name="YNF Mobile Search Bar">
+        <xpath expr="//header[@id='top']" position="after">
+            <div class="ynf-mobile-search d-lg-none">
+                <form action="/shop" method="get" class="ynf-ms-form">
+                    <i class="fa fa-search"/>
+                    <input type="text" name="search" placeholder="Search fragrances, brands, notes..."
+                           autocomplete="off"/>
+                </form>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============ TESTIMONIALS + NEWSLETTER (append to homepage) ============ -->
+    <!-- Injected after the homepage's main structure via the ynf-site wrapper. -->
+    <template id="homepage_extra_sections" inherit_id="website.homepage" name="YNF Homepage Extra Sections" priority="99">
+        <xpath expr="//div[hasclass('oe_structure')]" position="inside">
+            <!-- TRUST BADGES -->
+            <section class="ynf-trust">
+                <div class="ynf-trust-grid">
+                    <div class="ynf-trust-item">
+                        <i class="fa fa-certificate"/>
+                        <h6>100% Authentic</h6>
+                        <p>Sourced direct — never a knock-off</p>
+                    </div>
+                    <div class="ynf-trust-item">
+                        <i class="fa fa-truck"/>
+                        <h6>Fast US Shipping</h6>
+                        <p>Same-day dispatch on in-stock orders</p>
+                    </div>
+                    <div class="ynf-trust-item">
+                        <i class="fa fa-undo"/>
+                        <h6>Easy Returns</h6>
+                        <p>14-day window on unopened bottles</p>
+                    </div>
+                    <div class="ynf-trust-item">
+                        <i class="fa fa-lock"/>
+                        <h6>Secure Checkout</h6>
+                        <p>Encrypted payments, every order</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TESTIMONIALS -->
+            <section class="ynf-testimonials">
+                <div class="ynf-shell">
+                    <div class="ynf-t-head">
+                        <span class="ynf-eyebrow">Loved by thousands</span>
+                        <h2>What our customers say</h2>
+                    </div>
+                    <div class="ynf-t-grid">
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"Smells exactly like the designer original at a fraction of the price. Lasts all day."</p>
+                            <div class="ynf-t-author">Sarah M. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"Bought 3 from the live and every one was authentic and sealed. Shipping was crazy fast."</p>
+                            <div class="ynf-t-author">James T. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"The oud collection is unreal. Khamrah is now my signature scent. Will reorder."</p>
+                            <div class="ynf-t-author">Aisha R. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"Caught a steal on the TikTok live and the bottle arrived perfectly packed. 10/10."</p>
+                            <div class="ynf-t-author">Marcus D. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"Customer service helped me pick a gift set. My wife loved it. Great experience."</p>
+                            <div class="ynf-t-author">Priya K. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                        <div class="ynf-t-card">
+                            <div class="ynf-t-stars">★★★★★</div>
+                            <p>"Best prices I've found anywhere for these fragrances. Authentic, fast, reliable."</p>
+                            <div class="ynf-t-author">Leila H. <span class="ynf-t-verified"><i class="fa fa-check-circle"/> Verified</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AMAZON-STYLE PRODUCT RAILS (horizontal carousels) -->
+            <section class="ynf-rails-section">
+                <div class="ynf-shell">
+                    <t t-set="rail_products"
+                       t-value="request.env['product.template'].sudo().search([('is_published','=',True),('sale_ok','=',True)], limit=24, order='create_date desc')"/>
+
+                    <!-- Trending Now -->
+                    <div class="ynf-rail-head">
+                        <h2>Trending Now</h2>
+                        <a href="/shop" class="ynf-rail-all">See all →</a>
+                    </div>
+                    <div class="ynf-rail">
+                        <t t-foreach="rail_products[:12]" t-as="prod">
+                            <a t-attf-href="/shop/#{slug(prod)}" class="ynf-rail-card">
+                                <span class="ynf-rail-img"
+                                      t-attf-style="background-image:url('/web/image/product.template/#{prod.id}/image_512')"/>
+                                <span class="ynf-rail-body">
+                                    <span class="ynf-rail-name" t-esc="prod.name"/>
+                                    <span class="ynf-rail-price">
+                                        <t t-esc="prod.currency_id.symbol"/><t t-esc="'%.2f' % prod.list_price"/>
+                                    </span>
+                                </span>
+                            </a>
+                        </t>
+                    </div>
+
+                    <!-- From the Live Room -->
+                    <div class="ynf-rail-head" style="margin-top:8px;">
+                        <h2>From the Live Room</h2>
+                        <a href="/shop" class="ynf-rail-all">See all →</a>
+                    </div>
+                    <div class="ynf-rail">
+                        <t t-foreach="rail_products[12:24]" t-as="prod">
+                            <a t-attf-href="/shop/#{slug(prod)}" class="ynf-rail-card">
+                                <span class="ynf-rail-img"
+                                      t-attf-style="background-image:url('/web/image/product.template/#{prod.id}/image_512')"/>
+                                <span class="ynf-rail-body">
+                                    <span class="ynf-rail-name" t-esc="prod.name"/>
+                                    <span class="ynf-rail-price">
+                                        <t t-esc="prod.currency_id.symbol"/><t t-esc="'%.2f' % prod.list_price"/>
+                                    </span>
+                                </span>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEWSLETTER -->
+            <section class="ynf-newsletter">
+                <div class="ynf-shell">
+                    <div class="ynf-nl-inner">
+                        <span class="ynf-eyebrow">Join the list</span>
+                        <h2>Subscribe &amp; get 10% off your first order</h2>
+                        <p>Early access to live drops, restocks, and members-only deals.</p>
+                        <form class="ynf-nl-form" action="/website/mailing/subscribe" method="post">
+                            <input type="email" name="email" placeholder="Enter your email" required="required"/>
+                            <button type="submit" class="ynf-btn primary">Get 10% Off</button>
+                        </form>
+                        <small>No spam. Unsubscribe anytime.</small>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

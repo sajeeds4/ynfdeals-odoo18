@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         SHOP — re-skin website_sale's /shop in place (luxury cards + header).
+         We add a luxury header + gender quick-filter chips and tag the page
+         wrapper with our .ynf-shop scope class. The grid, pricing, filters,
+         pager and cart all remain native website_sale behaviour.
+         =================================================================== -->
+    <template id="shop_skin" inherit_id="website_sale.products" name="YNF Shop Skin">
+        <!-- Scope class on the page wrapper -->
+        <xpath expr="//div[@id='wrap'][hasclass('o_wsale_products_page')]" position="attributes">
+            <attribute name="class" add="ynf ynf-shop" separator=" "/>
+        </xpath>
+
+        <!-- Luxury header + gender/brand chips, injected at the top of the grid column -->
+        <xpath expr="//div[@id='products_grid']/t[@t-call='website_sale.products_breadcrumb']" position="before">
+            <t t-set="ynf_g" t-value="request.params.get('gender')"/>
+            <t t-set="ynf_b" t-value="request.params.get('brand')"/>
+            <div class="ynf-shop__head">
+                <div class="y-eyebrow">The collection</div>
+                <h1 t-if="not category">Shop fragrances</h1>
+            </div>
+            <!-- gender row -->
+            <div class="ynf-shop-chips">
+                <a t-attf-class="y-chip #{'is-active' if not ynf_g else ''}" href="/shop">Everyone</a>
+                <a t-attf-class="y-chip #{'is-active' if ynf_g=='men' else ''}" href="/shop?gender=men">For Him</a>
+                <a t-attf-class="y-chip #{'is-active' if ynf_g=='women' else ''}" href="/shop?gender=women">For Her</a>
+                <a t-attf-class="y-chip #{'is-active' if ynf_g=='unisex' else ''}" href="/shop?gender=unisex">Unisex</a>
+            </div>
+            <!-- brand row (derived from the live catalogue) -->
+            <div class="ynf-shop-chips" t-if="env">
+                <t t-set="ynf_houses" t-value="env['product.template'].sudo().ynf_distinct_houses(limit=10)"/>
+                <a t-attf-class="y-chip #{'is-active' if not ynf_b else ''}" href="/shop">All houses</a>
+                <t t-foreach="ynf_houses" t-as="h">
+                    <a t-attf-class="y-chip #{'is-active' if ynf_b==h else ''}" t-attf-href="/shop?brand=#{h}"><t t-esc="h"/></a>
+                </t>
+            </div>
+            <!-- scent-family row (lead discovery facet) -->
+            <t t-set="ynf_fam" t-value="request.params.get('family')"/>
+            <div class="ynf-shop-chips" t-if="env">
+                <t t-set="ynf_families" t-value="env['product.template'].sudo().ynf_distinct_families()"/>
+                <a t-attf-class="y-chip #{'is-active' if not ynf_fam else ''}" href="/shop">All scents</a>
+                <t t-foreach="ynf_families" t-as="f">
+                    <a t-attf-class="y-chip y-chip--fam #{'is-active' if ynf_fam==f else ''}" t-attf-href="/shop?family=#{f}" t-attf-data-fam="#{f.lower()}">
+                        <span class="y-chip__orb"/><t t-esc="f"/>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Branded flacon fallback on the native /shop grid items (imageless products) -->
+    <template id="shop_item_flacon" inherit_id="website_sale.products_item" name="YNF Shop Item Flacon">
+        <xpath expr="//div[hasclass('oe_product_image')]" position="inside">
+            <t t-if="not product.ynf_has_image()">
+                <t t-set="tint" t-value="product.ynf_flacon_tint()"/>
+                <div class="ynf ynf-grid-flacon" t-attf-style="--f1:#{tint[0]}; --f2:#{tint[1]}">
+                    <div class="y-flacon">
+                        <span class="y-flacon__cap"/>
+                        <span class="y-flacon__body">
+                            <span class="y-flacon__name" t-esc="product.name"/>
+                            <span class="y-flacon__house" t-esc="product.ynf_display_brand or ''"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

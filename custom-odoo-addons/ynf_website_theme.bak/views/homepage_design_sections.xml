@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================================================================
+         Homepage curated sections — port of YNF Deals.html design.
+         Inherits the existing ynf_homepage and appends 11 sections below
+         the existing hero/collections/featured.
+         All sections use Bootstrap 5 utilities + scoped `.ynf-design-*`
+         classes so they never collide with core templates.
+         ================================================================= -->
+
+    <template id="ynf_homepage_design_sections"
+              inherit_id="website.homepage"
+              name="YNF Homepage Design Sections">
+        <xpath expr="//div[@id='wrap']" position="inside">
+
+            <!-- Pre-fetch products to avoid 11 separate queries -->
+            <t t-set="ynf_all_products"
+               t-value="request.env['product.template'].sudo().search([
+                            ('website_published','=',True),
+                            ('sale_ok','=',True),
+                            ('active','=',True),
+                       ], limit=80, order='create_date desc')"/>
+            <t t-set="ynf_deal_products"
+               t-value="ynf_all_products.filtered(
+                            lambda p: (p.list_price or 0) &lt;= 30)[:8]"/>
+            <t t-set="ynf_new_products"
+               t-value="ynf_all_products[:7]"/>
+
+            <!-- ==================== 1. SHOP BY MOOD ==================== -->
+            <section class="ynf-design ynf-mood-section py-5">
+                <div class="container">
+                    <div class="ynf-design-sechead mb-4">
+                        <span class="ynf-design-eyebrow">Shop by mood</span>
+                        <h2>What are you in the mood for?</h2>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <a href="/shop?search=warm" class="ynf-mood-card">
+                                <div class="ynf-mood-icon">✨</div>
+                                <div class="ynf-mood-title">Warm &amp; Sweet</div>
+                                <div class="ynf-mood-sub">Gourmand · amber · vanilla</div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/shop?search=fresh" class="ynf-mood-card">
+                                <div class="ynf-mood-icon">🌿</div>
+                                <div class="ynf-mood-title">Fresh &amp; Clean</div>
+                                <div class="ynf-mood-sub">Aquatic · citrus · cool</div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/shop?search=oud" class="ynf-mood-card">
+                                <div class="ynf-mood-icon">🛡</div>
+                                <div class="ynf-mood-title">Woody &amp; Oud</div>
+                                <div class="ynf-mood-sub">Smoky · resinous · bold</div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/shop?search=floral" class="ynf-mood-card">
+                                <div class="ynf-mood-icon">🌸</div>
+                                <div class="ynf-mood-title">Floral</div>
+                                <div class="ynf-mood-sub">Rose · jasmine · blossom</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 2. UNDER $30 ==================== -->
+            <section class="ynf-design ynf-deal-section py-5"
+                     t-if="ynf_deal_products">
+                <div class="container">
+                    <div class="ynf-design-sechead mb-4 d-flex justify-content-between align-items-baseline">
+                        <div>
+                            <span class="ynf-design-eyebrow">Smell luxury for less</span>
+                            <h2>Under $30</h2>
+                        </div>
+                        <a href="/shop" class="ynf-design-action">Shop deals →</a>
+                    </div>
+                    <div class="ynf-rail">
+                        <t t-foreach="ynf_deal_products" t-as="prod">
+                            <a t-att-href="'/shop/product/' + str(prod.id)"
+                               class="ynf-mini-card">
+                                <div class="ynf-mini-img">
+                                    <img t-att-src="'/web/image/product.template/' + str(prod.id) + '/image_512'"
+                                         t-att-alt="prod.name" loading="lazy"/>
+                                </div>
+                                <div class="ynf-mini-name" t-esc="prod.name"/>
+                                <div class="ynf-mini-price">
+                                    $<span t-esc="'%.2f' % (prod.list_price or 0)"/>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 3. JUST DROPPED ==================== -->
+            <section class="ynf-design ynf-new-section py-5"
+                     t-if="ynf_new_products">
+                <div class="container">
+                    <div class="ynf-design-sechead mb-4 d-flex justify-content-between align-items-baseline">
+                        <div>
+                            <span class="ynf-design-eyebrow">Just dropped</span>
+                            <h2>New arrivals</h2>
+                        </div>
+                        <a href="/shop" class="ynf-design-action">See all →</a>
+                    </div>
+                    <div class="ynf-rail">
+                        <t t-foreach="ynf_new_products" t-as="prod">
+                            <a t-att-href="'/shop/product/' + str(prod.id)"
+                               class="ynf-mini-card">
+                                <div class="ynf-mini-img">
+                                    <img t-att-src="'/web/image/product.template/' + str(prod.id) + '/image_512'"
+                                         t-att-alt="prod.name" loading="lazy"/>
+                                </div>
+                                <div class="ynf-mini-name" t-esc="prod.name"/>
+                                <div class="ynf-mini-price">
+                                    $<span t-esc="'%.2f' % (prod.list_price or 0)"/>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 4. CURATED BUNDLES ==================== -->
+            <section class="ynf-design ynf-bundle-section py-5">
+                <div class="container">
+                    <div class="ynf-design-sechead mb-4">
+                        <span class="ynf-design-eyebrow">Discovery sets</span>
+                        <h2>Curated bundles</h2>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="/shop?search=Khamrah" class="ynf-bundle-card">
+                                <div class="ynf-bundle-imgs">
+                                    <div class="ynf-bundle-bottle"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-2"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-3"/>
+                                </div>
+                                <div class="ynf-bundle-body">
+                                    <div class="ynf-bundle-name">Crowd-Pleasers Trio</div>
+                                    <div class="ynf-bundle-sub">Three can't-miss signatures</div>
+                                    <div class="ynf-bundle-row">
+                                        <span class="ynf-bundle-price">$89</span>
+                                        <span class="ynf-bundle-was">$105</span>
+                                        <span class="ynf-bundle-save">Save 15%</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/shop?search=dupe" class="ynf-bundle-card">
+                                <div class="ynf-bundle-imgs">
+                                    <div class="ynf-bundle-bottle"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-2"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-3"/>
+                                </div>
+                                <div class="ynf-bundle-body">
+                                    <div class="ynf-bundle-name">Dupe Starter Set</div>
+                                    <div class="ynf-bundle-sub">Smell luxury for less</div>
+                                    <div class="ynf-bundle-row">
+                                        <span class="ynf-bundle-price">$72</span>
+                                        <span class="ynf-bundle-was">$85</span>
+                                        <span class="ynf-bundle-save">Save 15%</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/shop?search=Yara" class="ynf-bundle-card">
+                                <div class="ynf-bundle-imgs">
+                                    <div class="ynf-bundle-bottle"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-2"/>
+                                    <div class="ynf-bundle-bottle ynf-bundle-bottle-3"/>
+                                </div>
+                                <div class="ynf-bundle-body">
+                                    <div class="ynf-bundle-name">For Her Edit</div>
+                                    <div class="ynf-bundle-sub">Sweet, floral, unforgettable</div>
+                                    <div class="ynf-bundle-row">
+                                        <span class="ynf-bundle-price">$94</span>
+                                        <span class="ynf-bundle-was">$110</span>
+                                        <span class="ynf-bundle-save">Save 15%</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 5. HOUSE SPOTLIGHT ==================== -->
+            <section class="ynf-design ynf-spotlight-section py-5">
+                <div class="container">
+                    <div class="ynf-spotlight-card">
+                        <span class="ynf-design-eyebrow ynf-spotlight-eyebrow">House spotlight</span>
+                        <h2 class="ynf-spotlight-name">Lattafa</h2>
+                        <p class="ynf-spotlight-blurb">
+                            The house behind Khamrah, Asad and Yara — bold,
+                            affordable Arabian perfumery that punches far above
+                            its price.
+                        </p>
+                        <div class="ynf-spotlight-bottles">
+                            <div class="ynf-spotlight-bottle"/>
+                            <div class="ynf-spotlight-bottle"/>
+                            <div class="ynf-spotlight-bottle"/>
+                        </div>
+                        <a href="/shop?search=Lattafa" class="btn btn-primary ynf-spotlight-cta">
+                            Shop Lattafa
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 6. EDITORIAL BAND ==================== -->
+            <section class="ynf-design ynf-editorial-section py-5">
+                <div class="container">
+                    <div class="ynf-editorial-hero">
+                        <div class="ynf-editorial-overlay">
+                            <span class="ynf-design-eyebrow">Our house</span>
+                            <h2 class="ynf-editorial-title">
+                                Perfumery, the old-world way.
+                            </h2>
+                        </div>
+                    </div>
+                    <p class="ynf-editorial-quote">
+                        "We hunt down the bottles worth wearing — and price them
+                        so you can actually own them."
+                    </p>
+                    <div class="row g-3 mt-2">
+                        <div class="col-6">
+                            <div class="ynf-editorial-tile"/>
+                        </div>
+                        <div class="col-6">
+                            <div class="ynf-editorial-tile ynf-editorial-tile-2"/>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/shop" class="btn btn-outline-dark">
+                            Explore the catalog
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 7. QUIZ CTA ==================== -->
+            <section class="ynf-design ynf-quiz-section py-5">
+                <div class="container">
+                    <a href="/shop" class="ynf-quiz-card">
+                        <div class="ynf-quiz-icon">✨</div>
+                        <h2 class="ynf-quiz-title">
+                            Find your <em>signature</em>
+                        </h2>
+                        <p class="ynf-quiz-sub">
+                            Answer 4 quick questions and we'll match you to your
+                            next scent.
+                        </p>
+                        <span class="btn btn-outline-warning">Start the quiz →</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- ==================== 8. TESTIMONIALS ==================== -->
+            <section class="ynf-design ynf-testimonial-section py-5">
+                <div class="container">
+                    <div class="ynf-design-sechead mb-4">
+                        <span class="ynf-design-eyebrow">Loved by thousands</span>
+                        <h2>What buyers say</h2>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="ynf-testimonial-card">
+                                <div class="ynf-testimonial-stars">★★★★★</div>
+                                <p class="ynf-testimonial-quote">
+                                    "Khamrah is unreal for the price — I get
+                                    compliments every single time."
+                                </p>
+                                <div class="ynf-testimonial-author">
+                                    <strong>Ayesha K.</strong>
+                                    <span class="ynf-testimonial-verified">
+                                        ✓ Verified buyer
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="ynf-testimonial-card">
+                                <div class="ynf-testimonial-stars">★★★★★</div>
+                                <p class="ynf-testimonial-quote">
+                                    "Won Hawas on a live for $14. 100% authentic
+                                    and shipped in two days."
+                                </p>
+                                <div class="ynf-testimonial-author">
+                                    <strong>Marcus T.</strong>
+                                    <span class="ynf-testimonial-verified">
+                                        ✓ Verified buyer
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="ynf-testimonial-card">
+                                <div class="ynf-testimonial-stars">★★★★★</div>
+                                <p class="ynf-testimonial-quote">
+                                    "Yara smells expensive and lasts all day.
+                                    Completely obsessed."
+                                </p>
+                                <div class="ynf-testimonial-author">
+                                    <strong>Dana R.</strong>
+                                    <span class="ynf-testimonial-verified">
+                                        ✓ Verified buyer
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 9. STATS BAND ==================== -->
+            <section class="ynf-design ynf-stats-section py-5">
+                <div class="container">
+                    <div class="ynf-stats-band">
+                        <div class="ynf-stat-cell">
+                            <div class="ynf-stat-num"
+                                 data-count="12000" data-suffix="+">12,000+</div>
+                            <div class="ynf-stat-label">Bottles shipped</div>
+                        </div>
+                        <div class="ynf-stat-cell">
+                            <div class="ynf-stat-num"
+                                 data-count="60" data-suffix="+">60+</div>
+                            <div class="ynf-stat-label">Fragrances</div>
+                        </div>
+                        <div class="ynf-stat-cell">
+                            <div class="ynf-stat-num">4.8★</div>
+                            <div class="ynf-stat-label">Avg rating</div>
+                        </div>
+                        <div class="ynf-stat-cell">
+                            <div class="ynf-stat-num"
+                                 data-count="4" data-suffix="">4</div>
+                            <div class="ynf-stat-label">Houses</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 10. AUTHENTICITY BAND ==================== -->
+            <section class="ynf-design ynf-auth-section py-5">
+                <div class="container">
+                    <div class="ynf-auth-card">
+                        <div class="text-center mb-4">
+                            <span class="ynf-design-eyebrow ynf-auth-eyebrow">
+                                The YNF promise
+                            </span>
+                            <h2 class="ynf-auth-title">
+                                100% authentic, always
+                            </h2>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="ynf-auth-item">
+                                    <div class="ynf-auth-icon">🛡</div>
+                                    <div>
+                                        <div class="ynf-auth-name">Sourced direct</div>
+                                        <div class="ynf-auth-desc">
+                                            From brands &amp; authorized distributors —
+                                            never testers or fakes.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="ynf-auth-item">
+                                    <div class="ynf-auth-icon">✨</div>
+                                    <div>
+                                        <div class="ynf-auth-name">Batch-code verified</div>
+                                        <div class="ynf-auth-desc">
+                                            Every bottle checks out, or we refund
+                                            you in full.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="ynf-auth-item">
+                                    <div class="ynf-auth-icon">🚚</div>
+                                    <div>
+                                        <div class="ynf-auth-name">Fast, tracked shipping</div>
+                                        <div class="ynf-auth-desc">
+                                            Ships within 2 business days, free
+                                            over $75.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== 11. DROP ALERT ==================== -->
+            <section class="ynf-design ynf-dropalert-section py-5">
+                <div class="container">
+                    <div class="ynf-dropalert-card">
+                        <h2>Never miss a drop</h2>
+                        <p>
+                            Get a heads-up before every live auction and new arrival.
+                        </p>
+                        <form class="ynf-dropalert-form"
+                              action="#" method="post"
+                              onsubmit="event.preventDefault(); this.querySelector('.ynf-dropalert-done').style.display='block'; this.querySelector('.ynf-dropalert-row').style.display='none';">
+                            <div class="ynf-dropalert-row">
+                                <input type="email" placeholder="Your email"
+                                       required="required"
+                                       class="ynf-dropalert-input"/>
+                                <button type="submit" class="ynf-dropalert-btn">
+                                    Notify me
+                                </button>
+                            </div>
+                            <div class="ynf-dropalert-done" style="display:none;">
+                                ✓ You're on the list — see you live.
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reveal-on-scroll + count-up animation -->
+            <script>
+                (function () {
+                    const reveal = (els) => els.forEach(e => e.classList.add('ynf-design-in'));
+                    const sections = document.querySelectorAll('.ynf-design');
+                    if (!('IntersectionObserver' in window)) {
+                        reveal(sections);
+                    } else {
+                        const io = new IntersectionObserver((entries) => {
+                            entries.forEach(en => {
+                                if (en.isIntersecting) {
+                                    en.target.classList.add('ynf-design-in');
+                                    io.unobserve(en.target);
+                                    if (en.target.classList.contains('ynf-stats-section')) {
+                                        en.target.querySelectorAll('[data-count]').forEach(el => {
+                                            const to = parseInt(el.dataset.count, 10);
+                                            const suffix = el.dataset.suffix || '';
+                                            let i = 0; const steps = 30;
+                                            const tk = setInterval(() => {
+                                                i++; const t = Math.min(1, i / steps);
+                                                el.textContent = Math.round(to * (1 - Math.pow(1 - t, 3))).toLocaleString() + suffix;
+                                                if (t >= 1) clearInterval(tk);
+                                            }, 36);
+                                        });
+                                    }
+                                }
+                            });
+                        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+                        sections.forEach(s => io.observe(s));
+                        setTimeout(() => reveal(sections), 3000);
+                    }
+                })();
+            </script>
+
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,211 @@
+/* === Convert the editor homepage (view 1378 / .ynf-site) to LIGHT ===
+   The page defines its own palette via CSS vars and hard-codes several dark
+   sections. We override those to an ivory + gold light luxury look. */
+
+.ynf-site {
+    background: #fbf6ec !important;   /* paper */
+    color: #110b07 !important;        /* ink */
+}
+
+/* === Lattafa-style: clean SANS-SERIF everywhere (override Georgia serif) === */
+.ynf-site,
+.ynf-site .ynf-h1,
+.ynf-site .ynf-title,
+.ynf-site .ynf-card-body h3,
+.ynf-site .ynf-cinema h2,
+.ynf-site .ynf-cinema-inner h2,
+.ynf-site .ynf-editorial-copy h2,
+.ynf-site h1, .ynf-site h2, .ynf-site h3, .ynf-site h4 {
+    font-family: "Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+    letter-spacing: -0.01em;
+}
+.ynf-site .ynf-h1 {
+    font-weight: 700 !important;
+    line-height: 1.04 !important;
+}
+.ynf-site .ynf-title { font-weight: 700 !important; }
+
+/* === Burgundy secondary accent (Lattafa oud) === */
+.ynf-site .ynf-eyebrow,
+.ynf-site .ynf-kicker {
+    color: #6b1f23 !important;   /* wine eyebrows for warmth */
+}
+.ynf-site .ynf-btn.primary {
+    background: linear-gradient(135deg, #c9a961, #a07f3a) !important;
+    color: #1d1408 !important;
+}
+
+/* --- HERO: dark noir → light ivory with gold wash --- */
+.ynf-site .ynf-hero {
+    background: linear-gradient(180deg, #fff9ed 0%, #f6ecd8 100%) !important;
+}
+/* Dim the background video so it reads on light, or hide it */
+.ynf-site .ynf-bg-video {
+    opacity: 0.18 !important;
+    filter: saturate(0.9) contrast(0.95) brightness(1.15) !important;
+    mix-blend-mode: multiply;
+}
+/* Hero color overlays → soft warm light instead of dark */
+.ynf-site .ynf-hero:before {
+    background:
+        radial-gradient(circle at 78% 18%, rgba(201,154,54,0.18), transparent 30%),
+        radial-gradient(circle at 22% 78%, rgba(143,79,47,0.10), transparent 38%),
+        linear-gradient(90deg, rgba(255,249,237,0.92) 0%, rgba(255,249,237,0.55) 48%, rgba(255,249,237,0.10) 100%) !important;
+}
+.ynf-site .ynf-grain { opacity: 0.05 !important; mix-blend-mode: multiply; }
+.ynf-site .ynf-mist {
+    background: radial-gradient(circle, rgba(201,154,54,0.16), transparent 64%) !important;
+}
+
+/* Hero headline + lead → dark ink on light */
+.ynf-site .ynf-h1 {
+    color: #1a120a !important;
+    text-shadow: none !important;
+}
+.ynf-site .ynf-lead {
+    color: rgba(40,30,18,0.78) !important;
+}
+.ynf-site .ynf-eyebrow {
+    color: #a07f3a !important;   /* darker gold for contrast on light */
+}
+
+/* Secondary button → outlined dark on light */
+.ynf-site .ynf-btn.secondary {
+    color: #2a2118 !important;
+    background: rgba(160,127,58,0.08) !important;
+    border-color: rgba(160,127,58,0.35) !important;
+    backdrop-filter: none !important;
+}
+
+/* Hero stat chips → light cards */
+.ynf-site .ynf-hero-stat {
+    border-color: rgba(160,127,58,0.30) !important;
+    background: rgba(255,255,255,0.7) !important;
+    color: #2a2118 !important;
+    box-shadow: 0 4px 14px rgba(42,33,24,0.06) !important;
+}
+
+/* --- DARK SECTIONS → light ivory --- */
+.ynf-site .ynf-section.dark {
+    background: #f3ece0 !important;
+    color: #2a2118 !important;
+}
+.ynf-site .dark .ynf-copy {
+    color: rgba(42,33,24,0.72) !important;
+}
+.ynf-site .ynf-cinema h2,
+.ynf-site .ynf-cinema-inner h2 {
+    color: #1a120a !important;
+}
+.ynf-site .ynf-cinema p,
+.ynf-site .ynf-cinema-inner p,
+.ynf-site .ynf-cinema span,
+.ynf-site .ynf-cinema li {
+    color: rgba(42,33,24,0.78) !important;
+}
+
+/* Drop panel dark variant → light card */
+.ynf-site .ynf-drop-panel.darkish {
+    background: #fffaf0 !important;
+    color: #2a2118 !important;
+    border: 1px solid rgba(160,127,58,0.20);
+}
+.ynf-site .ynf-drop-panel.darkish p {
+    color: rgba(42,33,24,0.72) !important;
+}
+
+/* Marquee strip → light gold bar */
+.ynf-site .ynf-marquee {
+    background: #f6ecd8 !important;
+    color: #7c6128 !important;
+    border-color: rgba(160,127,58,0.25) !important;
+}
+
+/* Editorial green panel — keep a tasteful tone but lighten to sage so it
+   doesn't read as a heavy dark block; comment out if you prefer the forest. */
+.ynf-site .ynf-editorial-copy {
+    background: #e8efe9 !important;
+    color: #1e3932 !important;
+}
+.ynf-site .ynf-editorial-copy h2 {
+    color: #16302a !important;
+}
+.ynf-site .ynf-editorial-copy p,
+.ynf-site .ynf-editorial-copy .ynf-copy {
+    color: rgba(30,57,50,0.80) !important;
+}
+
+/* --- Hero feature chips (Authentic inventory / Fast US shipping / Live drop) ---
+   They live in .ynf-proof as bare <span>s; were pale cream on translucent
+   white = invisible on the light hero. */
+.ynf-site .ynf-proof span,
+.ynf-site .ynf-proof > * {
+    color: #7c6128 !important;
+    background: rgba(160,127,58,0.12) !important;
+    border: 1px solid rgba(160,127,58,0.30) !important;
+    border-radius: 999px;
+    padding: 7px 14px !important;
+    font-weight: 600;
+}
+
+/* --- Chips INSIDE collection cards (Explore woods / Shop fresh / etc.) ---
+   These sit over dark product photos, so keep them light & legible. */
+.ynf-site .ynf-coll-card .ynf-chip,
+.ynf-site [class*="card"] .ynf-chip,
+.ynf-site .ynf-chip {
+    color: #fff !important;
+    background: rgba(0,0,0,0.45) !important;
+    border: 1px solid rgba(255,255,255,0.35) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* Hero chips override the generic chip rule above (more specific) */
+.ynf-site .ynf-hero .ynf-chip {
+    color: #7c6128 !important;
+    background: rgba(160,127,58,0.12) !important;
+    border-color: rgba(160,127,58,0.30) !important;
+    backdrop-filter: none;
+}
+
+/* Editorial copy paragraph that stayed white-on-light */
+.ynf-site .ynf-editorial-copy p,
+.ynf-site .ynf-editorial-copy span,
+.ynf-site .ynf-editorial-copy li {
+    color: rgba(30,57,50,0.82) !important;
+}
+
+/* Any leftover light text on a light surface — force to ink.
+   Scoped to NON-card contexts (cards over images keep white). */
+.ynf-site .ynf-section > .ynf-shell [style*="color:#fff8eb"],
+.ynf-site .ynf-section > .ynf-shell [style*="color:rgba(255"] {
+    color: #2a2118 !important;
+}
+
+/* Hero side "Live Favorite" card — it sits over a dark product photo, so its
+   white text is correct. Just make sure the gold badge reads well. */
+.ynf-site .ynf-hero [class*="favorite"],
+.ynf-site .ynf-hero [class*="badge"] {
+    color: #1d1408 !important;
+}
+
+/* === Mask Odoo's gray camera placeholder on collection cards ===
+   Products without a real photo show a 6KB gray placeholder. Overlay a warm
+   gradient so cards look intentional (text stays readable over it). */
+.ynf-site .ynf-card .media {
+    background-color: #2a2118;   /* fallback behind any placeholder */
+    background-blend-mode: multiply;
+}
+.ynf-site .ynf-card .media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #3a2e22 0%, #1f1812 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+/* When the bg image is the placeholder, the dark gradient already sits under
+   the :after overlay, so cards read as deep luxury tiles either way. */
+.ynf-site .ynf-card:after {
+    background: linear-gradient(180deg, rgba(40,30,18,0.10) 0%, rgba(20,14,8,0.88) 100%) !important;
+}

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ============================================================ -->
+        <!-- /live — public landing for TikTok Live auctions               -->
+        <!-- Idiomatic Odoo 18: website.page record + linked website_menu  -->
+        <!-- ============================================================ -->
+        <record id="ynf_live_page_view" model="ir.ui.view">
+            <field name="name">YNF Live page</field>
+            <field name="type">qweb</field>
+            <field name="key">ynf_website_theme.ynf_live_page</field>
+            <field name="arch" type="xml">
+                <t name="YNF Live" t-name="ynf_website_theme.ynf_live_page">
+                    <t t-call="website.layout">
+                        <div id="wrap" class="ynf-live-page oe_structure">
+                            <section class="ynf-live-hero">
+                                <div class="container py-5 text-center">
+                                    <span class="ynf-live-badge mb-3 d-inline-block">
+                                        🔴 LIVE NOW
+                                    </span>
+                                    <h1 class="ynf-live-title">
+                                        Catch the live drop on TikTok
+                                    </h1>
+                                    <p class="lead mt-3 ynf-live-sub">
+                                        Real-time auctions, surprise gift sets,
+                                        and exclusive launch prices — straight from
+                                        the studio.
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                                        <a href="https://www.tiktok.com/@ynfdeals/live"
+                                           target="_blank" rel="noopener"
+                                           class="btn btn-primary btn-lg ynf-live-cta">
+                                            Watch Live on TikTok
+                                        </a>
+                                        <a href="/shop" class="btn btn-outline-dark btn-lg">
+                                            Browse the shop
+                                        </a>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="ynf-live-info py-5">
+                                <div class="container">
+                                    <div class="row g-4">
+                                        <div class="col-md-4 text-center">
+                                            <div class="ynf-live-step-num">①</div>
+                                            <h4>Tune in</h4>
+                                            <p class="text-muted">
+                                                Open TikTok and follow
+                                                <strong>@ynfdeals</strong> — you'll get
+                                                a ping every time we go Live.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <div class="ynf-live-step-num">②</div>
+                                            <h4>Bid &amp; win</h4>
+                                            <p class="text-muted">
+                                                Type your bid in chat. The highest at
+                                                the countdown wins the lot — checkout
+                                                runs automatically via TikTok Shop.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <div class="ynf-live-step-num">③</div>
+                                            <h4>Ships same-week</h4>
+                                            <p class="text-muted">
+                                                We pack and ship through USPS within
+                                                3-5 business days. Track on
+                                                <a href="/my/orders">your orders page</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="ynf-live-faq py-5 bg-light">
+                                <div class="container">
+                                    <h2 class="text-center mb-4">Questions buyers ask</h2>
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8">
+                                            <details class="ynf-live-faq-item mb-2">
+                                                <summary>How do I know when you're live?</summary>
+                                                <p>Follow @ynfdeals on TikTok — the app pushes
+                                                a notification the moment we go live. Most
+                                                Live sessions run weeknight evenings (US Eastern).</p>
+                                            </details>
+                                            <details class="ynf-live-faq-item mb-2">
+                                                <summary>Can I buy without TikTok?</summary>
+                                                <p>The Live auctions only run on TikTok. Everything
+                                                else — fixed-price bottles, gift sets, restocks —
+                                                is available right here at <a href="/shop">/shop</a>.</p>
+                                            </details>
+                                            <details class="ynf-live-faq-item mb-2">
+                                                <summary>What if I miss the win?</summary>
+                                                <p>You'll see all your past wins in
+                                                <a href="/my/orders">your orders page</a>,
+                                                grouped by session. Tracking, video receipts,
+                                                and disputes are one click each.</p>
+                                            </details>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="ynf_live_page" model="website.page">
+            <field name="name">Live</field>
+            <field name="url">/live</field>
+            <field name="website_published">True</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="ynf_live_page_view"/>
+        </record>
+
+        <record id="ynf_live_menu" model="website.menu">
+            <field name="name">Live</field>
+            <field name="url">/live</field>
+            <field name="page_id" ref="ynf_live_page"/>
+            <field name="parent_id" search="[
+                ('parent_id', '=', False),
+                ('website_id', '=', 1),
+            ]"/>
+            <field name="sequence">5</field>
+        </record>
+
+    </data>
+</odoo>

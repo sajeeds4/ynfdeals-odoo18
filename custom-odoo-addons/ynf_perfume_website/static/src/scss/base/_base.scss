@@ -1,0 +1,100 @@
+// ==========================================================================
+// YNF Perfume — Base / reset within the storefront wrapper
+// Everything is scoped under .ynf so it never touches the Odoo editor chrome,
+// backend, or other websites sharing the bundle.
+// ==========================================================================
+
+.ynf {
+    font-family: var(--y-body);
+    color: var(--y-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background: var(--y-bg);
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    h1, h2, h3, h4 {
+        font-family: var(--y-display);
+        color: var(--y-text);
+        font-weight: 600;
+        line-height: 1.08;
+        margin: 0;
+    }
+
+    p { margin: 0; line-height: 1.6; }
+
+    a { color: inherit; text-decoration: none; }
+
+    img { max-width: 100%; }
+
+    // Section rhythm — the design's "gap" (50px comfortable).
+    .y-section { margin-top: 50px; }
+    @media (max-width: $y-bp-md) { .y-section { margin-top: 38px; } }
+
+    // Content container: full-bleed on mobile (16px gutter), centred on desktop.
+    .y-container {
+        width: 100%;
+        max-width: var(--y-maxw);
+        margin: 0 auto;
+        padding-left: var(--y-gutter);
+        padding-right: var(--y-gutter);
+        @media (min-width: $y-bp-lg) {
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+    }
+
+    // Eyebrow / section heading typography.
+    .y-eyebrow {
+        font-family: var(--y-body);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--y-gold);
+    }
+
+    .y-h-section {
+        font-family: var(--y-display);
+        font-weight: 600;
+        font-size: 25px;
+        margin-top: 4px;
+        @media (min-width: $y-bp-lg) { font-size: 34px; }
+    }
+
+    // Hide scrollbars on horizontal rails (design's .y-noscroll).
+    .y-noscroll {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar { display: none; }
+    }
+
+    .y-rail {
+        display: flex;
+        gap: 13px;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        padding-bottom: 4px;
+        > * { scroll-snap-align: start; flex: 0 0 auto; }
+    }
+}
+
+// Keep the floating Odoo editor / cookie bar usable above our content.
+.ynf { position: relative; z-index: 0; }
+
+// ── Site-wide token application (header, footer, cart, checkout) ──
+// Scoped to #wrapwrap (Odoo's frontend content wrapper) so the whole storefront
+// inherits the luxury type scale. (We avoid a <body> class — the body element
+// lives in web.layout, which website.layout can't xpath into.)
+#wrapwrap {
+    font-family: var(--y-body);
+    color: var(--y-text);
+    h1, h2, h3, h4, .h1, .h2, .h3 { font-family: var(--y-display); }
+
+    // Primary buttons across cart/checkout pick up the gold accent.
+    .btn-primary {
+        background-color: var(--y-gold);
+        border-color: var(--y-gold);
+        &:hover, &:focus { background-color: var(--y-gold-d); border-color: var(--y-gold-d); }
+    }
+}

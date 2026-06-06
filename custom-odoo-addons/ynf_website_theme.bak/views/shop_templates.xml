@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tighten the shop catalog header -->
+    <template id="ynf_shop_overrides" inherit_id="website_sale.products" name="YNF Shop overrides">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="attributes">
+            <attribute name="class" add="ynf-shop" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="before">
+            <section class="ynf-section ynf-shop-header" style="padding-top: 56px; padding-bottom: 0;">
+                <div class="container">
+                    <div class="ynf-section-title">
+                        <span class="eyebrow">Catalog</span>
+                        <h2>Browse Fragrances</h2>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

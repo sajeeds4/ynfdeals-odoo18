@@ -1,0 +1,170 @@
+// ==========================================================================
+// YNF Deals — Deal product card (marketplace style)
+// White card, image, brand, name, RED sale price + strikethrough MSRP + % off,
+// add-to-cart button. Denser, retail.
+// ==========================================================================
+.ynf {
+    .y-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: var(--y-card);
+        border: 1px solid var(--y-line);
+        border-radius: var(--y-r-md);
+        overflow: hidden;
+        box-shadow: var(--y-shadow-card);
+        cursor: pointer;
+        transition: box-shadow .18s var(--y-ease), border-color .18s var(--y-ease), transform .18s var(--y-ease);
+        -webkit-tap-highlight-color: transparent;
+        height: 100%;
+
+        &:hover {
+            box-shadow: var(--y-shadow-lift);
+            border-color: var(--y-border);
+            transform: translateY(-2px);
+        }
+
+        // Image stage
+        &__stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 14px;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-bottom: 1px solid var(--y-line);
+        }
+        &__img {
+            position: relative;
+            z-index: 1;
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            object-fit: contain;
+            transition: transform .3s var(--y-ease);
+        }
+        &:hover &__img { transform: scale(1.05); }
+
+        // Badges
+        &__badge { position: absolute; top: 8px; left: 8px; z-index: 2; }
+        &__badge--br { top: auto; left: auto; bottom: 8px; right: 8px; }
+
+        // Body
+        &__body {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 11px 12px 12px;
+            flex: 1;
+        }
+        &__brand {
+            font-family: var(--y-body);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--y-muted);
+        }
+        &__name {
+            font-family: var(--y-body);
+            font-weight: 600;
+            font-size: 13.5px;
+            line-height: 1.3;
+            color: var(--y-text);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 35px;
+        }
+        &__sub { font-family: var(--y-body); font-size: 11px; color: var(--y-dim); }
+        &__gender { color: var(--y-dim); }
+
+        // Price row — red sale price, strikethrough MSRP, save %
+        &__pricerow {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 6px;
+        }
+        &__price {
+            font-family: var(--y-body);
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--y-sale);
+            .oe_currency_value { font-weight: 800; }
+        }
+        &__msrp {
+            font-family: var(--y-body);
+            font-size: 12.5px;
+            color: var(--y-dim);
+            text-decoration: line-through;
+        }
+        &__save {
+            font-family: var(--y-body);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--y-success);
+            background: rgba(31, 157, 87, 0.10);
+            padding: 2px 6px;
+            border-radius: var(--y-r-sm);
+        }
+
+        // Add to cart button
+        &__cart {
+            margin-top: 10px;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 9px 12px;
+            border: 0;
+            border-radius: var(--y-r-md);
+            background: var(--y-navy);
+            color: #fff;
+            font-family: var(--y-body);
+            font-weight: 600;
+            font-size: 12.5px;
+            cursor: pointer;
+            transition: background .15s ease, transform .1s ease;
+            &:hover { background: var(--y-navy-d); }
+            &:active { transform: translateY(1px); }
+            &.is-added { background: var(--y-success); }
+        }
+    }
+
+    // Branded flacon placeholder (products without a photo)
+    .y-flacon {
+        position: relative;
+        z-index: 1;
+        width: 54%;
+        aspect-ratio: 0.62;
+        border-radius: 5px;
+        background: linear-gradient(160deg, var(--f1, #6b1f23), var(--f2, #3a1416));
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 8px 14%;
+        text-align: center;
+        &__cap {
+            position: absolute; top: -9%; left: 50%; transform: translateX(-50%);
+            width: 26%; height: 11%; border-radius: 3px 3px 1px 1px;
+            background: var(--y-gold-l);
+        }
+        &__name {
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            font-family: var(--y-body); font-weight: 700; font-size: 12px; line-height: 1.15;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        &__house {
+            display: block; font-family: var(--y-body); font-size: 8px; letter-spacing: 0.18em;
+            text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-top: 5px;
+        }
+    }
+}

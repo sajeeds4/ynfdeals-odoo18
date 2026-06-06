@@ -1,0 +1,201 @@
+/* === Announcement bar === */
+.ynf-announce-bar {
+    background: linear-gradient(90deg, #4d1518, #6b1f23 50%, #4d1518);
+    color: #f6dc93;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 8px 14px;
+    text-transform: uppercase;
+
+    i { margin-right: 5px; color: #c9a961; }
+    .ynf-announce-sep { margin: 0 10px; opacity: 0.5; }
+
+    @media (max-width: 600px) {
+        font-size: 0.68rem;
+        .ynf-announce-sep { margin: 0 5px; }
+    }
+}
+
+/* === Trust badges === */
+.ynf-trust {
+    background: #fff;
+    padding: 40px 16px;
+    border-top: 1px solid rgba(115, 81, 34, 0.12);
+    border-bottom: 1px solid rgba(115, 81, 34, 0.12);
+
+    .ynf-trust-grid {
+        max-width: 1180px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+
+        @media (min-width: 768px) { grid-template-columns: repeat(4, 1fr); }
+    }
+    .ynf-trust-item {
+        text-align: center;
+        i {
+            font-size: 1.7rem;
+            color: #a07f3a;
+            margin-bottom: 10px;
+            display: block;
+        }
+        h6 {
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            color: #2a2118;
+            font-size: 1rem;
+            margin: 0 0 4px;
+        }
+        p { color: #6e6151; font-size: 0.82rem; margin: 0; }
+    }
+}
+
+/* === Testimonials === */
+.ynf-testimonials {
+    background: #faf5ec;
+    padding: 72px 0;
+
+    .ynf-shell { width: unquote("min(1220px, calc(100% - 40px))"); margin: 0 auto; }
+
+    .ynf-t-head {
+        text-align: center;
+        margin-bottom: 44px;
+        .ynf-eyebrow {
+            color: #6b1f23;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            color: #2a2118;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin: 0;
+        }
+    }
+
+    .ynf-t-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        @media (min-width: 600px) { grid-template-columns: repeat(2, 1fr); }
+        @media (min-width: 992px) { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .ynf-t-card {
+        background: #fff;
+        border: 1px solid rgba(115, 81, 34, 0.14);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 6px 20px rgba(42, 33, 24, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(42, 33, 24, 0.1); }
+
+        .ynf-t-stars { color: #c9a961; font-size: 1.05rem; letter-spacing: 2px; margin-bottom: 12px; }
+        p { color: #3a3127; font-size: 0.95rem; line-height: 1.6; margin: 0 0 16px; font-style: italic; }
+        .ynf-t-author {
+            font-weight: 700;
+            color: #2a2118;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ynf-t-verified {
+            color: #4e9266;
+            font-size: 0.75rem;
+            font-weight: 600;
+            i { margin-right: 3px; }
+        }
+    }
+}
+
+/* === Newsletter === */
+.ynf-newsletter {
+    background: linear-gradient(135deg, #6b1f23 0%, #4d1518 100%);
+    padding: 72px 16px;
+    text-align: center;
+
+    .ynf-shell { width: unquote("min(640px, calc(100% - 40px))"); margin: 0 auto; }
+    .ynf-eyebrow {
+        color: #f6dc93;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-weight: 700;
+        font-size: 0.78rem;
+        display: block;
+        margin-bottom: 12px;
+    }
+    h2 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        color: #fff9ed;
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        margin: 0 0 12px;
+        line-height: 1.15;
+    }
+    p { color: rgba(255, 249, 237, 0.82); font-size: 1rem; margin: 0 0 28px; }
+
+    .ynf-nl-form {
+        display: flex;
+        gap: 10px;
+        max-width: 480px;
+        margin: 0 auto 14px;
+
+        @media (max-width: 520px) { flex-direction: column; }
+
+        input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 0 !important;
+            border-radius: 999px;
+            padding: 14px 22px;
+            font-size: 0.95rem;
+            color: #2a2118 !important;
+
+            &::placeholder { color: #8a7d6b; }
+            &:focus { box-shadow: 0 0 0 3px rgba(246, 220, 147, 0.4) !important; }
+        }
+        .ynf-btn.primary {
+            background: linear-gradient(135deg, #f6dc93, #c9a961) !important;
+            color: #4d1518 !important;
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+    }
+    small { color: rgba(255, 249, 237, 0.6); font-size: 0.8rem; }
+}
+
+/* === Sale-price styling on product cards (shop + homepage) === */
+.oe_website_sale, .ynf-site {
+    del, .text-muted s, .o_wsale_price_compare, s {
+        color: #a8997f !important;
+        font-size: 0.85em;
+        margin-right: 6px;
+    }
+    .oe_currency_value, .o_wsale_product_btn {
+        /* sale price stays gold/bold via shop.scss */
+    }
+    /* Sale badge */
+    .badge.text-bg-danger, .o_ribbon, .o_sale_ribbon {
+        background: #6b1f23 !important;
+        color: #f6dc93 !important;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+}

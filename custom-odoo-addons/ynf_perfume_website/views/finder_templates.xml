@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         PHASE 9 · FRAGRANCE FINDER  (route /fragrance-finder)
+         A 4-question quiz that returns real catalogue matches. Works without
+         JS (plain GET form); JS progressively enhances it into a stepper.
+         =================================================================== -->
+    <template id="finder_page" name="YNF Fragrance Finder">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'ynf_finder'"/>
+            <div id="wrap" class="ynf ynf-finder oe_structure">
+                <div class="y-container" style="max-width:760px">
+
+                    <section class="y-finder-head y-rev">
+                        <div class="y-eyebrow">Fragrance Finder</div>
+                        <h1 class="y-finder-title">Find your <em>signature</em>.</h1>
+                        <p class="y-finder-lede">Answer four quick questions and we'll match you to scents from our real catalogue.</p>
+                    </section>
+
+                    <t t-if="not submitted">
+                        <form class="y-quiz" method="get" action="/fragrance-finder">
+                            <input type="hidden" name="submitted" value="1"/>
+
+                            <!-- Q1 Gender -->
+                            <fieldset class="y-quiz__step y-rev">
+                                <legend><span class="y-quiz__n">1</span> Who is it for?</legend>
+                                <div class="y-quiz__opts">
+                                    <t t-foreach="[('women','For Her'),('men','For Him'),('unisex','Unisex')]" t-as="g">
+                                        <label class="y-quiz__opt">
+                                            <input type="radio" name="gender" t-att-value="g[0]" t-att-checked="answers.get('gender')==g[0] or None"/>
+                                            <span t-esc="g[1]"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </fieldset>
+
+                            <!-- Q2 Mood / family -->
+                            <fieldset class="y-quiz__step y-rev">
+                                <legend><span class="y-quiz__n">2</span> What mood are you after?</legend>
+                                <div class="y-quiz__opts y-quiz__opts--grid">
+                                    <t t-foreach="moods" t-as="m">
+                                        <label class="y-quiz__opt y-quiz__opt--rich">
+                                            <input type="radio" name="mood" t-att-value="m['id']" t-att-checked="answers.get('mood')==m['id'] or None"/>
+                                            <span class="y-quiz__opt-title" t-esc="m['label']"/>
+                                            <span class="y-quiz__opt-sub" t-esc="m['sub']"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </fieldset>
+
+                            <!-- Q3 Budget -->
+                            <fieldset class="y-quiz__step y-rev">
+                                <legend><span class="y-quiz__n">3</span> Your budget?</legend>
+                                <div class="y-quiz__opts">
+                                    <t t-foreach="budgets" t-as="b">
+                                        <label class="y-quiz__opt">
+                                            <input type="radio" name="budget" t-att-value="b['id']" t-att-checked="answers.get('budget')==b['id'] or None"/>
+                                            <span t-esc="b['label']"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </fieldset>
+
+                            <!-- Q4 Occasion -->
+                            <fieldset class="y-quiz__step y-rev">
+                                <legend><span class="y-quiz__n">4</span> When will you wear it?</legend>
+                                <div class="y-quiz__opts">
+                                    <t t-foreach="occasions" t-as="o">
+                                        <label class="y-quiz__opt">
+                                            <input type="radio" name="occasion" t-att-value="o['id']" t-att-checked="answers.get('occasion')==o['id'] or None"/>
+                                            <span t-esc="o['label']"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </fieldset>
+
+                            <div class="y-quiz__submit y-rev">
+                                <button type="submit" class="y-btn y-btn--primary y-btn--lg">Reveal my matches →</button>
+                            </div>
+                        </form>
+                    </t>
+
+                    <t t-else="">
+                        <section class="y-finder-results">
+                            <div class="y-sechead y-rev">
+                                <div>
+                                    <div class="y-eyebrow">Your matches</div>
+                                    <h2 class="y-h-section">Curated for you</h2>
+                                </div>
+                                <a class="y-viewall" href="/fragrance-finder">Retake quiz ↻</a>
+                            </div>
+                            <t t-if="results">
+                                <div class="y-grid">
+                                    <t t-foreach="results" t-as="product">
+                                        <div class="y-rev"><t t-call="ynf_perfume_website.product_card"/></div>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <p class="y-finder-lede">No exact matches — <a href="/shop" style="color:var(--y-gold-d)">browse the full catalogue</a>.</p>
+                            </t>
+                        </section>
+                    </t>
+
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

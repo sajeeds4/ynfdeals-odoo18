@@ -48,3 +48,4 @@ whatnot-collector/**/*.pdf
 whatnot-collector/**/*.csv
 whatnot-collector/**/*.xlsx
 whatnot-collector/**/*.xls
+.aider*

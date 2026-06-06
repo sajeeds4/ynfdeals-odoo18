@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inject body class + viewport meta -->
+    <template id="layout" inherit_id="website.layout" name="YNF Layout overrides">
+        <xpath expr="//body" position="attributes">
+            <attribute name="class" add="ynf-body" separator=" "/>
+        </xpath>
+    </template>
+
+</odoo>

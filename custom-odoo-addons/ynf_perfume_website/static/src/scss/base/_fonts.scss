@@ -1,0 +1,12 @@
+// ==========================================================================
+// YNF Perfume — Web fonts
+// The design uses Cormorant Garamond (display) + Inter (body).
+//
+// IMPORTANT: do NOT use CSS `@import` here. Odoo concatenates every SCSS file
+// into one bundle; a CSS `@import` (and the `@charset` Odoo prepends) then
+// land mid-bundle, which is invalid CSS and makes the browser drop the ENTIRE
+// stylesheet after that point. The fonts are loaded via <link> tags injected
+// into <head> by views/website_layout_templates.xml instead.
+//
+// (Inter already ships with Odoo's web assets; only Cormorant Garamond is new.)
+// ==========================================================================

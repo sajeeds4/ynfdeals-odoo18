@@ -1,0 +1,303 @@
+/* =========================================================================
+   YNF Deals — Odoo 18 theme styles (compliant reskin)
+   Drop into: custom-odoo-addons/ynf_website_theme/static/src/scss/ynf_theme.scss
+   Add to __manifest__.py web.assets_frontend AFTER theme_variables.scss so the
+   $ynf-* variables resolve. Targets Bootstrap 5 + website_sale selectors only —
+   no core template edits required.
+   ========================================================================= */
+
+/* Premium typography — loaded via <link> in website.layout (see templates.xml) */
+
+$ynf-serif: var(--ynf-font-serif, "Cormorant Garamond", Georgia, serif);
+$ynf-sans:  var(--ynf-font-sans, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+
+/* Design tokens — palette */
+$ynf-bg:          #fdfaf3;
+$ynf-bg-soft:     #fbf4e6;
+$ynf-text:        #2d2419;
+$ynf-text-dim:    #5a4a36;
+$ynf-text-muted:  #8a7a66;
+$ynf-gold:        #a57c40;
+$ynf-gold-dark:   #8a6730;
+$ynf-gold-light:  #d9b46d;
+$ynf-gold-soft:   rgba(165, 124, 64, 0.10);
+$ynf-border:      rgba(165, 124, 64, 0.22);
+$ynf-border-soft: rgba(165, 124, 64, 0.12);
+$ynf-wine:        #6b1f23;
+$ynf-success:     #2d6a4f;
+
+/* Radii + shadows */
+$radius-md:    10px;
+$radius-lg:    16px;
+$radius-pill:  999px;
+$shadow-card:  0 6px 18px rgba(45, 36, 25, 0.08);
+$shadow-lift:  0 14px 30px rgba(45, 36, 25, 0.14);
+$shadow-gold:  0 8px 22px rgba(165, 124, 64, 0.22);
+
+/* ---- Page canvas + base type ---- */
+body, .o_wsale_products_page, #wrap {
+    background: #ffffff;
+    color: $ynf-text;
+    font-family: $ynf-sans;
+    -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .h1, .h2, .h3,
+.ynf-section-title h2, .ynf-hero h1 {
+    font-family: $ynf-serif !important;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: $ynf-text;
+}
+.eyebrow {
+    font-family: $ynf-sans;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $ynf-gold;
+}
+
+/* ---- Buttons → gold full-pill (premium) ---- */
+.btn-primary,
+.btn-primary:focus {
+    background: $ynf-gold;
+    border-color: $ynf-gold;
+    color: #fff;
+    border-radius: $radius-pill;
+    font-family: $ynf-sans;
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 13px 26px;
+    box-shadow: $shadow-gold;
+    transition: transform .12s ease, filter .2s ease;
+}
+.btn-primary:hover { background: $ynf-gold; filter: brightness(1.05); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-outline-primary {
+    color: $ynf-gold-dark;
+    border-color: $ynf-gold;
+    border-radius: $radius-pill;
+    font-weight: 600;
+    padding: 13px 26px;
+}
+.btn-outline-primary:hover { background: $ynf-gold; border-color: $ynf-gold; color: #fff; }
+
+/* ---- HERO (uses existing .ynf-hero markup) ---- */
+.ynf-hero {
+    background: linear-gradient(158deg, #fffdf8 0%, $ynf-bg-soft 52%, #ece2cf 100%);
+    border: 1px solid $ynf-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lift;
+    margin: 18px 16px 0;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+
+    .ynf-hero-eyebrow {
+        font-family: $ynf-sans;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: $ynf-gold;
+    }
+    h1 {
+        font-size: clamp(34px, 9vw, 56px);
+        line-height: 1.04;
+        margin: 14px 0 0;
+        em { color: $ynf-gold; font-style: italic; }
+    }
+    .lead { color: $ynf-text-muted; font-size: 15px; max-width: 460px; margin-top: 12px; }
+    .ynf-hero-cta { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    /* gold ornament */
+    &::after {
+        content: "◆"; color: $ynf-gold; font-size: 9px;
+        position: absolute; left: 24px; bottom: 18px;
+    }
+}
+
+/* ---- Section titles ---- */
+.ynf-section-title { text-align: center; margin-bottom: 22px;
+    .eyebrow { display: block; margin-bottom: 6px; }
+    h2 { font-size: clamp(24px, 6vw, 34px); }
+}
+
+/* ---- Collections cards ---- */
+.ynf-coll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; }
+.ynf-coll-card {
+    position: relative; aspect-ratio: 0.72; border: 1px solid $ynf-border-soft;
+    border-radius: $radius-md; overflow: hidden; display: flex; align-items: flex-end;
+    text-decoration: none; background: $ynf-bg-soft;
+    .ynf-coll-overlay { width: 100%; padding: 18px 8px 9px; text-align: center;
+        background: linear-gradient(to top, rgba(42,33,24,.82), transparent); }
+    h3 { color: #fff; font-size: 13px; margin: 0; }
+    .ynf-coll-cta { display: none; }
+}
+
+/* ---- website_sale product GRID card ---- */
+.oe_product, .o_wsale_products_item {
+    .oe_product_image, .o_wsale_product_information { background: #fff; }
+}
+#products_grid .oe_product,
+.o_wsale_products_grid .oe_product {
+    border: 1px solid $ynf-border-soft;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: $shadow-card;
+    transition: transform .12s ease, box-shadow .2s ease;
+    .oe_product_image, .oe_product_image_link {
+        background: #f4f1ea; display: flex; align-items: center; justify-content: center;
+        aspect-ratio: 1 / 1; padding: 14px;
+        img { mix-blend-mode: multiply; object-fit: contain; max-height: 100%; width: auto; }
+    }
+    .o_wsale_product_information { padding: 12px 13px 14px; }
+    h6, .o_wsale_products_item_title {
+        font-family: $ynf-serif; font-weight: 600; font-size: 16px; color: $ynf-text;
+    }
+    .product_price, .oe_currency_value {
+        font-family: $ynf-sans; font-weight: 600; color: $ynf-gold-dark; font-size: 16px;
+        font-variant-numeric: tabular-nums;
+    }
+}
+#products_grid .oe_product:active { transform: scale(.985); }
+
+/* "Inspired by" / brand chip — render from a product attribute or custom field,
+   e.g. <span class="ynf-inspired" t-if="product.x_ynf_inspired_by">…</span> */
+.ynf-inspired {
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+    padding: 3px 9px; border-radius: $radius-pill;
+    border: 1px solid $ynf-border; background: $ynf-gold-soft;
+    color: $ynf-gold-dark; font-size: 10.5px; font-weight: 600;
+}
+
+/* ---- Product detail page ---- */
+.ynf-product-detail {
+    h1 { font-family: $ynf-serif; font-weight: 600; font-size: clamp(28px, 8vw, 44px); }
+    .product_price .oe_currency_value { color: $ynf-gold-dark; font-family: $ynf-sans; font-weight: 600; }
+    #add_to_cart, .js_add_cart_json {
+        background: $ynf-gold; border-color: $ynf-gold; border-radius: $radius-pill; font-weight: 600;
+    }
+    .ynf-notes-row { display: grid; grid-template-columns: 60px 1fr; gap: 12px;
+        padding: 11px 0; border-top: 1px solid $ynf-border-soft;
+        .label { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: $ynf-gold; }
+        .val { font-family: $ynf-sans; font-size: 13.5px; color: $ynf-text; }
+    }
+}
+
+/* ---- Sticky mobile add-to-cart bar (optional, wrap PDP buy block) ---- */
+.ynf-buy-sticky {
+    position: sticky; bottom: 0; z-index: 6;
+    background: rgba(255,255,255,.94); backdrop-filter: blur(12px);
+    border-top: 1px solid $ynf-border-soft; padding: 12px 16px;
+}
+
+/* ---- Announcement / promo bar (see ynf_views.xml) ---- */
+.ynf-announce { background: $ynf-gold; color: #fff; overflow: hidden; }
+.ynf-announce .ynf-marquee {
+    display: inline-flex; white-space: nowrap; padding: 6px 0;
+    animation: ynf-marquee 22s linear infinite;
+    span { padding: 0 4px; font-size: 11px; font-weight: 500; }
+    .sep { color: rgba(255,255,255,.55); padding: 0 16px; }
+}
+@keyframes ynf-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ynf-marquee { animation: none; } }
+
+/* ---- Footer (dark espresso, gold labels) ---- */
+.ynf-footer, footer.o_footer {
+    background: $ynf-text; color: $ynf-bg;
+    .o_footer_copyright { color: rgba(250,247,241,.5); }
+    a { color: rgba(250,247,241,.8); }
+    h5, .ynf-foot-h { color: $ynf-gold-light; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+}
+
+/* ---- Scroll reveal + count-up ---- */
+.ynf-rev { opacity: 0; transform: translateY(16px);
+    transition: opacity .55s cubic-bezier(.22,.61,.36,1), transform .55s cubic-bezier(.22,.61,.36,1); }
+.ynf-rev.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .ynf-rev { opacity: 1 !important; transform: none !important; transition: none; } }
+
+/* ---- Curated homepage sections ---- */
+.ynf-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+.ynf-rail { display: flex; gap: 13px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
+    &::-webkit-scrollbar { display: none; } > * { flex: 0 0 168px; } }
+
+.ynf-moods { display: grid; grid-template-columns: 1fr 1fr; gap: 11px;
+    @media (min-width: 768px) { grid-template-columns: repeat(4,1fr); } }
+.ynf-mood-card { display: block; text-align: left; text-decoration: none; background: #fff;
+    border: 1px solid $ynf-border-soft; border-radius: $radius-lg; padding: 16px; box-shadow: $shadow-card;
+    h3 { font-family: $ynf-serif; font-weight: 600; font-size: 17px; color: $ynf-text; margin: 6px 0 2px; }
+    p { font-size: 11.5px; color: $ynf-text-muted; margin: 0; }
+    .ynf-mood-ic { width: 30px; height: 30px; border-radius: 50%; background: $ynf-gold-soft;
+        border: 1px solid $ynf-border; display: flex; align-items: center; justify-content: center; color: $ynf-gold; } }
+
+.ynf-bundle { flex: 0 0 250px; background: #fff; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    overflow: hidden; box-shadow: $shadow-card; text-decoration: none; display: block;
+    .ynf-bundle-imgs { display: flex; justify-content: center; gap: 6px; background: #f4f1ea; padding: 14px;
+        img { height: 96px; mix-blend-mode: multiply; &:not(:first-child) { margin-left: -16px; } } }
+    .ynf-bundle-b { padding: 12px 14px; }
+    h3 { font-family: $ynf-serif; font-weight: 600; font-size: 17px; margin: 0; color: $ynf-text; }
+    .price { font-family: $ynf-sans; font-weight: 600; color: $ynf-gold-dark; }
+    .strike { text-decoration: line-through; color: $ynf-text-dim; font-size: 12px; margin-left: 6px; }
+    .save { float: right; background: $ynf-wine; color: #fff; border-radius: $radius-pill; font-size: 9.5px;
+        font-weight: 700; padding: 4px 9px; text-transform: uppercase; } }
+
+.ynf-spotlight, .ynf-auth { background: $ynf-text; color: $ynf-bg; border-radius: $radius-lg; padding: 24px 20px; }
+.ynf-spotlight { background: linear-gradient(150deg, #2a2118, #15110c);
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 30px; color: #fff; margin: 8px 0; }
+    p { color: rgba(255,255,255,.74); font-size: 13.5px; } }
+.ynf-eyebrow-gold { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: $ynf-gold-light; }
+
+.ynf-editorial { position: relative; border-radius: $radius-lg; overflow: hidden; box-shadow: $shadow-lift;
+    img, .ynf-edslot { width: 100%; height: 270px; object-fit: cover; display: block; background: $ynf-bg-soft; }
+    .ynf-ed-cap { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column;
+        justify-content: flex-end; padding: 22px 20px; color: #fff;
+        background: linear-gradient(to top, rgba(20,15,10,.8), transparent 55%);
+        h2 { font-family: $ynf-serif; font-style: italic; font-weight: 500; font-size: 30px; margin: 8px 0 0; } } }
+.ynf-edgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 16px;
+    img, .ynf-edslot { width: 100%; height: 150px; object-fit: cover; border-radius: $radius-lg; background: $ynf-bg-soft; } }
+.ynf-quote { font-family: $ynf-serif; font-style: italic; font-size: 18px; text-align: center;
+    color: $ynf-text-muted; margin: 16px 4px 0; }
+
+.ynf-quizcard { border: 1px solid $ynf-border; border-radius: $radius-lg; text-align: center; padding: 24px 20px;
+    background: linear-gradient(158deg, #fffdf8, $ynf-bg-soft);
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 26px; margin: 10px 0 8px; em { color: $ynf-gold; } } }
+
+.ynf-testi { flex: 0 0 250px; background: #fff; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    padding: 18px; box-shadow: $shadow-card;
+    .q { font-family: $ynf-serif; font-style: italic; font-size: 17px; color: $ynf-text; }
+    .who { font-size: 13px; font-weight: 600; } .verif { font-size: 11px; color: $ynf-success; } }
+
+.ynf-stats { background: $ynf-bg-soft; border: 1px solid $ynf-border-soft; border-radius: $radius-lg;
+    padding: 22px 14px; display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; text-align: center;
+    .n { font-family: $ynf-serif; font-weight: 600; font-size: 24px; color: $ynf-gold-dark; }
+    .l { font-size: 9.5px; color: $ynf-text-muted; margin-top: 6px; } }
+
+.ynf-auth { .row { display: flex; gap: 13px; margin-bottom: 14px; } i { color: $ynf-gold-light; }
+    h4 { font-family: $ynf-serif; font-weight: 600; font-size: 15px; margin: 0; }
+    p { font-size: 12.5px; color: rgba(250,247,241,.66); margin: 0; } }
+
+.ynf-dropalert { background: linear-gradient(135deg, $ynf-gold, $ynf-gold-dark); color: #fff;
+    border-radius: $radius-lg; padding: 24px 20px; box-shadow: $shadow-gold;
+    h2 { font-family: $ynf-serif; font-weight: 500; font-size: 26px; margin: 0; }
+    form { display: flex; gap: 9px; }
+    input { flex: 1; min-width: 0; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4);
+        border-radius: $radius-pill; padding: 13px 16px; color: #fff; }
+    button { background: #fff; color: $ynf-gold-dark; border: 0; border-radius: $radius-pill; padding: 13px 20px; font-weight: 700; }
+    .ynf-dropalert-done { font-family: $ynf-serif; font-weight: 600; font-size: 17px; } }
+
+/* ---- Butterfly ---- */
+.ynf-butterfly { position: fixed; top: 0; left: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+    pointer-events: none; z-index: 1080; filter: drop-shadow(0 3px 3px rgba(42,33,24,.28)); }
+.ynf-bf-l, .ynf-bf-r { transform-box: fill-box; }
+.ynf-bf-l { transform-origin: 100% 48%; animation: ynf-flap-l .26s ease-in-out infinite; }
+.ynf-bf-r { transform-origin: 0% 48%; animation: ynf-flap-r .26s ease-in-out infinite; }
+@keyframes ynf-flap-l { 0%,100% { transform: perspective(80px) rotateY(10deg); } 46% { transform: perspective(80px) rotateY(84deg); } }
+@keyframes ynf-flap-r { 0%,100% { transform: perspective(80px) rotateY(-10deg); } 46% { transform: perspective(80px) rotateY(-84deg); } }
+@media (prefers-reduced-motion: reduce) { .ynf-bf-l, .ynf-bf-r { animation: none; } }
+
+/* ---- Cookie bar (Odoo ships one; just reskin) ---- */
+.o_cookies_bar, #cookies-consent {
+    background: $ynf-text !important; color: $ynf-bg !important; border-radius: $radius-lg;
+    .btn { border-radius: $radius-pill; }
+}

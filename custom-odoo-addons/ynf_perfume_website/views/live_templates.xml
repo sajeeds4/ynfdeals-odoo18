@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ===================================================================
+         LIVE AUCTIONS  (route /live)
+         Countdown + how-it-works + tonight's lineup (real products).
+         =================================================================== -->
+    <template id="live_page" name="YNF Live Auctions">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'ynf_live'"/>
+            <div id="wrap" class="ynf ynf-live oe_structure">
+                <div class="y-container">
+
+                    <!-- Banner -->
+                    <section class="y-section" style="margin-top:24px">
+                        <div class="y-live-hero y-rev">
+                            <span class="y-live__pill"><span class="dot y-pulse"></span> Live tonight · 8 PM ET</span>
+                            <div class="y-live-hero__cd">
+                                <div class="y-live-hero__cd-l">Doors open in</div>
+                                <div class="y-live-hero__cd-v" data-ynf-countdown="" data-hour="20">00:00:00</div>
+                            </div>
+                            <h1 class="y-live-hero__title">Auction night on <em>TikTok Live</em></h1>
+                            <p class="y-live-hero__sub">Bids open at $1. Win authentic bottles for a fraction of retail — shipped straight to your door.</p>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap">
+                                <a class="y-btn y-btn--primary" href="https://www.tiktok.com" target="_blank" rel="noopener">Set reminder</a>
+                                <a class="y-btn y-btn--outline" style="color:#fff;border-color:rgba(255,255,255,0.5)" href="/shop">Shop catalog</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- How it works -->
+                    <section class="y-section">
+                        <div class="y-eyebrow">How live auctions work</div>
+                        <div class="y-live-steps">
+                            <t t-foreach="[
+                                ('1','Join the live','Tap in on TikTok at showtime — we go live most nights.'),
+                                ('2','Bid to win','Auctions start at $1. Highest bid when the timer hits zero wins.'),
+                                ('3','We ship it','Pay in-app, we pack and ship within 2 days. Authenticity guaranteed.')
+                            ]" t-as="step">
+                                <div class="y-live-step y-rev">
+                                    <span class="y-live-step__n" t-esc="step[0]"/>
+                                    <div>
+                                        <div class="y-live-step__t" t-esc="step[1]"/>
+                                        <div class="y-live-step__d" t-esc="step[2]"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+
+                    <!-- Tonight's lineup -->
+                    <section class="y-section" t-if="lineup">
+                        <div class="y-sechead y-rev">
+                            <div>
+                                <div class="y-eyebrow">Tonight's lineup</div>
+                                <h2 class="y-h-section">On the block</h2>
+                            </div>
+                            <span class="y-viewall"><t t-esc="len(lineup)"/> lots</span>
+                        </div>
+                        <div class="y-live-lots">
+                            <t t-foreach="lineup" t-as="product">
+                                <div class="y-live-lot y-rev">
+                                    <a class="y-live-lot__img" t-att-href="product.website_url">
+                                        <t t-if="product.ynf_has_image()">
+                                            <img t-att-src="'/web/image/product.template/%s/image_256' % product.id" t-att-alt="product.name" loading="lazy"/>
+                                        </t>
+                                        <span class="y-live-lot__start">$1 start</span>
+                                    </a>
+                                    <div class="y-live-lot__info">
+                                        <div class="y-live-lot__brand" t-esc="product.ynf_display_brand or ''"/>
+                                        <a class="y-live-lot__name" t-att-href="product.website_url" t-esc="product.name"/>
+                                        <div class="y-live-lot__retail">Bidding opens at <b>$1</b> · retail <span t-field="product.list_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/></div>
+                                    </div>
+                                    <a class="y-btn y-btn--outline-gold y-btn--sm" href="https://www.tiktok.com" target="_blank" rel="noopener">Notify me</a>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

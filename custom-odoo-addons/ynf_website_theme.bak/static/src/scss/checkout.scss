@@ -1,0 +1,160 @@
+
+/* === Cart page === */
+#cart_products, .o_wsale_cart, .o_wizard {
+    background: $ynf-bg !important;
+    color: $ynf-text;
+
+    table.o_wsale_cart_lines, .o_cart_table {
+        background: $ynf-bg-card !important;
+        border-radius: $radius-md;
+        border: 1px solid $ynf-border-soft;
+        overflow: hidden;
+
+        th {
+            background: $ynf-bg-soft !important;
+            color: $ynf-text-muted !important;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: $sp-3 $sp-4;
+            border-bottom: 1px solid $ynf-border-soft !important;
+        }
+        td {
+            color: $ynf-text;
+            border-color: $ynf-border-soft !important;
+            padding: $sp-3 $sp-4;
+            vertical-align: middle;
+        }
+        td.text-end, td.text-right, .o_cart_total {
+            color: $ynf-gold;
+            font-weight: 600;
+        }
+    }
+
+    .o_wsale_cart_line_image, .product_image img {
+        background: $ynf-bg-soft;
+        border-radius: $radius-sm;
+        padding: 4px;
+    }
+
+    /* Totals card */
+    .o_wsale_total_row, #cart_total, .oe_website_sale_total {
+        background: $ynf-bg-card !important;
+        border: 1px solid $ynf-border;
+        border-radius: $radius-md;
+        padding: $sp-5;
+
+        h4 {
+            font-family: $font-display;
+            color: $ynf-text;
+        }
+
+        .oe_currency_value {
+            color: $ynf-gold;
+            font-weight: 700;
+        }
+    }
+
+    /* Process checkout button */
+    .btn_payment, .o_payment_form_button, a[href*="/shop/checkout"] {
+        width: 100%;
+        margin-top: $sp-3;
+    }
+}
+
+/* === Checkout flow (address / payment) === */
+.oe_website_sale .o_payment_form, .oe_website_sale .o_wizard_step,
+form.checkout_autoformat, #wrap form[action*="/shop/"] {
+    .form-control, input, select, textarea {
+        background: $ynf-bg-soft !important;
+        border: 1px solid $ynf-border-soft !important;
+        color: $ynf-text !important;
+        padding: 12px 14px;
+        border-radius: $radius-md;
+        font-size: 0.95rem;
+    }
+
+    label {
+        color: $ynf-text-muted;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    fieldset, .card {
+        background: $ynf-bg-card !important;
+        border: 1px solid $ynf-border-soft !important;
+        border-radius: $radius-md;
+        padding: $sp-5;
+        margin-bottom: $sp-4;
+    }
+
+    h2, h3, h4 {
+        font-family: $font-display;
+        color: $ynf-text;
+        margin-bottom: $sp-4;
+    }
+}
+
+/* === Checkout wizard progress === */
+.o_wizard_steps, .o_wsale_step_indicator, ol.o_wizard {
+    background: $ynf-bg-soft !important;
+    border: 0 !important;
+    border-radius: $radius-pill;
+    padding: 10px;
+    margin-bottom: $sp-5;
+
+    li, .o_wizard_step {
+        color: $ynf-text-dim !important;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+
+        &.active, &.o_wizard_step_active {
+            color: $ynf-gold !important;
+        }
+        &.done {
+            color: $ynf-success !important;
+        }
+    }
+}
+
+/* === Mobile single-column checkout === */
+@media (max-width: 767px) {
+    .o_wsale_cart, #wrap form[action*="/shop/"] {
+        .row > [class*="col-"] {
+            margin-bottom: $sp-4;
+        }
+        .o_wsale_total_row, #cart_total {
+            position: sticky;
+            bottom: 0;
+            margin: 0 -$sp-4;
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+            z-index: 10;
+        }
+    }
+}
+
+/* === Order success === */
+.oe_website_sale .oe_website_sale_tx_status,
+.oe_website_sale.thank_you_page {
+    text-align: center;
+    background: $ynf-bg;
+    padding: $sp-9 $sp-4;
+
+    h1, h2 {
+        font-family: $font-display;
+        color: $ynf-gold;
+    }
+
+    .badge-success, .alert-success {
+        background: $ynf-success !important;
+        color: $ynf-bg !important;
+    }
+}

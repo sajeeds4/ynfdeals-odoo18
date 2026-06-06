@@ -1,0 +1,261 @@
+// ==========================================================================
+// YNF Perfume — Product page / PDP (Phase 7)
+// We layer luxury styling + a fragrance-notes pyramid onto website_sale's
+// native product page. Add-to-cart, variants, pricing stay 100% Odoo.
+// ==========================================================================
+.ynf-pdp {
+    background: var(--y-bg);
+    color: var(--y-text);
+
+    // Gallery
+    #o-carousel-product, .o_wsale_product_images {
+        .carousel-item, .o_product_image_main {
+            background: var(--y-soft);
+            border-radius: var(--y-r-lg);
+            border: 1px solid var(--y-line);
+            overflow: hidden;
+        }
+        img { mix-blend-mode: multiply; }
+    }
+
+    // Brand eyebrow + title
+    .ynf-pdp__brand {
+        font-family: var(--y-body);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--y-gold);
+    }
+    h1[itemprop="name"], .ynf-pdp h1 {
+        font-family: var(--y-display) !important;
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 1.05;
+        color: var(--y-text);
+        @media (min-width: 992px) { font-size: 44px; }
+    }
+
+    // Price — big red retail
+    .product_price .oe_currency_value,
+    .product_price h3, .product_price b {
+        font-family: var(--y-body) !important;
+        font-weight: 800;
+        color: var(--y-sale);
+    }
+    .product_price { font-size: 26px; }
+
+    // Editorial blurb
+    .ynf-pdp__blurb {
+        font-family: var(--y-body);
+        font-size: 15px;
+        line-height: 1.65;
+        color: var(--y-text);
+        margin: 14px 0;
+    }
+
+    // Add to cart button → gold pill
+    #add_to_cart, .js_main_product #add_to_cart, a#add_to_cart {
+        background: var(--y-gold) !important;
+        border-color: var(--y-gold) !important;
+        color: #fff !important;
+        border-radius: var(--y-pill) !important;
+        font-family: var(--y-display) !important;
+        font-weight: 600 !important;
+        padding: 14px 28px !important;
+        box-shadow: var(--y-shadow-gold);
+        transition: filter .2s ease, transform .12s ease;
+        &:hover { filter: brightness(1.05); }
+        &:active { transform: translateY(1px); }
+    }
+}
+
+// ── Fragrance notes pyramid (educational, #6) ──
+.ynf-notes {
+    border-top: 1px solid var(--y-line);
+    border-bottom: 1px solid var(--y-line);
+    margin: 18px 0;
+    &__head {
+        font-family: var(--y-body);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--y-gold);
+        padding: 14px 0 4px;
+    }
+    &__row {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 16px;
+        align-items: start;
+        padding: 15px 0;
+        position: relative;
+        border-top: 1px solid var(--y-line);
+        @media (max-width: 575px) { grid-template-columns: 1fr; gap: 6px; }
+    }
+    // translucent tier band tinted left→right
+    &__row--top    { background: linear-gradient(90deg, rgba(201,169,97,0.10), transparent 70%); }
+    &__row--heart  { background: linear-gradient(90deg, rgba(176,106,122,0.10), transparent 70%); }
+    &__row--base   { background: linear-gradient(90deg, rgba(124,97,40,0.12), transparent 70%); }
+    &__label { display: flex; flex-direction: column; gap: 3px; }
+    &__tier {
+        font-family: var(--y-display);
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--y-text);
+    }
+    &__hint { font-family: var(--y-body); font-size: 11px; line-height: 1.4; color: var(--y-muted); }
+    &__notes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        align-content: flex-start;
+        .y-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 11px 5px 9px;
+            border: 1px solid var(--y-line);
+            border-radius: var(--y-pill);
+            background: var(--y-card);
+            font-family: var(--y-body);
+            font-size: 12.5px;
+            color: var(--y-text);
+            &__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--note-color, var(--y-gold)); flex-shrink: 0; }
+            &::after { content: none; }
+        }
+    }
+}
+
+// ── Olfactive spec chips (#13) ──
+.ynf-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+}
+.ynf-spec {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border: 1px solid var(--y-line);
+    border-radius: var(--y-r-md);
+    background: var(--y-soft);
+    &__orb { width: 10px; height: 10px; border-radius: 50%; background: var(--fam-color, var(--y-gold)); }
+    &__k { font-family: var(--y-body); font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--y-dim); }
+    &__v { font-family: var(--y-display); font-weight: 600; font-size: 13.5px; color: var(--y-text); }
+}
+
+// ── Detail accordions (#12) ──
+.ynf-accordion { margin: 20px 0; border-top: 1px solid var(--y-line); }
+.ynf-acc {
+    border-bottom: 1px solid var(--y-line);
+    summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 2px;
+        font-family: var(--y-display);
+        font-weight: 600;
+        font-size: 15.5px;
+        color: var(--y-text);
+        &::-webkit-details-marker { display: none; }
+        svg { transition: transform .2s var(--y-ease); }
+    }
+    &[open] summary svg { transform: rotate(90deg); }
+    &__body {
+        padding: 0 2px 16px;
+        font-family: var(--y-body);
+        font-size: 13.5px;
+        line-height: 1.65;
+        color: var(--y-muted);
+    }
+}
+
+// ── More-from-this-House rail (#3-lite) ──
+.ynf-house-rail {
+    margin: 32px auto 8px;
+    .y-rail .y-card { width: 168px; flex: 0 0 168px; }
+}
+
+// ── Performance meters (longevity / projection) ──
+.ynf-meters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+    &__item {
+        background: var(--y-soft);
+        border: 1px solid var(--y-line);
+        border-radius: var(--y-r-md);
+        padding: 14px;
+    }
+    &__label { font-family: var(--y-body); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--y-muted); }
+    &__bar { height: 6px; border-radius: 999px; background: rgba(160, 127, 58, 0.16); margin-top: 8px; overflow: hidden; }
+    &__fill { height: 100%; background: var(--y-gold); border-radius: 999px; }
+    &__val { font-family: var(--y-display); font-weight: 600; font-size: 14px; color: var(--y-text); margin-top: 6px; }
+}
+
+// ── Trust / perks panel ──
+.ynf-perks {
+    background: var(--y-card);
+    border: 1px solid var(--y-line);
+    border-radius: var(--y-r-lg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 20px 0;
+    &__item { display: flex; gap: 13px; align-items: flex-start; svg { stroke: var(--y-gold); flex-shrink: 0; } }
+    &__t { font-family: var(--y-display); font-weight: 600; font-size: 14px; color: var(--y-text); }
+    &__d { font-family: var(--y-body); font-size: 12.5px; color: var(--y-muted); margin-top: 1px; }
+}
+
+// Low-stock urgency line (Phase 14)
+.ynf-pdp__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--y-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--y-red);
+    background: rgba(181, 58, 58, 0.07);
+    border: 1px solid rgba(181, 58, 58, 0.2);
+    border-radius: var(--y-pill);
+    padding: 7px 14px;
+    margin: 6px 0 4px;
+    strong { font-weight: 700; }
+}
+.ynf-pdp__stock-dot {
+    width: 7px; height: 7px; border-radius: 999px;
+    background: var(--y-red);
+    animation: y-pulse 1.5s ease-in-out infinite;
+}
+
+// Recently viewed rail (any page)
+.ynf-recent {
+    &__title {
+        font-family: var(--y-display);
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--y-text);
+        margin: 0 0 12px;
+    }
+}
+
+// Inspired-by + meta line on PDP
+.ynf-pdp__metaline {
+    font-family: var(--y-body);
+    font-size: 13px;
+    color: var(--y-muted);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 8px;
+}

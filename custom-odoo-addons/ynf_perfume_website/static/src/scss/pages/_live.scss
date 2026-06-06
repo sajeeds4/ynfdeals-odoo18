@@ -1,0 +1,97 @@
+// ==========================================================================
+// YNF Perfume — Live Auctions page
+// ==========================================================================
+.ynf-live {
+    padding-bottom: 50px;
+
+    .y-live-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--y-r-lg);
+        background: linear-gradient(150deg, var(--y-wine) 0%, #2a0f12 100%);
+        color: #fff;
+        padding: 28px 24px;
+        box-shadow: var(--y-shadow-lift);
+        @media (min-width: 992px) { padding: 48px 56px; }
+        &__cd { margin-top: 16px; }
+        &__cd-l { font-family: var(--y-body); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+        &__cd-v {
+            font-family: var(--y-display);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            font-size: 34px;
+            letter-spacing: 0.02em;
+            color: var(--y-gold-l);
+            @media (min-width: 992px) { font-size: 48px; }
+        }
+        &__title {
+            font-family: var(--y-display);
+            font-weight: 600;
+            font-size: 30px;
+            line-height: 1.08;
+            margin: 14px 0 0;
+            color: #fff;
+            @media (min-width: 992px) { font-size: 46px; }
+            em { color: var(--y-gold-l); font-style: normal; }
+        }
+        &__sub { font-family: var(--y-body); font-size: 14px; line-height: 1.55; color: rgba(255, 255, 255, 0.78); margin: 10px 0 18px; max-width: 440px; }
+    }
+
+    .y-live-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; @media (min-width: 768px) { flex-direction: row; } }
+    .y-live-step {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        flex: 1;
+        background: var(--y-card);
+        border: 1px solid var(--y-line);
+        border-radius: var(--y-r-lg);
+        padding: 18px;
+        box-shadow: var(--y-shadow-card);
+        &__n {
+            flex-shrink: 0;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--y-gold-soft); border: 1px solid var(--y-border);
+            color: var(--y-gold-d);
+            font-family: var(--y-display); font-weight: 600; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        &__t { font-family: var(--y-display); font-weight: 600; font-size: 15px; color: var(--y-text); }
+        &__d { font-family: var(--y-body); font-size: 13px; line-height: 1.5; color: var(--y-muted); margin-top: 2px; }
+    }
+
+    .y-live-lots { display: flex; flex-direction: column; gap: 12px; }
+    .y-live-lot {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        background: var(--y-card);
+        border: 1px solid var(--y-line);
+        border-radius: var(--y-r-lg);
+        padding: 12px;
+        box-shadow: var(--y-shadow-card);
+        transition: transform .15s var(--y-ease), border-color .15s ease;
+        &:hover { transform: translateY(-2px); border-color: var(--y-border); }
+        &__img {
+            position: relative;
+            flex-shrink: 0;
+            width: 76px; height: 86px;
+            border-radius: var(--y-r-md);
+            background: var(--y-soft);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            padding: 6px;
+            img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
+        }
+        &__start {
+            position: absolute; top: 5px; left: 5px;
+            background: var(--y-wine); color: #fff;
+            font-family: var(--y-display); font-weight: 600; font-size: 9px;
+            padding: 2px 6px; border-radius: var(--y-pill);
+        }
+        &__info { flex: 1; min-width: 0; }
+        &__brand { font-family: var(--y-body); font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--y-gold); }
+        &__name { display: block; font-family: var(--y-display); font-weight: 600; font-size: 16px; color: var(--y-text); line-height: 1.15; }
+        &__retail { font-family: var(--y-body); font-size: 11.5px; color: var(--y-muted); margin-top: 3px; b { color: var(--y-text); } }
+    }
+}

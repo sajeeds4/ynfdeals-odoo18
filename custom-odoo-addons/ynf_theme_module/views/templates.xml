@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================ LAYOUT ============================ -->
+    <!-- Announcement marquee + decorative butterfly on every page -->
+    <template id="ynf_layout" inherit_id="website.layout" name="YNF Layout">
+        <xpath expr="//head" position="inside">
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&amp;family=Inter:wght@400;500;600;700&amp;display=swap"/>
+        </xpath>
+        <xpath expr="//header" position="before">
+            <div class="ynf-announce">
+                <div class="ynf-marquee">
+                    <t t-foreach="range(2)" t-as="loop">
+                        <span>Free shipping over $75</span><span class="sep">✦</span>
+                        <span>100% authentic guarantee</span><span class="sep">✦</span>
+                        <span>Live auctions nightly · 8 PM ET</span><span class="sep">✦</span>
+                        <span>New drops every week</span><span class="sep">✦</span>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <div class="ynf-butterfly" aria-hidden="true">
+                <svg viewBox="0 0 48 46" width="34" height="34">
+                    <g class="ynf-bf-l">
+                        <path d="M24 16 C 15 4 3 6 4 14 C 4.5 19 8 22 15 22 C 20 22 23 20 24 18 Z" fill="#241a12"/>
+                        <path d="M24 19 C 18 21 10 24 13 32 C 16 37 22 34 24 24 Z" fill="#241a12"/>
+                        <path d="M23 16.5 C 16 7 6 8.6 6.6 14.2 C 7 18 10 20 15 20 C 19 20 21.5 18.5 23 17 Z" fill="#d39a3e"/>
+                        <path d="M23 20.5 C 18 22 12.5 25 15 31 C 17 35 21 32 23 24 Z" fill="#cf8f33"/>
+                        <circle cx="6.5" cy="12.2" r="0.85" fill="#fff7ea"/><circle cx="5.4" cy="15" r="0.8" fill="#fff7ea"/><circle cx="9" cy="18.4" r="0.75" fill="#fff7ea"/>
+                    </g>
+                    <g class="ynf-bf-r">
+                        <path d="M24 16 C 33 4 45 6 44 14 C 43.5 19 40 22 33 22 C 28 22 25 20 24 18 Z" fill="#241a12"/>
+                        <path d="M24 19 C 30 21 38 24 35 32 C 32 37 26 34 24 24 Z" fill="#241a12"/>
+                        <path d="M25 16.5 C 32 7 42 8.6 41.4 14.2 C 41 18 38 20 33 20 C 29 20 26.5 18.5 25 17 Z" fill="#d39a3e"/>
+                        <path d="M25 20.5 C 30 22 35.5 25 33 31 C 31 35 27 32 25 24 Z" fill="#cf8f33"/>
+                        <circle cx="41.5" cy="12.2" r="0.85" fill="#fff7ea"/><circle cx="42.6" cy="15" r="0.8" fill="#fff7ea"/><circle cx="39" cy="18.4" r="0.75" fill="#fff7ea"/>
+                    </g>
+                    <ellipse cx="24" cy="23" rx="1.5" ry="9.5" fill="#1d150e"/>
+                    <circle cx="24" cy="12.6" r="2" fill="#1d150e"/>
+                    <path d="M24 11 C 22 7 20.5 5.6 18.8 4.8 M24 11 C 26 7 27.5 5.6 29.2 4.8" stroke="#1d150e" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Reusable product card -->
+    <template id="ynf_product_card" name="YNF Product Card">
+        <div class="oe_product ynf-rev">
+            <a t-attf-href="/shop/product/#{slug(product)}" class="oe_product_image oe_product_image_link">
+                <img t-attf-src="/web/image/product.template/{{ product.id }}/image_512" t-att-alt="product.name" class="img img-fluid" loading="lazy"/>
+            </a>
+            <div class="o_wsale_product_information">
+                <h6 class="o_wsale_products_item_title"><a t-attf-href="/shop/product/#{slug(product)}" t-field="product.name"/></h6>
+                <span class="ynf-inspired" t-if="product.x_ynf_inspired_by">✦ Inspired by <t t-esc="product.x_ynf_inspired_by"/></span>
+                <div class="product_price"><span t-field="product.list_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ============================ HOMEPAGE ============================ -->
+    <template id="ynf_homepage" name="YNF Homepage">
+        <t t-call="website.layout">
+            <t t-set="pub" t-value="[('sale_ok','=',True),('website_published','=',True)]"/>
+            <t t-set="newest" t-value="request.env['product.template'].sudo().search(pub, limit=8, order='create_date desc')"/>
+            <t t-set="cheap" t-value="request.env['product.template'].sudo().search(pub + [('list_price','&lt;=',31)], limit=8)"/>
+            <t t-set="bundle_src" t-value="request.env['product.template'].sudo().search(pub, limit=9)"/>
+            <div id="wrap" class="ynf-homepage">
+
+                <!-- HERO -->
+                <section class="ynf-wrap" style="margin-top:18px;">
+                    <div class="ynf-hero ynf-rev">
+                        <span class="ynf-hero-eyebrow">Authentic Fragrances · Live Auctions</span>
+                        <h1>Discover your <em>signature</em> scent.</h1>
+                        <p class="lead">Hand-picked Arabian &amp; niche houses at live-auction prices. Shipped fast, 100% authentic.</p>
+                        <div class="ynf-hero-cta">
+                            <a href="/shop" class="btn btn-primary">Shop fragrances</a>
+                            <a href="/live" class="btn btn-outline-primary">Watch live</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- LIVE STRIP -->
+                <section class="ynf-wrap" style="margin-top:30px;">
+                    <a href="/live" class="ynf-live-strip ynf-rev d-block text-decoration-none">
+                        <span class="ynf-eyebrow-gold">● Live tonight · 8 PM ET · TikTok</span>
+                        <h2 class="mt-2">Auction night — steals start at <span style="color:#c9a961;">$1</span>.</h2>
+                    </a>
+                </section>
+
+                <!-- COLLECTIONS -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Shop by</span><h2>Collections</h2></div>
+                    <div class="ynf-coll-grid ynf-rev">
+                        <a href="/shop?attribute_value=him" class="ynf-coll-card"><span class="ynf-coll-overlay"><h3>For Him</h3></span></a>
+                        <a href="/shop?attribute_value=her" class="ynf-coll-card"><span class="ynf-coll-overlay"><h3>For Her</h3></span></a>
+                        <a href="/shop" class="ynf-coll-card"><span class="ynf-coll-overlay"><h3>Unisex</h3></span></a>
+                    </div>
+                </section>
+
+                <!-- BESTSELLERS -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Currently trending</span><h2>Bestsellers</h2></div>
+                    <div class="row g-3" id="products_grid">
+                        <t t-foreach="newest" t-as="product">
+                            <div class="col-6 col-md-3"><t t-call="ynf_theme_module.ynf_product_card"/></div>
+                        </t>
+                    </div>
+                    <div class="text-center mt-4"><a href="/shop" class="btn btn-outline-primary">View all products</a></div>
+                </section>
+
+                <!-- SHOP BY MOOD -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Shop by mood</span><h2>What are you in the mood for?</h2></div>
+                    <div class="ynf-moods ynf-rev">
+                        <a href="/shop?family=warm" class="ynf-mood-card"><span class="ynf-mood-ic">✦</span><h3>Warm &amp; Sweet</h3><p>Gourmand · amber · vanilla</p></a>
+                        <a href="/shop?family=fresh" class="ynf-mood-card"><span class="ynf-mood-ic">❋</span><h3>Fresh &amp; Clean</h3><p>Aquatic · citrus · cool</p></a>
+                        <a href="/shop?family=oud" class="ynf-mood-card"><span class="ynf-mood-ic">◆</span><h3>Woody &amp; Oud</h3><p>Smoky · resinous · bold</p></a>
+                        <a href="/shop?family=floral" class="ynf-mood-card"><span class="ynf-mood-ic">✿</span><h3>Floral</h3><p>Rose · jasmine · blossom</p></a>
+                    </div>
+                </section>
+
+                <!-- UNDER $30 -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Smell luxury for less</span><h2>Under $30</h2></div>
+                    <div class="ynf-rail">
+                        <t t-foreach="cheap" t-as="product"><t t-call="ynf_theme_module.ynf_product_card"/></t>
+                    </div>
+                </section>
+
+                <!-- NEW ARRIVALS -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Just dropped</span><h2>New arrivals</h2></div>
+                    <div class="ynf-rail">
+                        <t t-foreach="newest" t-as="product"><t t-call="ynf_theme_module.ynf_product_card"/></t>
+                    </div>
+                </section>
+
+                <!-- CURATED BUNDLES -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Discovery sets</span><h2>Curated bundles</h2></div>
+                    <div class="ynf-rail">
+                        <t t-foreach="[('Crowd-Pleasers Trio', 0), ('Dupe Starter Set', 3), ('For Her Edit', 6)]" t-as="b">
+                            <t t-set="items" t-value="bundle_src[b[1]:b[1]+3]"/>
+                            <a href="/shop" class="ynf-bundle ynf-rev">
+                                <div class="ynf-bundle-imgs">
+                                    <t t-foreach="items" t-as="bp"><img t-attf-src="/web/image/product.template/{{ bp.id }}/image_256" loading="lazy"/></t>
+                                </div>
+                                <div class="ynf-bundle-b">
+                                    <span class="save">Save 15%</span>
+                                    <h3><t t-esc="b[0]"/></h3>
+                                    <t t-set="full" t-value="sum(items.mapped('list_price'))"/>
+                                    <div><span class="price" t-esc="round(full*0.85)"/><span class="strike" t-esc="round(full,2)"/></div>
+                                </div>
+                            </a>
+                        </t>
+                    </div>
+                </section>
+
+                <!-- HOUSE SPOTLIGHT -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-spotlight ynf-rev">
+                        <span class="ynf-eyebrow-gold">House spotlight</span>
+                        <h2>Lattafa</h2>
+                        <p>The house behind Khamrah, Asad and Yara — bold, affordable Arabian perfumery that punches far above its price.</p>
+                        <a href="/shop?brand=lattafa" class="btn btn-primary mt-2">Shop Lattafa</a>
+                    </div>
+                </section>
+
+                <!-- EDITORIAL IMAGE BAND (images editable in Website editor) -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-editorial ynf-rev">
+                        <img class="ynf-edslot" src="/web/image/website.s_banner_default_image" alt="Our house"/>
+                        <div class="ynf-ed-cap"><span class="ynf-eyebrow-gold">Our house</span><h2>Perfumery, the old-world way.</h2></div>
+                    </div>
+                    <p class="ynf-quote">“We hunt down the bottles worth wearing — and price them so you can actually own them.”</p>
+                    <div class="ynf-edgrid ynf-rev">
+                        <img class="ynf-edslot" src="/web/image/website.s_banner_default_image" alt="Atelier"/>
+                        <img class="ynf-edslot" src="/web/image/website.s_banner_default_image" alt="Bottles"/>
+                    </div>
+                </section>
+
+                <!-- FRAGRANCE FINDER -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <a href="/shop" class="ynf-quizcard ynf-rev d-block text-decoration-none">
+                        <h2>Find your <em>signature</em></h2>
+                        <p class="text-muted">Answer 4 quick questions and we’ll match you to your next scent.</p>
+                        <span class="btn btn-outline-primary">Start the quiz →</span>
+                    </a>
+                </section>
+
+                <!-- TESTIMONIALS -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">Loved by thousands</span><h2>What buyers say</h2></div>
+                    <div class="ynf-rail">
+                        <t t-foreach="[('Khamrah is unreal for the price — compliments every single time.', 'Ayesha K.'), ('Won Hawas on a live for $14. 100% authentic, shipped in two days.', 'Marcus T.'), ('Yara smells expensive and lasts all day. Obsessed.', 'Dana R.')]" t-as="rev">
+                            <div class="ynf-testi ynf-rev">
+                                <div style="color:#a07f3a;">★★★★★</div>
+                                <p class="q">“<t t-esc="rev[0]"/>”</p>
+                                <div class="who"><t t-esc="rev[1]"/></div>
+                                <div class="verif">✓ Verified buyer</div>
+                            </div>
+                        </t>
+                    </div>
+                </section>
+
+                <!-- STATS -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-stats ynf-rev">
+                        <div><div class="n ynf-count" data-to="12000" data-suffix="+">0</div><div class="l">Bottles shipped</div></div>
+                        <div><div class="n ynf-count" data-to="60" data-suffix="+">0</div><div class="l">Fragrances</div></div>
+                        <div><div class="n">4.8★</div><div class="l">Avg rating</div></div>
+                        <div><div class="n ynf-count" data-to="4" data-suffix="">0</div><div class="l">Houses</div></div>
+                    </div>
+                </section>
+
+                <!-- AUTHENTICITY -->
+                <section class="ynf-wrap" style="margin-top:48px;">
+                    <div class="ynf-auth ynf-rev">
+                        <div class="text-center mb-3"><span class="ynf-eyebrow-gold">The YNF promise</span><h2 style="font-family:var(--ynf-font-serif,'Cormorant Garamond',serif);color:#fff;">100% authentic, always</h2></div>
+                        <div class="row"><i>✦</i><div><h4>Sourced direct</h4><p>From brands &amp; authorized distributors — never testers or fakes.</p></div></div>
+                        <div class="row"><i>✦</i><div><h4>Batch-code verified</h4><p>Every bottle checks out, or we refund you in full.</p></div></div>
+                        <div class="row"><i>✦</i><div><h4>Fast, tracked shipping</h4><p>Ships within 2 business days, free over $75.</p></div></div>
+                    </div>
+                </section>
+
+                <!-- DROP ALERT -->
+                <section class="ynf-wrap" style="margin-top:48px; margin-bottom:48px;">
+                    <div class="ynf-dropalert ynf-rev">
+                        <h2>Never miss a drop</h2>
+                        <p style="opacity:.85;">Get a heads-up before every live auction and new arrival.</p>
+                        <form>
+                            <input type="email" placeholder="Your email" required="required"/>
+                            <button type="submit">Notify me</button>
+                        </form>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+
+    <record id="ynf_homepage_page" model="website.page">
+        <field name="name">Home</field>
+        <field name="url">/ynf-home</field>
+        <field name="view_id" ref="ynf_homepage"/>
+        <field name="website_published">True</field>
+    </record>
+
+    <!-- ============================ SHOP ============================ -->
+    <template id="ynf_products_item_inspired" inherit_id="website_sale.products_item" name="YNF Inspired chip">
+        <xpath expr="//div[hasclass('o_wsale_product_information')]//div[hasclass('product_price')]" position="before">
+            <span class="ynf-inspired" t-if="product.x_ynf_inspired_by">✦ Inspired by <t t-esc="product.x_ynf_inspired_by"/></span>
+        </xpath>
+    </template>
+
+    <!-- ============================ PRODUCT ============================ -->
+    <template id="ynf_product_overrides" inherit_id="website_sale.product" name="YNF Product wrapper">
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" add="ynf-product-detail" separator=" "/>
+        </xpath>
+    </template>
+    <template id="ynf_product_notes" inherit_id="website_sale.product" name="YNF Notes Pyramid">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <div class="ynf-notes" t-if="product.x_ynf_note_top or product.x_ynf_note_mid or product.x_ynf_note_base">
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_top"><span class="label">Top</span><span class="val" t-esc="product.x_ynf_note_top"/></div>
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_mid"><span class="label">Heart</span><span class="val" t-esc="product.x_ynf_note_mid"/></div>
+                <div class="ynf-notes-row" t-if="product.x_ynf_note_base"><span class="label">Base</span><span class="val" t-esc="product.x_ynf_note_base"/></div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================ LIVE ============================ -->
+    <template id="ynf_live_page" name="YNF Live">
+        <t t-call="website.layout">
+            <div id="wrap" class="ynf-live-page">
+                <section class="ynf-wrap" style="margin-top:18px;">
+                    <div class="ynf-spotlight ynf-rev" style="background:linear-gradient(150deg,#6b1f23,#2a0f12);">
+                        <span class="ynf-eyebrow-gold">● Live tonight · 8 PM ET</span>
+                        <h2>Auction night on <span style="color:#c9a961;">TikTok Live</span></h2>
+                        <p>Bids open at $1. Win authentic bottles for a fraction of retail — shipped straight to your door.</p>
+                        <a href="/shop" class="btn btn-primary mt-2">Shop catalog</a>
+                    </div>
+                </section>
+                <section class="ynf-wrap" style="margin-top:40px; margin-bottom:48px;">
+                    <div class="ynf-section-title ynf-rev"><span class="eyebrow">How it works</span><h2>Bid, win, we ship</h2></div>
+                </section>
+            </div>
+        </t>
+    </template>
+    <record id="ynf_live_page_rec" model="website.page">
+        <field name="name">Live</field>
+        <field name="url">/live</field>
+        <field name="view_id" ref="ynf_live_page"/>
+        <field name="website_published">True</field>
+    </record>
+    <record id="ynf_live_menu" model="website.menu">
+        <field name="name">Live</field>
+        <field name="url">/live</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" eval="35"/>
+    </record>
+
+</odoo>

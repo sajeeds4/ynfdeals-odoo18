@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Replace Odoo's default homepage with our Lattafa-inspired hero + collections -->
+    <template id="ynf_homepage" name="YNF Homepage">
+        <t t-call="website.layout">
+            <div id="wrap" class="ynf-homepage">
+
+                <!-- HERO -->
+                <section class="ynf-hero">
+                    <div class="ynf-hero-inner">
+                        <span class="ynf-hero-eyebrow">Authentic Fragrances · Live Auctions</span>
+                        <h1>Discover your <em>signature</em> scent.</h1>
+                        <p class="lead">
+                            Hand-picked Arabian and niche fragrances at live-auction prices.
+                            Catch us on TikTok Live for steals, or shop the catalog any time.
+                        </p>
+                        <div class="ynf-hero-cta">
+                            <a href="/shop" class="btn btn-primary">Shop Fragrances</a>
+                            <a href="/live-sessions" class="btn btn-outline-primary">Past Live Replays</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FEATURED COLLECTIONS -->
+                <section class="ynf-collections">
+                    <div class="ynf-section-title">
+                        <span class="eyebrow">Shop By</span>
+                        <h2>Collections</h2>
+                    </div>
+                    <div class="ynf-coll-grid">
+                        <a href="/shop?attrib=1-3" class="ynf-coll-card">
+                            <div class="ynf-coll-img" style="background-image: url('/web/image/website/1/header_overlay');"/>
+                            <div class="ynf-coll-overlay">
+                                <h3>For Him</h3>
+                                <span class="ynf-coll-cta">Shop Men's</span>
+                            </div>
+                        </a>
+                        <a href="/shop?attrib=1-4" class="ynf-coll-card">
+                            <div class="ynf-coll-img" style="background-image: url('/web/image/website/1/header_overlay');"/>
+                            <div class="ynf-coll-overlay">
+                                <h3>For Her</h3>
+                                <span class="ynf-coll-cta">Shop Women's</span>
+                            </div>
+                        </a>
+                        <a href="/shop?attrib=1-5" class="ynf-coll-card">
+                            <div class="ynf-coll-img" style="background-image: url('/web/image/website/1/header_overlay');"/>
+                            <div class="ynf-coll-overlay">
+                                <h3>Unisex</h3>
+                                <span class="ynf-coll-cta">Shop All</span>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- FEATURED PRODUCTS -->
+                <section class="ynf-featured">
+                    <div class="container">
+                        <div class="ynf-section-title">
+                            <span class="eyebrow">Currently Trending</span>
+                            <h2>Bestsellers</h2>
+                        </div>
+                        <t t-set="featured_products"
+                           t-value="request.env['product.template'].sudo().search([('sale_ok','=',True),('website_published','=',True)], limit=8, order='create_date desc')"/>
+                        <div class="row" id="products_grid">
+                            <t t-foreach="featured_products" t-as="product">
+                                <div class="col-6 col-md-3">
+                                    <div class="oe_product o_wsale_product_card">
+                                        <a t-attf-href="/shop/product/#{slug(product)}" class="oe_product_image_link">
+                                            <img t-att-src="'/web/image/product.template/' + str(product.id) + '/image_512'"
+                                                 t-att-alt="product.name"/>
+                                        </a>
+                                        <div class="o_wsale_product_information">
+                                            <h6><a t-attf-href="/shop/product/#{slug(product)}" t-esc="product.name"/></h6>
+                                            <div class="product_price">
+                                                <t t-esc="product.currency_id.symbol"/>
+                                                <t t-esc="'%.2f' % product.list_price"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="text-center" style="margin-top: 32px;">
+                            <a href="/shop" class="btn btn-outline-primary">View All Products</a>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- Make this view available as a page at /ynf-home; can be picked as homepage in Website Settings -->
+    <record id="ynf_homepage_page" model="website.page">
+        <field name="name">YNF Homepage</field>
+        <field name="url">/ynf-home</field>
+        <field name="view_id" ref="ynf_homepage"/>
+        <field name="website_published">True</field>
+    </record>
+
+</odoo>

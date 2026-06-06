@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wrapper class on product detail page -->
+    <template id="ynf_product_overrides" inherit_id="website_sale.product" name="YNF Product overrides">
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" add="ynf-product-detail" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- "Inspired by" chip on every catalog card                      -->
+    <!-- ============================================================ -->
+    <template id="ynf_products_item_inspired_by"
+              inherit_id="website_sale.products_item"
+              name="YNF Inspired-by chip">
+        <xpath expr="//div[hasclass('o_wsale_product_information_text')]" position="inside">
+            <t t-set="ynf_inspired" t-value="(product.x_ynf_dupe_inspiration or '').strip()"/>
+            <div t-if="ynf_inspired" class="ynf-card-inspired"
+                 t-att-title="'Inspired by ' + ynf_inspired">
+                <span class="ynf-card-inspired-label">Inspired by</span>
+                <span class="ynf-card-inspired-name" t-esc="ynf_inspired"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- PDP notes pyramid — top / heart / base fragrance notes.      -->
+    <!-- Reads x_ynf_note_top / x_ynf_note_mid / x_ynf_note_base from -->
+    <!-- product.template (comma-separated strings). Gracefully       -->
+    <!-- skipped when no notes are filled.                            -->
+    <!-- ============================================================ -->
+    <template id="ynf_product_notes_pyramid"
+              inherit_id="website_sale.product"
+              name="YNF Notes Pyramid">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <t t-set="ynf_note_top" t-value="(product.x_ynf_note_top or '').strip()"/>
+            <t t-set="ynf_note_mid" t-value="(product.x_ynf_note_mid or '').strip()"/>
+            <t t-set="ynf_note_base" t-value="(product.x_ynf_note_base or '').strip()"/>
+            <div t-if="ynf_note_top or ynf_note_mid or ynf_note_base"
+                 class="ynf-notes-pyramid">
+                <h3 class="ynf-notes-title">Fragrance Notes</h3>
+                <div class="ynf-notes-tiers">
+                    <div t-if="ynf_note_top" class="ynf-notes-tier ynf-notes-top">
+                        <div class="ynf-notes-label">Top notes</div>
+                        <div class="ynf-notes-chips">
+                            <t t-foreach="ynf_note_top.split(',')" t-as="note">
+                                <span class="ynf-note-chip" t-esc="note.strip()"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div t-if="ynf_note_mid" class="ynf-notes-tier ynf-notes-mid">
+                        <div class="ynf-notes-label">Heart notes</div>
+                        <div class="ynf-notes-chips">
+                            <t t-foreach="ynf_note_mid.split(',')" t-as="note">
+                                <span class="ynf-note-chip" t-esc="note.strip()"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div t-if="ynf_note_base" class="ynf-notes-tier ynf-notes-base">
+                        <div class="ynf-notes-label">Base notes</div>
+                        <div class="ynf-notes-chips">
+                            <t t-foreach="ynf_note_base.split(',')" t-as="note">
+                                <span class="ynf-note-chip" t-esc="note.strip()"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

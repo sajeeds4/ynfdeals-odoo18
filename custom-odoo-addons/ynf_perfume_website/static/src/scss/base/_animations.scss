@@ -1,0 +1,56 @@
+// ==========================================================================
+// YNF Perfume — Animations (1:1 with the design export)
+// ==========================================================================
+
+// Reveal on scroll
+.ynf .y-rev {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .55s var(--y-ease), transform .55s var(--y-ease);
+    &.in { opacity: 1; transform: none; }
+}
+
+// Live pulse dot
+@keyframes y-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: .55; }
+}
+.ynf .y-pulse { animation: y-pulse 1.5s ease-in-out infinite; }
+
+// Cart bump
+@keyframes y-bump {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.55); }
+    100% { transform: scale(1); }
+}
+.ynf .y-bump { animation: y-bump .42s var(--y-ease); }
+
+// Announcement marquee
+@keyframes y-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+.ynf .y-marquee {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: y-marquee 22s linear infinite;
+}
+
+// Bottle float (hero / spotlight)
+@keyframes y-bottle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+.ynf .y-float { animation: y-bottle-float 4.6s ease-in-out infinite; will-change: transform; }
+
+// Hero video cross-fade (driven by JS opacity, eased here)
+.ynf .y-hero-video {
+    transition: opacity .5s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ynf {
+        .y-rev { opacity: 1 !important; transform: none !important; transition: none !important; }
+        .y-pulse, .y-bump, .y-marquee, .y-float { animation: none !important; }
+    }
+}

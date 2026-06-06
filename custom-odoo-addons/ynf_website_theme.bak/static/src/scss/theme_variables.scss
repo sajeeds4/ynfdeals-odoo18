@@ -1,0 +1,84 @@
+/* YNF Deals — Lattafa-inspired LIGHT luxury fragrance palette */
+
+/* === Colors (light) === */
+$ynf-bg:           #faf7f1;            /* warm ivory — page background */
+$ynf-bg-soft:      #f3ede1;            /* slightly deeper sections */
+$ynf-bg-card:      #ffffff;            /* cards / surfaces */
+$ynf-border:       rgba(168, 134, 58, 0.30);   /* gold-tinted border */
+$ynf-border-soft:  rgba(20, 14, 6, 0.08);      /* hairline */
+
+$ynf-text:         #2a2118;            /* deep espresso — body text */
+$ynf-text-muted:   #6e6151;            /* subdued */
+$ynf-text-dim:     #a8997f;
+
+$ynf-gold:         #a07f3a;            /* primary accent (darker gold for light-bg contrast) */
+$ynf-gold-light:   #c9a961;
+$ynf-gold-dark:    #7c6128;
+$ynf-gold-soft:    rgba(160, 127, 58, 0.10);
+
+$ynf-accent-red:   #b53a3a;            /* sale tags / urgency */
+$ynf-success:      #4e9266;
+
+/* Burgundy / wine — secondary accent (Lattafa oud aesthetic) */
+$ynf-wine:         #6b1f23;
+$ynf-wine-light:   #8f3236;
+$ynf-wine-dark:    #4d1518;
+$ynf-wine-soft:    rgba(107, 31, 35, 0.08);
+
+/* === Typography (Lattafa = clean contemporary sans-serif) === */
+$font-display: "Poppins", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+$font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+$font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+/* === Sizes === */
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:   14px;
+$radius-pill: 999px;
+
+$shadow-card:  0 6px 20px rgba(42, 33, 24, 0.08);
+$shadow-lift:  0 14px 40px rgba(42, 33, 24, 0.14);
+$shadow-gold:  0 4px 16px rgba(160, 127, 58, 0.22);
+
+/* === Breakpoints (mobile-first) === */
+$bp-tablet:  768px;
+$bp-desktop: 1100px;
+$bp-wide:    1440px;
+
+/* === Spacing scale === */
+$sp-1: 4px;
+$sp-2: 8px;
+$sp-3: 12px;
+$sp-4: 16px;
+$sp-5: 24px;
+$sp-6: 32px;
+$sp-7: 48px;
+$sp-8: 64px;
+$sp-9: 96px;
+
+/* === Override Bootstrap / Odoo defaults === */
+:root {
+    --o-color-primary: #{$ynf-gold};
+    --o-color-secondary: #{$ynf-bg-card};
+    --o-color-success: #{$ynf-success};
+    --o-color-info: #{$ynf-gold-light};
+    --o-color-warning: #{$ynf-gold-dark};
+    --o-color-danger: #{$ynf-accent-red};
+    --o-color-dark: #{$ynf-bg};
+    --o-color-light: #{$ynf-text};
+    /* Odoo numbered theme colors — color-1 was green (#006241); remap to gold/ink */
+    --o-color-1: #{$ynf-gold};
+    --o-color-2: #{$ynf-bg-card};
+    --o-color-3: #{$ynf-bg-soft};
+    --o-color-4: #{$ynf-wine};
+    --o-color-5: #{$ynf-text};
+    --o-cc1-text: #{$ynf-text};
+    --o-cc1-headings: #{$ynf-text};
+    --o-cc1-link: #{$ynf-gold};
+    --bs-body-bg: #{$ynf-bg};
+    --bs-body-color: #{$ynf-text};
+    --bs-link-color: #{$ynf-gold};
+    --bs-link-hover-color: #{$ynf-gold-light};
+    --bs-success: #{$ynf-success};
+    --bs-success-rgb: 78, 146, 102;
+}

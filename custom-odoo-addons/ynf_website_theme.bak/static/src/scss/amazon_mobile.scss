@@ -1,0 +1,197 @@
+/* ============================================================
+   AMAZON-STYLE MOBILE PATTERNS (≤ 991px)
+   - sticky bottom tab bar
+   - prominent search bar in header
+   - denser product cards
+   - horizontal carousels
+   ============================================================ */
+
+/* ---- 1. STICKY BOTTOM TAB BAR ---- */
+.ynf-bottom-bar {
+    display: none;
+}
+@media (max-width: 991.98px) {
+    .ynf-bottom-bar {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1090;
+        background: #fff;
+        border-top: 1px solid rgba(20,14,6,0.10);
+        box-shadow: 0 -4px 18px rgba(42,33,24,0.08);
+        padding: 6px 0 unquote("max(6px, env(safe-area-inset-bottom))");
+
+        .ynf-bb-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 4px 0;
+            color: #6e6151;
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            position: relative;
+            transition: color 0.15s ease;
+
+            i { font-size: 1.15rem; }
+            span:not(.ynf-bb-badge) { line-height: 1; }
+
+            &:active, &.is-active { color: #a07f3a; }
+        }
+
+        /* center Search gets emphasis (Amazon-ish raised pill) */
+        .ynf-bb-search i {
+            background: linear-gradient(135deg, #c9a961, #a07f3a);
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -14px;
+            box-shadow: 0 4px 12px rgba(160,127,58,0.4);
+        }
+
+        .ynf-bb-badge {
+            position: absolute;
+            top: 0;
+            right: 50%;
+            transform: translateX(16px);
+            background: #6b1f23;
+            color: #f6dc93;
+            font-size: 0.6rem;
+            font-weight: 800;
+            min-width: 16px;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 999px;
+            padding: 0 4px;
+            text-transform: none;
+        }
+    }
+
+    /* Pad page bottom so content isn't hidden behind the bar */
+    #wrapwrap { padding-bottom: 64px; }
+}
+
+/* ---- 2. PROMINENT MOBILE SEARCH BAR ---- */
+.ynf-mobile-search { display: none; }
+@media (max-width: 991.98px) {
+    .ynf-mobile-search {
+        display: block !important;
+        position: sticky;
+        top: 0;
+        z-index: 1029;
+        background: #fff;
+        padding: 8px 14px 10px;
+        border-bottom: 1px solid rgba(20,14,6,0.06);
+
+        .ynf-ms-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f3ece0;
+            border: 1px solid rgba(160,127,58,0.22);
+            border-radius: 999px;
+            padding: 0 16px;
+            height: 44px;
+
+            i { color: #a07f3a; font-size: 0.95rem; }
+            input {
+                flex: 1;
+                border: 0 !important;
+                background: transparent !important;
+                font-size: 0.92rem;
+                color: #2a2118 !important;
+                outline: none;
+                &::placeholder { color: #8a7d6b; }
+            }
+        }
+    }
+}
+
+/* ---- 3. AMAZON-STYLE PRODUCT CARDS (shop + homepage rows) ---- */
+@media (max-width: 991.98px) {
+    .oe_website_sale .oe_product,
+    .oe_website_sale .o_wsale_product_grid_wrapper {
+        border: 1px solid rgba(20,14,6,0.08) !important;
+        border-radius: 12px !important;
+        background: #fff !important;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(42,33,24,0.05);
+
+        .oe_product_image, .oe_product_image_link {
+            background: #fff !important;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            img { object-fit: contain; max-height: 100%; }
+        }
+
+        h6, .product_name, .o_wsale_products_item_title {
+            font-size: 0.82rem !important;
+            line-height: 1.3 !important;
+            color: #2a2118 !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.1em;
+            margin: 0 0 4px !important;
+        }
+        .product_price, .oe_currency_value {
+            font-size: 1.05rem !important;
+            font-weight: 800 !important;
+            color: #2a2118 !important;
+        }
+        /* original (compare) price strikethrough */
+        del, s, .text-muted s {
+            color: #a8997f !important;
+            font-weight: 400 !important;
+            font-size: 0.8rem !important;
+        }
+    }
+}
+
+/* ---- 4. HORIZONTAL PRODUCT CAROUSELS (homepage rows) ---- */
+.ynf-rail {
+    margin: 0 -16px;
+    padding: 4px 16px 14px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    .ynf-rail-card {
+        flex: 0 0 46%;
+        scroll-snap-align: start;
+        background: #fff;
+        border: 1px solid rgba(20,14,6,0.08);
+        border-radius: 12px;
+        overflow: hidden;
+
+        .ynf-rail-img {
+            aspect-ratio: 1/1;
+            background: #faf5ec center/contain no-repeat;
+            display: block;
+        }
+        .ynf-rail-body { padding: 10px 12px; }
+        .ynf-rail-name {
+            font-size: 0.8rem; color: #2a2118; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .ynf-rail-price { font-weight: 800; color: #a07f3a; margin-top: 4px; }
+    }
+}

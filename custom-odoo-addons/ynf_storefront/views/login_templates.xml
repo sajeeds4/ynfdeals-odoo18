@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Replace the entire /web/login body with the YNF two-column design.
+       Keeps Odoo's form fields (csrf_token, login, password, redirect)
+       intact so backend auth still works. -->
+  <template id="ynf_login_override"
+            inherit_id="web.login"
+            name="YNF Login Page">
+    <xpath expr="." position="replace">
+      <t t-call="web.frontend_layout">
+        <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+        <t t-set="body_classname" t-value="'ynf-login-body'"/>
+        <t t-set="no_header" t-value="True"/>
+        <t t-set="no_footer" t-value="True"/>
+
+        <div class="ynf-login-wrap">
+
+          <!-- LEFT: dark welcome panel (desktop only) -->
+          <aside class="ynf-login-hero">
+            <div class="ynf-login-brand">
+              <span class="ynf-login-logo"><span>Y</span></span>
+              <span class="ynf-login-brandname">YNF DEALS</span>
+            </div>
+            <h1 class="ynf-login-welcome">
+              Welcome <em>back.</em>
+            </h1>
+            <p class="ynf-login-sub">
+              Sign in to track orders, save your favourites, and never miss a live auction.
+            </p>
+            <ul class="ynf-login-feats">
+              <li>
+                <span class="ynf-login-feat-ico"><i class="fa fa-bolt"/></span>
+                <div>
+                  <strong>Live-auction prices</strong>
+                  <span>Win authentic bottles for a fraction of retail.</span>
+                </div>
+              </li>
+              <li>
+                <span class="ynf-login-feat-ico"><i class="fa fa-shield"/></span>
+                <div>
+                  <strong>100% authentic</strong>
+                  <span>Sourced direct — never a tester or fake.</span>
+                </div>
+              </li>
+              <li>
+                <span class="ynf-login-feat-ico"><i class="fa fa-truck"/></span>
+                <div>
+                  <strong>Fast, tracked shipping</strong>
+                  <span>Ships within 2 business days, free over $75.</span>
+                </div>
+              </li>
+            </ul>
+          </aside>
+
+          <!-- RIGHT: sign-in form -->
+          <main class="ynf-login-card">
+            <h2 class="ynf-login-title">Sign in</h2>
+            <p class="ynf-login-greet">Good to see you again.</p>
+
+            <div class="ynf-login-tabs" role="tablist">
+              <span class="ynf-login-tab is-active" role="tab" aria-selected="true">Sign in</span>
+              <a class="ynf-login-tab" role="tab" href="/web/signup">Create account</a>
+            </div>
+
+            <form class="ynf-login-form oe_login_form" role="form"
+                  t-attf-action="/web/login" method="post"
+                  onsubmit="this.action = '/web/login' + location.hash">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+              <div t-if="databases and len(databases) &gt; 1" class="ynf-login-field">
+                <label for="db">Database</label>
+                <div class="input-group">
+                  <input type="text" name="db" t-att-value="request.db" id="db"
+                         class="form-control" required="required" readonly="readonly"/>
+                  <a role="button" href="/web/database/selector" class="btn btn-secondary">
+                    Select <i class="fa fa-database"/>
+                  </a>
+                </div>
+              </div>
+
+              <div class="ynf-login-field">
+                <label for="login">EMAIL</label>
+                <div class="ynf-login-input">
+                  <i class="fa fa-user-o ynf-login-iicon"/>
+                  <input type="text" name="login" id="login"
+                         placeholder="you@email.com"
+                         t-att-value="login"
+                         required="required" autocapitalize="off"
+                         autocomplete="username"/>
+                </div>
+              </div>
+
+              <div class="ynf-login-field">
+                <label for="password">PASSWORD</label>
+                <div class="ynf-login-input">
+                  <i class="fa fa-shield ynf-login-iicon"/>
+                  <input type="password" name="password" id="password"
+                         placeholder="••••••••"
+                         required="required" maxlength="4096"
+                         autocomplete="current-password"
+                         t-att-autofocus="'autofocus' if login else None"/>
+                  <button type="button" class="ynf-login-show"
+                          onclick="var p=this.previousElementSibling; if(p.type==='password'){p.type='text';this.textContent='Hide';}else{p.type='password';this.textContent='Show';}">
+                    Show
+                  </button>
+                </div>
+              </div>
+
+              <div class="ynf-login-row">
+                <label class="ynf-login-remember">
+                  <input type="checkbox" name="remember" value="1" checked="checked"/>
+                  <span>Remember me</span>
+                </label>
+                <a href="/web/reset_password" class="ynf-login-forgot">Forgot password?</a>
+              </div>
+
+              <p class="alert alert-danger" t-if="error" role="alert">
+                <t t-esc="error"/>
+              </p>
+              <p class="alert alert-success" t-if="message" role="status">
+                <t t-esc="message"/>
+              </p>
+
+              <button type="submit" class="ynf-login-cta">Sign in</button>
+
+              <t t-if="debug">
+                <button type="submit" name="redirect" value="/web/become"
+                        class="btn btn-link btn-sm w-100">Log in as superuser</button>
+              </t>
+
+              <div class="o_login_auth"/>
+
+              <input type="hidden" name="type" value="password"/>
+              <input type="hidden" name="redirect" t-att-value="redirect"/>
+            </form>
+
+            <div class="ynf-login-or"><span>OR</span></div>
+
+            <div class="ynf-login-social">
+              <a href="/auth_oauth/signin?provider=google" class="ynf-login-social-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt=""/>
+                Google
+              </a>
+              <a href="/auth_oauth/signin?provider=apple" class="ynf-login-social-btn">
+                <i class="fa fa-apple"/> Apple
+              </a>
+            </div>
+
+            <a href="/shop" class="ynf-login-guest">Continue as guest <span>→</span></a>
+
+            <p class="ynf-login-trust">
+              <i class="fa fa-check-circle"/> 100% authentic · secure checkout
+            </p>
+            <p class="ynf-login-legal">
+              By continuing you agree to our
+              <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+            </p>
+          </main>
+
+        </div>
+      </t>
+    </xpath>
+  </template>
+
+</odoo>
