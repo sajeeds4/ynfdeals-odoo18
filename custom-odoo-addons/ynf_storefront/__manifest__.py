@@ -22,7 +22,9 @@ Mobile-first storefront for ynfdeals.com.
     "assets": {
         "web.assets_frontend": [
             "ynf_storefront/static/src/scss/ynf_theme.scss",
+            "ynf_storefront/static/src/scss/ynf_home_v2.scss",
             "ynf_storefront/static/src/js/ynf_theme.js",
+            "ynf_storefront/static/src/js/ynf_home_v2.js",
         ],
     },
     "license": "LGPL-3",

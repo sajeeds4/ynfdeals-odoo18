@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <!-- Default the gate to ON; turn off via ir.config_parameter when ready to launch. -->
+  <!-- Site is launched: gate OFF (public). Set to True to re-enable the
+       "coming soon" gate for all non-internal visitors. -->
   <record id="ynf_dev_mode_param" model="ir.config_parameter">
     <field name="key">ynf.dev_mode</field>
-    <field name="value">True</field>
+    <field name="value">False</field>
   </record>
 </odoo>
